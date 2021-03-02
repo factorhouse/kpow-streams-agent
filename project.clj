@@ -1,9 +1,8 @@
-(defproject streams-agent "0.1.0"
+(defproject wavejumper/streams-agent "0.1.0"
   :description "kPow streams agent"
   :url "https://github.com/operatr-io/streams-agent"
   :dependencies [[org.clojure/clojure "1.10.2"]
                  [org.clojure/core.async "1.3.610"]
-                 [org.clojure/tools.logging "1.1.0"]
                  [com.cognitect/transit-clj "1.0.324"]
                  [org.apache.kafka/kafka-streams "2.6.0" :scope "provided"]]
   :uberjar {:prep-tasks  ["clean" "javac" "compile"]
