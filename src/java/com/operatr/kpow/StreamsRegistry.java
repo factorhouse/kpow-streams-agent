@@ -9,10 +9,23 @@ import org.apache.kafka.streams.Topology;
 
 import java.util.Properties;
 
-public class StreamsInstrumentor implements AutoCloseable {
+public class StreamsRegistry implements AutoCloseable {
+
+    public static class StreamsAgent {
+        private final String _id;
+
+        StreamsAgent(String id) {
+            _id = id;
+        }
+
+        public String getId() {
+            return _id;
+        }
+    }
+
     private final Object agent;
 
-    public StreamsInstrumentor(Properties props) {
+    public StreamsRegistry(Properties props) {
         IFn require = Clojure.var("clojure.core", "require");
         require.invoke(Clojure.read("com.operatr.kpow.agent"));
         IFn agentFn = Clojure.var("com.operatr.kpow.agent", "init-agent");
