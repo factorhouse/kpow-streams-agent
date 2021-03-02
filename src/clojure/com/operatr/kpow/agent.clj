@@ -46,7 +46,7 @@
               :topic-extraction? (not (nil? (.topicNameExtractor ^TopologyDescription$Sink node)))}))))
 
 (def kpow-snapshot-topic
-  "__oprtr_snapshot_state")
+  {:topic "__oprtr_snapshot_state"})
 
 (defn metrics
   [^KafkaStreams streams]
