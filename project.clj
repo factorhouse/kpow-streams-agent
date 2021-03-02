@@ -1,4 +1,4 @@
-(defproject wavejumper/streams-agent "0.1.1"
+(defproject wavejumper/streams-agent "0.1.2"
   :description "kPow streams agent"
   :url "https://github.com/operatr-io/streams-agent"
   :dependencies [[org.clojure/clojure "1.10.2"]
