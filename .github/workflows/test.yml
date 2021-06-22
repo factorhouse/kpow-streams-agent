@@ -13,6 +13,6 @@ jobs:
         uses: DeLaGuardo/setup-clojure@3.4
         with:
           lein: latest
-      - run: lein test
+      - run: lein kaocha
       - run: lein kondo
       - run: lein fmt
