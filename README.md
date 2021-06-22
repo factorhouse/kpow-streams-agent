@@ -1,8 +1,10 @@
 # streams-agent
 
-kPow's Kafka Streams agent. Install this 
+kPow's Kafka Streams agent. Install this agent to monitor Kafka Streams applications with [kPow](https://kpow.io)
 
 [Documentation](https://docs.kpow.io/features/kafka-streams)
+
+![screenshot](docs/screenshot.png)
 
 # Installation
 
