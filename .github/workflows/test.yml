@@ -14,3 +14,5 @@ jobs:
         with:
           lein: latest
       - run: lein test
+      - run: lein kondo
+      - run: lein fmt
