@@ -11,13 +11,13 @@ kPow's Kafka Streams agent. Install this agent to monitor Kafka Streams applicat
 kPow's streams agent can be found on Maven:
 
 ``` 
-com.operatr/streams-agent
+io.operatr/streams-agent
 ```
 
 # Usage
 
 ```java 
-import com.operatr.kpow.StreamsRegistry;
+import io.operatr.kpow.StreamsRegistry;
 
 Properties props = new Properties(); // Kafka Producer properties -- this is the Kafka cluster the metrics will be sent to.
 StreamsRegistry registry = new StreamsRegistry(props); // The registry instance

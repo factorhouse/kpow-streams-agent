@@ -1,4 +1,4 @@
-package com.operatr.kpow;
+package io.operatr.kpow;
 
 import clojure.java.api.Clojure;
 import clojure.lang.IFn;
@@ -27,10 +27,10 @@ public class StreamsRegistry implements AutoCloseable {
 
     public StreamsRegistry(Properties props) {
         IFn require = Clojure.var("clojure.core", "require");
-        require.invoke(Clojure.read("com.operatr.kpow.agent"));
-        IFn agentFn = Clojure.var("com.operatr.kpow.agent", "init-agent");
-        require.invoke(Clojure.read("com.operatr.kpow.serdes"));
-        IFn serdesFn = Clojure.var("com.operatr.kpow.serdes", "transit-json-serializer");
+        require.invoke(Clojure.read("io.operatr.kpow.agent"));
+        IFn agentFn = Clojure.var("io.operatr.kpow.agent", "init-agent");
+        require.invoke(Clojure.read("io.operatr.kpow.serdes"));
+        IFn serdesFn = Clojure.var("io.operatr.kpow.serdes", "transit-json-serializer");
         Serializer keySerializer = (Serializer) serdesFn.invoke();
         Serializer valSerializer = (Serializer) serdesFn.invoke();
         KafkaProducer producer = new KafkaProducer<>(props, keySerializer, valSerializer);
@@ -39,8 +39,8 @@ public class StreamsRegistry implements AutoCloseable {
 
     public StreamsAgent register(KafkaStreams streams, Topology topology) {
         IFn require = Clojure.var("clojure.core", "require");
-        require.invoke(Clojure.read("com.operatr.kpow.agent"));
-        IFn registerFn = Clojure.var("com.operatr.kpow.agent", "register");
+        require.invoke(Clojure.read("io.operatr.kpow.agent"));
+        IFn registerFn = Clojure.var("io.operatr.kpow.agent", "register");
         String id = (String) registerFn.invoke(agent, streams, topology);
         if (id != null) {
             return new StreamsAgent(id);
@@ -52,8 +52,8 @@ public class StreamsRegistry implements AutoCloseable {
     public void unregister(StreamsAgent agent) {
         if (agent != null) {
             IFn require = Clojure.var("clojure.core", "require");
-            require.invoke(Clojure.read("com.operatr.kpow.agent"));
-            IFn unregisterFn = Clojure.var("com.operatr.kpow.agent", "unregister");
+            require.invoke(Clojure.read("io.operatr.kpow.agent"));
+            IFn unregisterFn = Clojure.var("io.operatr.kpow.agent", "unregister");
             unregisterFn.invoke(agent.getId());
         }
     }
@@ -61,8 +61,8 @@ public class StreamsRegistry implements AutoCloseable {
     @Override
     public void close() throws Exception {
         IFn require = Clojure.var("clojure.core", "require");
-        require.invoke(Clojure.read("com.operatr.kpow.agent"));
-        IFn closeFn = Clojure.var("com.operatr.kpow.agent", "close-agent");
+        require.invoke(Clojure.read("io.operatr.kpow.agent"));
+        IFn closeFn = Clojure.var("io.operatr.kpow.agent", "close-agent");
         closeFn.invoke(agent);
     }
 }

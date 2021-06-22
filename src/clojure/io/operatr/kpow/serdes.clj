@@ -1,4 +1,4 @@
-(ns com.operatr.kpow.serdes
+(ns io.operatr.kpow.serdes
   (:require [cognitect.transit :as transit])
   (:import (java.io ByteArrayOutputStream ByteArrayInputStream)
            (org.apache.kafka.streams.kstream Windowed Window)
