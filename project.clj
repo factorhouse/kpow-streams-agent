@@ -9,6 +9,9 @@
             :aot         :all
             :omit-source true}
   :profiles {:dev {:resource-paths ["dev-resources"]
-                   :dependencies [[org.apache.kafka/kafka-streams-test-utils "2.8.0"]]}}
+                   :dependencies [[org.slf4j/slf4j-api "1.7.30"]
+                                  [ch.qos.logback/logback-classic "1.2.3"]
+                                  [lambdaisland/kaocha "1.0.861"]]}}
+  :aliases {"kaocha" ["with-profile" "+kaocha" "run" "-m" "kaocha.runner"]}
   :java-source-paths ["src/java"]
   :source-paths ["src/clojure"])

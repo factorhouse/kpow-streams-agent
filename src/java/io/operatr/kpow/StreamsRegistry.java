@@ -28,7 +28,7 @@ public class StreamsRegistry implements AutoCloseable {
     public StreamsRegistry(Properties props) {
         IFn require = Clojure.var("clojure.core", "require");
         require.invoke(Clojure.read("io.operatr.kpow.agent"));
-        IFn agentFn = Clojure.var("io.operatr.kpow.agent", "init-agent");
+        IFn agentFn = Clojure.var("io.operatr.kpow.agent", "init-registry");
         require.invoke(Clojure.read("io.operatr.kpow.serdes"));
         IFn serdesFn = Clojure.var("io.operatr.kpow.serdes", "transit-json-serializer");
         Serializer keySerializer = (Serializer) serdesFn.invoke();
@@ -62,7 +62,7 @@ public class StreamsRegistry implements AutoCloseable {
     public void close() throws Exception {
         IFn require = Clojure.var("clojure.core", "require");
         require.invoke(Clojure.read("io.operatr.kpow.agent"));
-        IFn closeFn = Clojure.var("io.operatr.kpow.agent", "close-agent");
+        IFn closeFn = Clojure.var("io.operatr.kpow.agent", "close-registry");
         closeFn.invoke(agent);
     }
 }

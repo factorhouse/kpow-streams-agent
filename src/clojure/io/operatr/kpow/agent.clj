@@ -3,11 +3,11 @@
             [clojure.tools.logging :as log]
             [clojure.core.protocols :as p])
   (:import (org.apache.kafka.clients.producer Producer ProducerRecord)
-           (org.apache.kafka.streams KafkaStreams Topology KeyValue TopologyDescription TopologyDescription$Subtopology
+           (org.apache.kafka.streams Topology KeyValue TopologyDescription TopologyDescription$Subtopology
                                      TopologyDescription$GlobalStore TopologyDescription$Node TopologyDescription$Source
                                      TopologyDescription$Processor TopologyDescription$Sink)
            (java.util UUID)
-           (java.util.concurrent Executors ThreadFactory TimeUnit)))
+           (java.util.concurrent Executors TimeUnit)))
 
 (extend-protocol p/Datafiable
   KeyValue
@@ -37,7 +37,7 @@
              :predecessors (set (map #(identity {:name (.name %)}) (.predecessors node)))
              :successors   (set (map #(identity {:name (.name %)}) (.successors node)))}
       (instance? TopologyDescription$Source node)
-      (merge {:topic-set     (.topicSet ^TopologyDescription$Source node)
+      (merge {:topic-set     (into #{} (.topicSet ^TopologyDescription$Source node))
               :topic-pattern (some-> (.topicPattern ^TopologyDescription$Source node) str)})
       (instance? TopologyDescription$Processor node)
       (assoc :stores (.stores ^TopologyDescription$Processor node))
@@ -49,7 +49,7 @@
   {:topic "__oprtr_snapshot_state"})
 
 (defn metrics
-  [^KafkaStreams streams]
+  [streams]
   (into [] (map (fn [[_ metric]]
                   (let [metric-name (.metricName metric)]
                     {:value       (.metricValue metric)
@@ -124,7 +124,7 @@
     (.get (.send producer record))))
 
 (defn snapshot-telemetry
-  [{:keys [^KafkaStreams streams ^Topology topology] :as ctx}]
+  [{:keys [streams ^Topology topology] :as ctx}]
   (let [topology       (p/datafy (.describe topology))
         state          (str (.state streams))
         ;; TODO: do metrics go directly to metrics topic, or as discrete snapshot events?
@@ -141,7 +141,7 @@
     ctx))
 
 (defn ^Runnable snapshot-task
-  [snapshot-topic producer registered-topologies]
+  [snapshot-topic producer registered-topologies latch]
   (fn []
     (let [job-id (str (UUID/randomUUID))
           ctx    {:job-id         job-id
@@ -153,34 +153,31 @@
                (Thread/sleep 2000)
                (plan-send next-ctx))
              (catch Throwable e
-               (log/error e "kPow: error sending streams snapshot")))))))
+               (log/error e "kPow: error sending streams snapshot"))))
 
-(def ^:private thread-factory
-  (let [!count (atom 0)]
-    (reify ThreadFactory
-      (newThread [_ r]
-        (doto (Thread. r)
-          (.setName (format "kpow-streams-agent-%d" (swap! !count inc))))))))
+      (deliver latch true))))
 
-(defn start-agent
+(defn start-registry
   [{:keys [snapshot-topic producer]}]
   (log/info "kPow: starting agent")
   (let [registered-topologies (atom {})
-        pool                  (Executors/newSingleThreadScheduledExecutor thread-factory)
+        pool                  (Executors/newSingleThreadScheduledExecutor)
         register-fn           (fn [streams topology]
                                 (let [id (str (UUID/randomUUID))]
                                   (swap! registered-topologies assoc id [streams topology])
                                   id))
-        task                  (snapshot-task snapshot-topic producer registered-topologies)]
+        latch                 (promise)
+        task                  (snapshot-task snapshot-topic producer registered-topologies latch)]
 
-    (.scheduleAtFixedRate pool task 15000 60000 TimeUnit/MILLISECONDS)
+    (.scheduleAtFixedRate pool task 500 60000 TimeUnit/MILLISECONDS)
 
     {:register   register-fn
      :pool       pool
      :topologies registered-topologies
-     :close      (fn [] (.shutdownNow pool))}))
+     :close      (fn [] (.shutdownNow pool))
+     :latch      latch}))
 
-(defn close-agent
+(defn close-registry
   [agent]
   (log/info "kPow: closing agent")
   (when-let [close (:close agent)]
@@ -189,9 +186,9 @@
     (reset! registered-topologies {}))
   {})
 
-(defn init-agent
+(defn init-registry
   [producer]
-  (start-agent {:snapshot-topic kpow-snapshot-topic :producer producer}))
+  (start-registry {:snapshot-topic kpow-snapshot-topic :producer producer}))
 
 (defn register
   [agent streams topology]
