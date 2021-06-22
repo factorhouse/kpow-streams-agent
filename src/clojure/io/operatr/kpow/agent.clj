@@ -67,9 +67,10 @@
   [metrics]
   (let [app-id    (application-id metrics)
         client-id (some #(get-in % [:tags "client-id"]) metrics)]
-    (-> (str/replace client-id (str app-id "-") "")
-        (str/split #"-StreamThread-")
-        (first))))
+    (some-> client-id
+            (str/replace (str app-id "-") "")
+            (str/split #"-StreamThread-")
+            (first))))
 
 (defn numeric-metrics
   [metrics]
@@ -127,7 +128,6 @@
   [{:keys [streams ^Topology topology] :as ctx}]
   (let [topology       (p/datafy (.describe topology))
         state          (str (.state streams))
-        ;; TODO: do metrics go directly to metrics topic, or as discrete snapshot events?
         metrics        (metrics streams)
         snapshot       {:topology topology :state state}
         client-id      (client-id metrics)
@@ -136,6 +136,8 @@
                               :client-id client-id
                               :application-id application-id
                               :snapshot-id {:domain :streams :id client-id})]
+    (when (or (nil? application-id) (nil? client-id))
+      (throw (Exception. "Cannot infer client id from metrics returned from KafkaStreams instance")))
     (snapshot-send ctx snapshot)
     (metrics-send ctx (numeric-metrics metrics))
     ctx))
@@ -148,18 +150,18 @@
                   :snapshot-topic snapshot-topic
                   :producer       producer}]
 
-      (doseq [[_ [streams topology]] @registered-topologies]
+      (doseq [[id [streams topology]] @registered-topologies]
         (try (let [next-ctx (snapshot-telemetry (assoc ctx :streams streams :topology topology))]
                (Thread/sleep 2000)
                (plan-send next-ctx))
              (catch Throwable e
-               (log/error e "kPow: error sending streams snapshot"))))
+               (log/error e "kPow: error sending streams snapshot for agent %s" id))))
 
       (deliver latch true))))
 
 (defn start-registry
   [{:keys [snapshot-topic producer]}]
-  (log/info "kPow: starting agent")
+  (log/info "kPow: starting registry")
   (let [registered-topologies (atom {})
         pool                  (Executors/newSingleThreadScheduledExecutor)
         register-fn           (fn [streams topology]
@@ -167,19 +169,18 @@
                                   (swap! registered-topologies assoc id [streams topology])
                                   id))
         latch                 (promise)
-        task                  (snapshot-task snapshot-topic producer registered-topologies latch)]
-
-    (.scheduleAtFixedRate pool task 500 60000 TimeUnit/MILLISECONDS)
-
-    {:register   register-fn
-     :pool       pool
-     :topologies registered-topologies
-     :close      (fn [] (.shutdownNow pool))
-     :latch      latch}))
+        task                  (snapshot-task snapshot-topic producer registered-topologies latch)
+        scheduled-future      (.scheduleWithFixedDelay pool task 500 60000 TimeUnit/MILLISECONDS)]
+    {:register         register-fn
+     :pool             pool
+     :scheduled-future scheduled-future
+     :topologies       registered-topologies
+     :close            (fn [] (.shutdownNow pool))
+     :latch            latch}))
 
 (defn close-registry
   [agent]
-  (log/info "kPow: closing agent")
+  (log/info "kPow: closing registry")
   (when-let [close (:close agent)]
     (close))
   (when-let [registered-topologies (:topologies agent)]
@@ -194,12 +195,12 @@
   [agent streams topology]
   (when-let [register-fn (:register agent)]
     (let [id (register-fn streams topology)]
-      (log/infof "kPow: registring new KafkaStreams instance %s" id)
+      (log/infof "kPow: registring new streams agent %s" id)
       id)))
 
 (defn unregister
   [agent ^String id]
   (when-let [registered-topologies (:topologies agent)]
     (swap! registered-topologies dissoc id)
-    (log/infof "kPow: unregistered KafkaStreams instance %s" id)
+    (log/infof "kPow: unregistered streams agent %s" id)
     true))
