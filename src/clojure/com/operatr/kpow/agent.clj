@@ -1,13 +1,13 @@
 (ns com.operatr.kpow.agent
   (:require [clojure.string :as str]
             [clojure.tools.logging :as log]
-            [clojure.core.async :as async]
             [clojure.core.protocols :as p])
   (:import (org.apache.kafka.clients.producer Producer ProducerRecord)
            (org.apache.kafka.streams KafkaStreams Topology KeyValue TopologyDescription TopologyDescription$Subtopology
                                      TopologyDescription$GlobalStore TopologyDescription$Node TopologyDescription$Source
                                      TopologyDescription$Processor TopologyDescription$Sink)
-           (java.util UUID)))
+           (java.util UUID)
+           (java.util.concurrent Executors ThreadFactory TimeUnit)))
 
 (extend-protocol p/Datafiable
   KeyValue
@@ -98,7 +98,7 @@
 (defn metrics-send
   [{:keys [snapshot-topic producer snapshot-id application-id job-id client-id]} metrics]
   (let [taxon [(:domain snapshot-id) (:id snapshot-id) :kafka/streams-agent]]
-    (doseq [data (partition-all 250 metrics)]
+    (doseq [data (partition-all 50 metrics)]
       (let [captured (System/currentTimeMillis)
             value    {:type           :kafka/streams-agent-metrics
                       :application-id application-id
@@ -108,7 +108,8 @@
                       :job/id         job-id
                       :snapshot/id    snapshot-id}
             record   (ProducerRecord. (:topic snapshot-topic) taxon value)]
-        (.get (.send producer record))))))
+        (.get (.send producer record))))
+    (log/infof "kPow: sent [%s] streams metrics for application.id %s" (count metrics) application-id)))
 
 (defn plan-send
   [{:keys [snapshot-topic producer snapshot-id job-id]}]
@@ -139,9 +140,9 @@
     (metrics-send ctx (numeric-metrics metrics))
     ctx))
 
-(defn snapshot-loop
-  [registered-topologies _close-ch snapshot-topic producer]
-  (async/go-loop []
+(defn ^Runnable snapshot-task
+  [snapshot-topic producer registered-topologies]
+  (fn []
     (let [job-id (str (UUID/randomUUID))
           ctx    {:job-id         job-id
                   :snapshot-topic snapshot-topic
@@ -149,35 +150,41 @@
 
       (doseq [[_ [streams topology]] @registered-topologies]
         (try (let [next-ctx (snapshot-telemetry (assoc ctx :streams streams :topology topology))]
-               (async/<! (async/timeout 2000))
+               (Thread/sleep 2000)
                (plan-send next-ctx))
              (catch Throwable e
-               (log/error e "kPow: error sending streams snapshot")))))
+               (log/error e "kPow: error sending streams snapshot")))))))
 
-    (async/<! (async/timeout 60000))
-    (recur)))
+(def ^:private thread-factory
+  (let [!count (atom 0)]
+    (reify ThreadFactory
+      (newThread [_ r]
+        (doto (Thread. r)
+          (.setName (format "kpow-streams-agent-%d" (swap! !count inc))))))))
 
 (defn start-agent
   [{:keys [snapshot-topic producer]}]
   (log/info "kPow: starting agent")
   (let [registered-topologies (atom {})
-        close-ch              (async/chan)
+        pool                  (Executors/newSingleThreadScheduledExecutor thread-factory)
         register-fn           (fn [streams topology]
                                 (let [id (str (UUID/randomUUID))]
                                   (swap! registered-topologies assoc id [streams topology])
-                                  id))]
-    {:register      register-fn
-     :close-ch      close-ch
-     :topologies    registered-topologies
-     :snapshot-loop (snapshot-loop registered-topologies close-ch snapshot-topic producer)}))
+                                  id))
+        task                  (snapshot-task snapshot-topic producer registered-topologies)]
+
+    (.scheduleAtFixedRate pool task 15000 60000 TimeUnit/MILLISECONDS)
+
+    {:register   register-fn
+     :pool       pool
+     :topologies registered-topologies
+     :close      (fn [] (.shutdownNow pool))}))
 
 (defn close-agent
   [agent]
   (log/info "kPow: closing agent")
-  (when-let [close-ch (:close-ch agent)]
-    (async/close! close-ch))
-  (when-let [snapshot-loop (:snapshot-loop agent)]
-    (async/close! snapshot-loop))
+  (when-let [close (:close agent)]
+    (close))
   (when-let [registered-topologies (:topologies agent)]
     (reset! registered-topologies {}))
   {})
@@ -199,4 +206,3 @@
     (swap! registered-topologies dissoc id)
     (log/infof "kPow: unregistered KafkaStreams instance %s" id)
     true))
-
