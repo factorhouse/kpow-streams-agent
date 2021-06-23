@@ -32,14 +32,26 @@ To instrument a Kafka Streams application, create a new instance of a `StreamsRe
 ```java 
 import io.operatr.kpow.StreamsRegistry;
 
-Properties props = new Properties(); // Kafka Producer properties -- this is the Kafka cluster the metrics will be sent to (and where kPow should be installed).
-StreamsRegistry registry = new StreamsRegistry(props); // The registry instance
+// Your Kafka Streams topology
+Topology topology = new Topology(); 
 
-Topology topology = new Topology(); // Your Kafka Streams topology
-Properties streamsProps = new Properties(); // Your Kafka Streams config
-KafkaStreams streams = new KafkaStreams(topology, streamsProps); // Your Kafka Streams instance
+// Your Kafka Streams config
+Properties streamsProps = new Properties();
+ 
+// Your Kafka Streams instance
+KafkaStreams streams = new KafkaStreams(topology, streamsProps); 
 
-registry.register(streams, topology); // Register your Kafka Streams instance with the registry
+// kPow Producer properties for the Kafka cluster that Streams metrics will be sent (and where kPow should be installed).
+Properties props = new Properties(); 
+
+// kPow Streams Registry to periodically capture and send metrics with the Producer properties above
+StreamsRegistry registry = new StreamsRegistry(props);
+
+// Register your Kafka Streams instance with the kPow StreamsRegistry
+registry.register(streams, topology); 
+
+// Start your Kafka Streams application
+streams.start();
 ```
 
 Once configured, metrics will be periodically sent to kPow's internal snapshot topic. You will be able to monitor your streams application from within kPow and externally via [Prometheus egress](https://docs.kpow.io/features/prometheus)
@@ -48,4 +60,6 @@ For more information read the [documentation](https://docs.kpow.io/features/kafk
 
 # Copyright and License
 
-Copyright © 2021 Operatr Pty Ltd. Distributed under the Eclipse Public License, the same as Clojure uses. See the file LICENSE
+Copyright © 2021 Operatr Pty Ltd. 
+
+Distributed under the Apache-2.0 License, the same as Apache Kafka.
