@@ -23,10 +23,12 @@ kPow's streams agent can be found on Maven:
 
 # Usage
 
+To instrument a Kafka Streams application, create a new instance of a `StreamsRegistry` and register your `KafkaStreams` + `Topology` instances against it.
+
 ```java 
 import io.operatr.kpow.StreamsRegistry;
 
-Properties props = new Properties(); // Kafka Producer properties -- this is the Kafka cluster the metrics will be sent to.
+Properties props = new Properties(); // Kafka Producer properties -- this is the Kafka cluster the metrics will be sent to (and where kPow should be installed).
 StreamsRegistry registry = new StreamsRegistry(props); // The registry instance
 
 Topology topology = new Topology(); // Your Kafka Streams topology
@@ -35,6 +37,8 @@ KafkaStreams streams = new KafkaStreams(topology, streamsProps); // Your Kafka S
 
 registry.register(streams, topology); // Register your Kafka Streams instance with the registry
 ```
+
+Once configured, metrics will be periodically sent to kPow's internal snapshot topic. You will be able to monitor your streams application from within kPow and externally via [Prometheus Egress](https://docs.kpow.io/features/prometheus)
 
 For more information read the [documentation](https://docs.kpow.io/features/kafka-streams)
 
