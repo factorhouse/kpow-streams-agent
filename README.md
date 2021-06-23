@@ -1,6 +1,6 @@
 [![test](https://github.com/operatr-io/streams-agent/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/operatr-io/streams-agent/actions/workflows/test.yml)
 
-# streams-agent
+# kpow-streams-agent
 
 kPow's Kafka Streams agent. Install this agent to monitor Kafka Streams applications with [kPow](https://kpow.io)
 
@@ -25,9 +25,10 @@ Properties props = new Properties(); // Kafka Producer properties -- this is the
 StreamsRegistry registry = new StreamsRegistry(props); // The registry instance
 
 Topology topology = new Topology(); // Your Kafka Streams topology
-KafkaStreams streams = new KafkaStreams(); // Your Kafka Streams instance
+Properties streamsProps = new Properties(); // Your Kafka Streams config
+KafkaStreams streams = new KafkaStreams(topology, streamsProps); // Your Kafka Streams instance
 
-(.register registry streams topology); // Register your Kafka Streams instance with the registry
+registry.register(streams, topology); // Register your Kafka Streams instance with the registry
 ```
 
 For more information read the [documentation](https://docs.kpow.io/features/kafka-streams)
