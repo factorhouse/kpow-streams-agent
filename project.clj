@@ -1,6 +1,26 @@
 (defproject io.operatr/kpow-streams-agent "0.2.0"
-  :description "kPow streams agent"
+  :description "kPow's Kafka Streams monitoring agent"
   :url "https://github.com/operatr-io/streams-agent"
+  :license {:name         "Eclipse Public License - v 1.0"
+            :url          "http://www.eclipse.org/legal/epl-v10.html"
+            :distribution :repo
+            :comments     "same as Clojure"}
+  :scm {:name "git" :url "https://github.com/operatr-io/kpow-streams-agent"}
+  :pom-addition ([:developers
+                  [:developer
+                   [:id "wavejumper"]
+                   [:name "Thomas Crowley"]
+                   [:url "https://operatr.io"]
+                   [:roles
+                    [:role "developer"]
+                    [:role "maintainer"]]]
+                  [:developer
+                   [:id "d-t-w"]
+                   [:name "Derek Troy-West"]
+                   [:url "https://operatr.io"]
+                   [:roles
+                    [:role "developer"]
+                    [:role "maintainer"]]]])
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [cheshire "5.10.0"]
                  [com.cognitect/transit-clj "1.0.324"]
@@ -21,4 +41,8 @@
             "fmt"    ["with-profile" "+smoke" "cljfmt" "check"]
             "fmtfix" ["with-profile" "+smoke" "cljfmt" "fix"]}
   :java-source-paths ["src/java"]
-  :source-paths ["src/clojure"])
+  :source-paths ["src/clojure"]
+  :deploy-repositories [["releases" {:url   "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                                     :creds :gpg}
+                         "snapshots" {:url   "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                                      :creds :gpg}]])
