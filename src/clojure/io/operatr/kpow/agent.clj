@@ -2,12 +2,15 @@
   (:require [clojure.string :as str]
             [clojure.tools.logging :as log]
             [clojure.core.protocols :as p])
-  (:import (org.apache.kafka.clients.producer Producer ProducerRecord)
+  (:import (java.util UUID)
+           (java.util.concurrent Executors TimeUnit)
+           (org.apache.kafka.clients.producer Producer ProducerRecord)
            (org.apache.kafka.streams Topology KeyValue TopologyDescription TopologyDescription$Subtopology
                                      TopologyDescription$GlobalStore TopologyDescription$Node TopologyDescription$Source
-                                     TopologyDescription$Processor TopologyDescription$Sink)
-           (java.util UUID)
-           (java.util.concurrent Executors TimeUnit)))
+                                     TopologyDescription$Processor TopologyDescription$Sink)))
+
+(def kpow-snapshot-topic
+  {:topic "__oprtr_snapshot_state"})
 
 (extend-protocol p/Datafiable
   KeyValue
@@ -44,9 +47,6 @@
       (instance? TopologyDescription$Sink node)
       (merge {:topic             (.topic ^TopologyDescription$Sink node)
               :topic-extraction? (not (nil? (.topicNameExtractor ^TopologyDescription$Sink node)))}))))
-
-(def kpow-snapshot-topic
-  {:topic "__oprtr_snapshot_state"})
 
 (defn metrics
   [streams]
