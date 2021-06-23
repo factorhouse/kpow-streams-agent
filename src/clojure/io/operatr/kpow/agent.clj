@@ -155,7 +155,7 @@
                (Thread/sleep 2000)
                (plan-send next-ctx))
              (catch Throwable e
-               (log/error e "kPow: error sending streams snapshot for agent %s" id))))
+               (log/errorf e "kPow: error sending streams snapshot for agent %s" id))))
 
       (deliver latch true))))
 
