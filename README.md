@@ -23,7 +23,9 @@ kPow's streams agent can be found on Maven:
 
 # Prerequisites
 
-kPow's Streams Agent requires a running instance of kPow. To get up and running with kPow, visit the [kpow-local](https://github.com/operatr-io/kpow-local) repo or visit our [Quick Start](https://docs.kpow.io/installation/quick-start) guide.
+kPow's Streams Agent requires a running instance of kPow. 
+
+To get up and running with kPow, visit the [kpow-local](https://github.com/operatr-io/kpow-local) repo or visit our [Quick Start](https://docs.kpow.io/installation/quick-start) guide.
 
 # Usage
 
