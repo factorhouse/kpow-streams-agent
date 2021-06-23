@@ -13,7 +13,7 @@ kPow's Kafka Streams agent. Install this agent to monitor Kafka Streams applicat
 kPow's streams agent can be found on Maven:
 
 ``` 
-io.operatr/streams-agent
+"io.operatr:kpow-streams-agent:0.2.0"
 ```
 
 # Usage
