@@ -38,7 +38,7 @@ KafkaStreams streams = new KafkaStreams(topology, streamsProps); // Your Kafka S
 registry.register(streams, topology); // Register your Kafka Streams instance with the registry
 ```
 
-Once configured, metrics will be periodically sent to kPow's internal snapshot topic. You will be able to monitor your streams application from within kPow and externally via [Prometheus Egress](https://docs.kpow.io/features/prometheus)
+Once configured, metrics will be periodically sent to kPow's internal snapshot topic. You will be able to monitor your streams application from within kPow and externally via [Prometheus egress](https://docs.kpow.io/features/prometheus)
 
 For more information read the [documentation](https://docs.kpow.io/features/kafka-streams)
 
