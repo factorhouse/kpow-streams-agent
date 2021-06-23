@@ -1,4 +1,4 @@
-(defproject io.operatr/kpow-streams-agent "0.1.2"
+(defproject io.operatr/kpow-streams-agent "0.2.0"
   :description "kPow streams agent"
   :url "https://github.com/operatr-io/streams-agent"
   :dependencies [[org.clojure/clojure "1.10.3"]
