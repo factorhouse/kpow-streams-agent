@@ -1,10 +1,10 @@
 (defproject io.operatr/kpow-streams-agent "0.2.2"
   :description "kPow's Kafka Streams monitoring agent"
   :url "https://github.com/operatr-io/streams-agent"
-  :license {:name         "Eclipse Public License - v 1.0"
-            :url          "http://www.eclipse.org/legal/epl-v10.html"
+  :license {:name         "Apache-2.0 License"
+            :url          "https://www.apache.org/licenses/LICENSE-2.0"
             :distribution :repo
-            :comments     "same as Clojure"}
+            :comments     "same as Kafka"}
   :scm {:name "git" :url "https://github.com/operatr-io/kpow-streams-agent"}
   :pom-addition ([:developers
                   [:developer
