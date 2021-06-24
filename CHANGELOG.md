@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [0.2.3] - 2021-24-06
+### Fixed
+- Updated `project.clj` to meet requirements of deploying to Maven central.
+
 ## [0.2.2] - 2021-24-06
 ### Changed
 - Underlying `StreamsRegistry` thread pool constructed with a thread factory. Improves thread names and logging.
