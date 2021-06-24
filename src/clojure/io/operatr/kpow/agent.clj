@@ -3,11 +3,12 @@
             [clojure.tools.logging :as log]
             [clojure.core.protocols :as p])
   (:import (java.util UUID)
-           (java.util.concurrent Executors TimeUnit)
+           (java.util.concurrent Executors TimeUnit ThreadFactory)
            (org.apache.kafka.clients.producer Producer ProducerRecord)
            (org.apache.kafka.streams Topology KeyValue TopologyDescription TopologyDescription$Subtopology
                                      TopologyDescription$GlobalStore TopologyDescription$Node TopologyDescription$Source
-                                     TopologyDescription$Processor TopologyDescription$Sink)))
+                                     TopologyDescription$Processor TopologyDescription$Sink)
+           (java.util.concurrent.atomic AtomicInteger)))
 
 (def kpow-snapshot-topic
   {:topic "__oprtr_snapshot_state"})
@@ -159,11 +160,18 @@
 
       (deliver latch true))))
 
+(defonce thread-factory
+  (let [n (AtomicInteger. 0)]
+    (reify ThreadFactory
+      (newThread [_ r]
+        (doto (Thread. r)
+          (.setName (format "kpow-streams-agent-%d" (.getAndIncrement n))))))))
+
 (defn start-registry
   [{:keys [snapshot-topic producer]}]
   (log/info "kPow: starting registry")
   (let [registered-topologies (atom {})
-        pool                  (Executors/newSingleThreadScheduledExecutor)
+        pool                  (Executors/newSingleThreadScheduledExecutor thread-factory)
         register-fn           (fn [streams topology]
                                 (let [id (str (UUID/randomUUID))]
                                   (swap! registered-topologies assoc id [streams topology])
