@@ -8,4 +8,4 @@ All notable changes to this project will be documented in this file. This change
 
 ## [0.2.0] - 2021-23-06
 ### Added
-- `io.operatr.kpow.StreamsRegistry`
+- `io.operatr.kpow.StreamsRegistry` (initial release)
