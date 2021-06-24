@@ -1,4 +1,4 @@
-(defproject io.operatr/kpow-streams-agent "0.2.3"
+(defproject io.operatr/kpow-streams-agent "0.2.4"
   :description "kPow's Kafka Streams monitoring agent"
   :url "https://github.com/operatr-io/streams-agent"
   :license {:name         "Apache-2.0 License"
@@ -45,6 +45,7 @@
             "kondo"  ["with-profile" "+smoke" "run" "-m" "clj-kondo.main" "--lint" "src"]
             "fmt"    ["with-profile" "+smoke" "cljfmt" "check"]
             "fmtfix" ["with-profile" "+smoke" "cljfmt" "fix"]}
+  :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
   :java-source-paths ["src/java"]
   :source-paths ["src/clojure"]
   :deploy-repositories [["releases" {:url   "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
