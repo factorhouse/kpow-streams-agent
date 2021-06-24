@@ -1,4 +1,4 @@
-(defproject io.operatr/kpow-streams-agent "0.2.2"
+(defproject io.operatr/kpow-streams-agent "0.2.3"
   :description "kPow's Kafka Streams monitoring agent"
   :url "https://github.com/operatr-io/streams-agent"
   :license {:name         "Apache-2.0 License"
@@ -27,8 +27,7 @@
                  [org.clojure/tools.logging "1.1.0"]
                  [org.apache.kafka/kafka-streams "2.8.0" :scope "provided" :exclusions [com.fasterxml.jackson.core/jackson-core]]]
   :uberjar {:prep-tasks  ["clean" "javac" "compile"]
-            :aot         :all
-            :omit-source true}
+            :aot         :all}
   :profiles {:kaocha {:dependencies [[lambdaisland/kaocha "1.0.861"]]}
              :dev    {:resource-paths ["dev-resources"]
                       :plugins        [[lein-cljfmt "0.7.0"]]
