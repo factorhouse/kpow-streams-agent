@@ -45,7 +45,7 @@
             "kondo"  ["with-profile" "+smoke" "run" "-m" "clj-kondo.main" "--lint" "src"]
             "fmt"    ["with-profile" "+smoke" "cljfmt" "check"]
             "fmtfix" ["with-profile" "+smoke" "cljfmt" "fix"]}
-  :javac-options ["-target" "1.6" "-source" "1.6" "-Xlint:-options"]
+  :javac-options ["-target" "1.7" "-source" "1.7" "-Xlint:-options"]
   :java-source-paths ["src/java"]
   :source-paths ["src/clojure"]
   :deploy-repositories [["releases" {:url   "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
