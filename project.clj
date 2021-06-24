@@ -28,9 +28,9 @@
                  [org.apache.kafka/kafka-streams "2.8.0" :scope "provided" :exclusions [com.fasterxml.jackson.core/jackson-core]]]
   :uberjar {:prep-tasks ["clean" "javac" "compile"]
             :aot        :all}
-  :classifiers [["source" {:source-paths      ^:replace []
-                           :java-source-paths ^:replace ["src/java"]
-                           :resource-paths    ^:replace ["javadoc"]}]
+  :classifiers [["sources" {:source-paths      ^:replace []
+                            :java-source-paths ^:replace ["src/java"]
+                            :resource-paths    ^:replace ["javadoc"]}]
                 ["javadoc" {:source-paths      ^:replace []
                             :java-source-paths ^:replace []
                             :resource-paths    ^:replace ["javadoc"]}]]
