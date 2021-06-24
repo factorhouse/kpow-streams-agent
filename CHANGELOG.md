@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file. This change
 
 ## [0.2.2] - 2021-24-06
 ### Changed
-- underlying `StreamsRegistry` thread pool constructed with a thread factory. Improves thread names and logging.
+- Underlying `StreamsRegistry` thread pool constructed with a thread factory. Improves thread names and logging.
 
 ## [0.2.1] - 2021-24-06
 ### Fixed
