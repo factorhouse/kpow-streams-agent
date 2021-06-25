@@ -1,4 +1,5 @@
 [![test](https://github.com/operatr-io/streams-agent/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/operatr-io/streams-agent/actions/workflows/test.yml)
+[![Maven Central](https://img.shields.io/maven-central/v/io.operatr/kpow-streams-agent.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.operatr%22%20AND%20a:%22kpow-streams-agent%22)
 
 # [kPow](https://kpow.io) Streams Agent
 
@@ -10,13 +11,13 @@ kPow's Kafka Streams agent. Install this agent to monitor Kafka Streams applicat
 
 # Installation
 
-kPow's streams agent can be found on Maven:
+kPow's streams agent can be found on [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent):
 
 ```xml
 <dependency>
   <groupId>io.operatr</groupId>
   <artifactId>kpow-streams-agent</artifactId>
-  <version>0.2.3</version>
+  <version>0.2.4</version>
   <type>bundle</type>
 </dependency>
 ```

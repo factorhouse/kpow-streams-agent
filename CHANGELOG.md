@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [0.2.4] - 2021-24-06
+### Changed
+- Explicitly set `-target` and `-source` javac options to `1.7`.
+
+
 ## [0.2.3] - 2021-24-06
 ### Fixed
 - Updated `project.clj` to meet requirements of deploying to Maven central.
