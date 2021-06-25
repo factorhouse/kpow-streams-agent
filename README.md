@@ -17,7 +17,7 @@ kPow's streams agent can be found on [Maven Central](https://search.maven.org/ar
 <dependency>
   <groupId>io.operatr</groupId>
   <artifactId>kpow-streams-agent</artifactId>
-  <version>0.2.4</version>
+  <version>0.2.5</version>
   <type>bundle</type>
 </dependency>
 ```
