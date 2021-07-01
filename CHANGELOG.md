@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [0.2.6] - 2021-01-07
+### Changed
+- `Properties` passed into `StreamsRegistry` constructor filtered to only relevant Kafka connection details. Eg, to reuse streams properties.
+
 ## [0.2.5] - 2021-25-06
 ### Fixed
 - Fixed project details in `pom.xml`
