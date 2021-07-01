@@ -1,4 +1,4 @@
-(defproject io.operatr/kpow-streams-agent "0.2.5"
+(defproject io.operatr/kpow-streams-agent "0.2.6"
   :description "kPow's Kafka Streams monitoring agent"
   :url "https://github.com/operatr-io/kpow-streams-agent"
   :license {:name         "Apache-2.0 License"
