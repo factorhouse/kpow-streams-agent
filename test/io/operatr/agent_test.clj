@@ -4,7 +4,20 @@
             [io.operatr.kpow.agent :as agent])
   (:import (org.apache.kafka.streams Topology StreamsBuilder KafkaStreams$State)
            (org.apache.kafka.common MetricName Metric)
-           (org.apache.kafka.clients.producer Producer)))
+           (org.apache.kafka.clients.producer Producer)
+           (io.operatr.kpow StreamsRegistry)
+           (java.util Properties)))
+
+(defn ^Properties ->props [m]
+  (let [props (Properties.)]
+    (doseq [[k v] m]
+      (.put props k v))
+    props))
+
+(deftest filter-props
+  (is (empty? (StreamsRegistry/filterProperties (->props {"fo" "bar"}))))
+  (is (= {"bootstrap.servers" "xyz"}
+         (into {} (StreamsRegistry/filterProperties (->props {"fo" "bar" "bootstrap.servers" "xyz"}))))))
 
 (defn ^Topology test-topology
   []

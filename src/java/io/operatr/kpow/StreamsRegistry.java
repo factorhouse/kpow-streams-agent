@@ -7,6 +7,7 @@ import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.Topology;
 
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class StreamsRegistry implements AutoCloseable {
@@ -25,6 +26,40 @@ public class StreamsRegistry implements AutoCloseable {
 
     private final Object agent;
 
+    public static Properties filterProperties(Properties props) {
+        ArrayList<String> allowedKeys = new ArrayList<>();
+        allowedKeys.add("security.protocol");
+        allowedKeys.add("sasl.mechanism");
+        allowedKeys.add("sasl.jaas.config");
+        allowedKeys.add("sasl.login.callback.handler.class");
+        allowedKeys.add("ssl.keystore.location");
+        allowedKeys.add("ssl.keystore.password");
+        allowedKeys.add("ssl.key.password");
+        allowedKeys.add("ssl.keystore.type");
+        allowedKeys.add("ssl.keymanager.algorithm");
+        allowedKeys.add("ssl.truststore.location");
+        allowedKeys.add("ssl.truststore.password");
+        allowedKeys.add("ssl.truststore.type");
+        allowedKeys.add("ssl.trustmanager.algorithm");
+        allowedKeys.add("ssl.endpoint.identification.algorithm");
+        allowedKeys.add("ssl.provider");
+        allowedKeys.add("ssl.cipher.suites");
+        allowedKeys.add("ssl.protocol");
+        allowedKeys.add("ssl.enabled.protocols");
+        allowedKeys.add("ssl.secure.random.implementation");
+        allowedKeys.add("ssl.keystore.key");
+        allowedKeys.add("ssl.keystore.certificate.chain");
+        allowedKeys.add("ssl.truststore.certificates");
+        allowedKeys.add("bootstrap.servers");
+        Properties nextProps = new Properties();
+        for (String key : allowedKeys) {
+            if (props.containsKey(key)) {
+                nextProps.setProperty(key, String.valueOf(props.get(key)));
+            }
+        }
+        return nextProps;
+    }
+
     public StreamsRegistry(Properties props) {
         IFn require = Clojure.var("clojure.core", "require");
         require.invoke(Clojure.read("io.operatr.kpow.agent"));
@@ -33,7 +68,8 @@ public class StreamsRegistry implements AutoCloseable {
         IFn serdesFn = Clojure.var("io.operatr.kpow.serdes", "transit-json-serializer");
         Serializer keySerializer = (Serializer) serdesFn.invoke();
         Serializer valSerializer = (Serializer) serdesFn.invoke();
-        KafkaProducer producer = new KafkaProducer<>(props, keySerializer, valSerializer);
+        Properties producerProps = filterProperties(props);
+        KafkaProducer producer = new KafkaProducer<>(producerProps, keySerializer, valSerializer);
         agent = agentFn.invoke(producer);
     }
 
