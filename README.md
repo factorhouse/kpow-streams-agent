@@ -103,7 +103,7 @@ This could happen for a few reasons:
 You can verify `StreamsRegistry` is sending telemetry to your Kafka Cluster by using Data Inspect in kPow:
 
 * Select topic `__oprtr_snapshot_state`
-* Choose `Transit / JSON` as the key serde
+* Choose `Transit / JSON` as the key deserializer
 * Enter the following kJQ filter for the key: `.[0] == :streams`
 
 ![Data Inspect](docs/data-inspect.png)
