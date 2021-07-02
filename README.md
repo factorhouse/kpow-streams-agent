@@ -121,7 +121,7 @@ If you secure your Kafka Cluster with ACLs, the user provided in the Producer co
   --add --allow-principal User:<your-producer-user> --operation Write --topic '__oprtr_snapshot_state'
 ```
 
-### Single vs Multi-Cluster kPow
+### Produce to the Primary Cluster
 
 When managing a single Kafka Cluster you can reuse the properties from your Kafka Streams application to create your StreamsRegisty. This is because the kPow internal topic `___oprtr_snapshot_compute` lives in the cluster that your Kafka Streams application connects to.
 
