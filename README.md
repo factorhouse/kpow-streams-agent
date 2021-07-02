@@ -112,7 +112,7 @@ For more details visit the [Producer](https://kafka.apache.org/documentation/#pr
 
 ### Minimum Required ACLs
 
-If you secure your cluster with ACLs the user provided in the Producer configuration must have permission to write to the internal kPow topic.
+The user provided in the Producer configuration must have permission to write to the internal kPow topic.
 
 ```
 ./kafka-acls.sh \
