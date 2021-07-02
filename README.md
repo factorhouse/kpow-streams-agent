@@ -154,6 +154,12 @@ StreamsRegistry registry = new StreamsRegistry(primaryProps);
 
 See the [kPow Multi-Cluster Feature Guide](https://docs.kpow.io/config/multi-cluster) for more information.
 
+### Multi-Cluster kPow Feedback Requested
+
+Is the requirement to produce to the primary kPow cluster difficult for you?
+
+Please [let us know](mailto:support@operatr.io) - we are considering options to allow you to produce to the same cluster as your streams connects to in all cases, and then have kPow gather telemetry from all clusters in the case of streams.
+
 ### Register Multiple Kafka Streams Instances
 
 If you run multiple Kafka Streams instances in one application, register them on the same StreamsRegistry.
