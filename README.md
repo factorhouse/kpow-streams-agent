@@ -110,9 +110,9 @@ Producer configuration means any of the following fields:
 
 For more details visit the [Producer](https://kafka.apache.org/documentation/#producerconfigs) section of the Apache Kafka documentation.
 
-### ACL Configuration
+### Minimum Required ACLs
 
-If you secure your cluster with ACLs, the user provided in the Producer configuration must have permission to write to the internal kPow topic.
+If you secure your cluster with ACLs the user provided in the Producer configuration must have permission to write to the internal kPow topic.
 
 ```
 ./kafka-acls.sh \
