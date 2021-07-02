@@ -76,19 +76,21 @@ The StreamsRegistry is a *single-threaded process* that performs these actions *
 
 The StreamsRegistry **does not talk directly to kPow**. kPow reads streams data from the snapshot topic.
 
-## Deployment Scenarios
+## Configuration
 
-The `Properties` passed to the `StreamsRegistry` contains connection configuration to create the producer that sends streams snapshot information to the internal kPow topic.
+The `Properties` passed to the `StreamsRegistry` contains connection configuration required to create a producer that sends streams snapshot information to the internal kPow topic. The StreamsRegistry configures its own Serdes.
 
-Appropriate key/value serializers will be appropriately set once the instance has been constructed.
-
-Kafka connection fields include any of the following: `bootstrap.servers, ssl.truststore.type, ssl.truststore.password, ssl.truststore.location, ssl.truststore.certificates, ssl.trustmanager.algorithm, ssl.secure.random.implementation, ssl.provider, ssl.protocol, ssl.keystore.type, ssl.keystore.password, ssl.keystore.location, ssl.keystore.key, ssl.keystore.certificate.chain, ssl.keymanager.algorithm, ssl.key.password, ssl.endpoint.identification.algorithm, ssl.enabled.protocols, ssl.cipher.suites, security.protocol, sasl.mechanism, sasl.login.callback.handler.class, sasl.jaas.config`
+Connection configuration means any of the following fields: `bootstrap.servers, ssl.truststore.type, ssl.truststore.password, ssl.truststore.location, ssl.truststore.certificates, ssl.trustmanager.algorithm, ssl.secure.random.implementation, ssl.provider, ssl.protocol, ssl.keystore.type, ssl.keystore.password, ssl.keystore.location, ssl.keystore.key, ssl.keystore.certificate.chain, ssl.keymanager.algorithm, ssl.key.password, ssl.endpoint.identification.algorithm, ssl.enabled.protocols, ssl.cipher.suites, security.protocol, sasl.mechanism, sasl.login.callback.handler.class, sasl.jaas.config`
 
 For more details visit the [Producer configs](https://kafka.apache.org/documentation/#producerconfigs) section of the Apache Kafka documentation.
 
-This section outlines different deployment scenarios and how you might want to configure your `Properties` object.
+## Single v Multi-Cluster kPow
 
-### Simple
+In the case of kPow managing a single Kafka Cluster you can reuse the properties from your Kafka Streams application to create your StreamsRegisty.
+
+This is because the kpow internal topic `___oprtr_snapshot_compute` resides in the cluster that your Kafka Streams application connects to.
+
+### Single Cluster kPow + Streams Registry
 
 If kPow is configured to monitor only a single Kafka cluster, you can reuse your Kafka Streams `Properties` configuration:
 
