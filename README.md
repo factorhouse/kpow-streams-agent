@@ -78,11 +78,11 @@ The StreamsRegistry **does not talk directly to kPow**. kPow reads streams data 
 
 ## Configuration
 
-The `Properties` passed to the `StreamsRegistry` contains connection configuration required to create a producer to send streams data to the internal kPow topic.
+The `Properties` passed to the `StreamsRegistry` contains configuration required to create a producer that sends streams data to the internal kPow topic.
 
-The StreamsRegistry configures its own Serdes.
+The StreamsRegistry configures its own Serdes, you do not need to set them.
 
-Connection configuration means any of the following fields: 
+Producer configuration means any of the following fields: 
 
 * bootstrap.servers
 * ssl.truststore.type
