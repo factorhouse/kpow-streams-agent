@@ -162,7 +162,7 @@ Please [let us know](mailto:support@operatr.io) - we are considering the option 
 
 ### Register Multiple Kafka Streams Instances
 
-If you run multiple Kafka Streams instances in one application, register them on the same StreamsRegistry.
+You can register multiple Kafka Streams instances on the same StreamsRegistry.
 
 ```java
 KafkaStreams dedupeStreams = new KafkaStreams(dedupeTopology, dedupeProps);
