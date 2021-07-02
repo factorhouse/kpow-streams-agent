@@ -74,7 +74,7 @@ The StreamsRegistry is a *single-threaded process* that performs these actions *
 * Capture metadata about each registered Kafka Streams application.
 * Produce snapshots to the kpow internal `__oprtr_snapshot_state` topic.
 
-The StreamsRegistry **does not talk directly to kPow**. kPow interprets data on the snapshot topic to create the Streams UI.
+The StreamsRegistry **does not talk directly to kPow**. kPow reads streams data from the snapshot topic.
 
 The StreamsRegistry captures metadata about your Kafka Streams application and produces snapshots to the `__oprtr_snapshot_state` topic once every minute.
 
@@ -88,7 +88,7 @@ For more information read the [documentation](https://docs.kpow.io/features/kafk
 
 The `Properties` object passed to the `StreamsRegistry` instance only requires your Kafka Connection details. This configuration is used to initialize a Kafka Producer that periodically sends streams telemetry to an internal kPow topic.
 
-Key/value serializers will be appropriately set once the instance has been constructed.
+Appropriate key/value serializers will be appropriately set once the instance has been constructed.
 
 Kafka connection fields include any of the following: `bootstrap.servers, ssl.truststore.type, ssl.truststore.password, ssl.truststore.location, ssl.truststore.certificates, ssl.trustmanager.algorithm, ssl.secure.random.implementation, ssl.provider, ssl.protocol, ssl.keystore.type, ssl.keystore.password, ssl.keystore.location, ssl.keystore.key, ssl.keystore.certificate.chain, ssl.keymanager.algorithm, ssl.key.password, ssl.endpoint.identification.algorithm, ssl.enabled.protocols, ssl.cipher.suites, security.protocol, sasl.mechanism, sasl.login.callback.handler.class, sasl.jaas.config`
 
