@@ -21,7 +21,9 @@ This Apache-2.0 licensed agent is written in Java and Clojure and is available i
 
 # Installation
 
-kPow's streams agent can be found on [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent):
+The kPow Stream Agent can be found on [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent):
+
+Include the agent as a dependency in your Kafka Streams application.
 
 ```xml
 <dependency>
@@ -31,6 +33,10 @@ kPow's streams agent can be found on [Maven Central](https://search.maven.org/ar
   <type>bundle</type>
 </dependency>
 ```
+
+# Operation
+
+Register your 
 
 # Prerequisites
 
@@ -46,18 +52,15 @@ To instrument a Kafka Streams application, create a new instance of a `StreamsRe
 import io.operatr.kpow.StreamsRegistry;
 
 // Your Kafka Streams topology
-Topology topology = new Topology(); 
+Topology topology = createMyTopology(); 
 
 // Your Kafka Streams config
-Properties streamsProps = new Properties();
+Properties props = new createMyStreamProperties();
  
 // Your Kafka Streams instance
-KafkaStreams streams = new KafkaStreams(topology, streamsProps); 
+KafkaStreams streams = new KafkaStreams(topology, props); 
 
-// kPow Producer properties for the Kafka cluster that Streams metrics will be sent (and where kPow should be installed).
-Properties props = new Properties(); 
-
-// kPow Streams Registry to periodically capture and send metrics with the Producer properties above
+// kPow Streams Registry to periodically capture and send metrics to the kPow Snapshot Topic
 StreamsRegistry registry = new StreamsRegistry(props);
 
 // Register your Kafka Streams instance with the kPow StreamsRegistry
