@@ -76,7 +76,7 @@ The StreamsRegistry is a *single-threaded process* that performs these actions *
 
 The StreamsRegistry **does not talk directly to kPow**. kPow reads streams data from the snapshot topic.
 
-## Configuration
+# Configuration
 
 The `StreamsRegistry` `Properties` contains configuration to create the snapshot producer.
 
@@ -110,7 +110,7 @@ Producer configuration means any of the following fields:
 
 For more details visit the [Producer configs](https://kafka.apache.org/documentation/#producerconfigs) section of the Apache Kafka documentation.
 
-## Single v Multi-Cluster kPow
+### Single v Multi-Cluster kPow
 
 In the case of kPow managing a single Kafka Cluster you can reuse the properties from your Kafka Streams application to create your StreamsRegisty. This is because the kPow internal topic `___oprtr_snapshot_compute` is guaranteed to reside in the same cluster that your Kafka Streams application connects to.
 
@@ -141,11 +141,11 @@ StreamsRegistry registry = new StreamsRegistry(primaryProps);
 ...
 ```
 
-See the [kPow Multi-Cluster Feature Guide](https://docs.kpow.io/config/multi-cluster) form more information.
+See the [kPow Multi-Cluster Feature Guide](https://docs.kpow.io/config/multi-cluster) for more information.
 
-### Registring multiple KafkaStreams instances for a single app
+### Register Multiple Kafka Streams Instances
 
-You can call the `register` method many times to register multiple streams apps:
+If you run multiple Kafka Streams instances in one application, register them on the same StreamsRegistry.
 
 ```java
 KafkaStreams dedupeStreams = new KafkaStreams(dedupeTopology, dedupeProps);
