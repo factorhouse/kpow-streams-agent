@@ -69,12 +69,12 @@ registry.register(streams, topology);
 streams.start();
 ```
 
-The StreamsRegistry is a single-threaded process that performs these actions once every minute:
+The StreamsRegistry is a *single-threaded process* that performs these actions **once every minute**:
 
 * Capture metadata about each registered Kafka Streams application.
 * Produce snapshots to the kpow internal `__oprtr_snapshot_state` topic.
 
-The StreamsRegistry *does not talk directly to kPow*.
+The StreamsRegistry **does not talk directly to kPow**. kPow interprets data on the snapshot topic to create the Streams UI.
 
 The StreamsRegistry captures metadata about your Kafka Streams application and produces snapshots to the `__oprtr_snapshot_state` topic once every minute.
 
