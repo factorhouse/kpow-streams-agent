@@ -1,11 +1,13 @@
 [![test](https://github.com/operatr-io/streams-agent/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/operatr-io/streams-agent/actions/workflows/test.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/io.operatr/kpow-streams-agent.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.operatr%22%20AND%20a:%22kpow-streams-agent%22)
 
-# [kPow](https://kpow.io) Kafka Streams Agent
+# [kPow](https://kpow.io) Streams Agent
+
+This repository contains the open-source kPow Streams Agent.
+
+The agent is written in Java and Clojure and is packaged as a library available in [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent).
 
 Visualise Kafka Streams topologies and view streams metrics (including RocksDB) in the kPow UI.
-
-For the [Kafka Streams Feature Guide](https://docs.kpow.io/features/kafka-streams) for full documentation.
 
 ![topology-ui](docs/topology-ui.png)
 
