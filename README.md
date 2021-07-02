@@ -7,7 +7,7 @@ Visualise Kafka Streams topologies and view streams metrics (including RocksDB) 
 
 For the [Kafka Streams Feature Guide](https://docs.kpow.io/features/kafka-streams) for full documentation.
 
-![streams-ui](docs/streams-ui.png)
+![topology-ui](docs/topology-ui.png)
 
 # Installation
 
