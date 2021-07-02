@@ -1,9 +1,11 @@
 [![test](https://github.com/operatr-io/streams-agent/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/operatr-io/streams-agent/actions/workflows/test.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/io.operatr/kpow-streams-agent.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.operatr%22%20AND%20a:%22kpow-streams-agent%22)
 
-# [kPow](https://kpow.io) Streams Agent
+# [kPow](https://kpow.io) Kafka Streams Agent
 
-kPow's Kafka Streams agent. Install this agent to monitor Kafka Streams applications with [kPow](https://kpow.io)
+kPow's Kafka Streams agent allows you to view Kafka Streams telemtry in the kPow UI. 
+
+Install this agent to monitor Kafka Streams applications with [kPow](https://kpow.io)
 
 [Documentation](https://docs.kpow.io/features/kafka-streams)
 
