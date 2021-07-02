@@ -3,7 +3,7 @@
 
 # [kPow](https://kpow.io) Streams Agent
 
-This repository contains the kPow Streams Agent. This agent is available in [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent).
+This repository contains the kPow Streams Agent.
 
 Use this agent to integrate your Kafka Streams applications with kPow and unlock the following features:
 
@@ -76,17 +76,9 @@ The StreamsRegistry is a *single-threaded process* that performs these actions *
 
 The StreamsRegistry **does not talk directly to kPow**. kPow reads streams data from the snapshot topic.
 
-The StreamsRegistry captures metadata about your Kafka Streams application and produces snapshots to the `__oprtr_snapshot_state` topic once every minute.
+## Deployment Scenarios
 
-To instrument a Kafka Streams application, create a new instance of a `StreamsRegistry` and register your `KafkaStreams` + `Topology` instances against it.
-
-Once configured, metrics will be periodically sent to kPow's internal snapshot topic. You will be able to monitor your streams application from within kPow and externally via [Prometheus egress](https://docs.kpow.io/features/prometheus)
-
-
-
-## Deployment scenarios
-
-The `Properties` object passed to the `StreamsRegistry` instance only requires your Kafka Connection details. This configuration is used to initialize a Kafka Producer that periodically sends streams telemetry to an internal kPow topic.
+The `Properties` passed to the `StreamsRegistry` contains connection configuration to create the producer that sends streams snapshot information to the internal kPow topic.
 
 Appropriate key/value serializers will be appropriately set once the instance has been constructed.
 
