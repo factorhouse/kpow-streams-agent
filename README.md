@@ -72,13 +72,13 @@ streams.start();
 The StreamsRegistry is a *single-threaded process* that performs these actions **once every minute**:
 
 * Capture metadata about each registered Kafka Streams application.
-* Produce snapshots to the kpow internal `__oprtr_snapshot_state` topic.
+* Produce snapshots to the kPow internal `__oprtr_snapshot_state` topic.
 
 The StreamsRegistry **does not talk directly to kPow**. kPow reads streams data from the snapshot topic.
 
 ## Configuration
 
-The `Properties` passed to the `StreamsRegistry` contains configuration required to create a producer that sends streams data to the internal kPow topic.
+The `StreamsRegistry` `Properties` contains configuration to create a producer that sends streams data to the internal kPow topic.
 
 The StreamsRegistry configures its own Serdes, you do not need to set them.
 
