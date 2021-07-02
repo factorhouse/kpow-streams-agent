@@ -108,7 +108,18 @@ Producer configuration means any of the following fields:
 * sasl.jaas.config
 * sasl.login.callback.handler.class
 
-For more details visit the [Producer configs](https://kafka.apache.org/documentation/#producerconfigs) section of the Apache Kafka documentation.
+For more details visit the [Producer](https://kafka.apache.org/documentation/#producerconfigs) section of the Apache Kafka documentation.
+
+### ACL Configuration
+
+If you secure your cluster with ACLs, the user provided in the Producer configuration must have permission to write to the internal kPow topic.
+
+```
+./kafka-acls.sh \
+  --bootstrap-server 127.0.0.1:9092 \
+  --command-config client.conf \
+  --add --allow-principal User:<your-producer-user> --operation Write --topic '__oprtr_snapshot_state'
+```
 
 ### Single v Multi-Cluster kPow
 
