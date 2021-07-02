@@ -3,7 +3,7 @@
 
 # [kPow](https://kpow.io) Streams Agent
 
-This repository contains the open-source kPow Streams Agent.
+This repository contains the kPow Streams Agent, open-sourced under the Apache-2.0 license (just like Apache Kafka).
 
 The agent is written in Java and Clojure and is packaged as a library available in [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent).
 
