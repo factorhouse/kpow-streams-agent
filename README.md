@@ -13,7 +13,9 @@ Use this agent to integrate your Kafka Streams applications with kPow and unlock
 * See summaries of Kafka Streams activity for your Kafka cluster(s).
 * (Soon) View kPow Insights of your Kafka Streams applications (outlier metrics, etc).
 
-This agent is written in Java and Clojure and is packaged as a library available in [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent).
+This Apache-2.0 licensed agent is written in Java and Clojure and is available in [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent).
+
+---
 
 ![topology-ui](docs/topology-ui.png)
 
