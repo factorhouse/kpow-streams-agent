@@ -123,11 +123,11 @@ If you secure your cluster with ACLs, the user provided in the Producer configur
 
 ### Single v Multi-Cluster kPow
 
-In the case of kPow managing a single Kafka Cluster you can reuse the properties from your Kafka Streams application to create your StreamsRegisty. This is because the kPow internal topic `___oprtr_snapshot_compute` is guaranteed to reside in the same cluster that your Kafka Streams application connects to.
+When managing a single Kafka Cluster you can reuse the properties from your Kafka Streams application to create your StreamsRegisty. This is because the kPow internal topic `___oprtr_snapshot_compute` is guaranteed to reside in the same cluster that your Kafka Streams application connects to.
 
-In the case of kPow managing multiple Kafka Clusters, the kPow internal topic `___oprtr_snapshot_compute` resides in your **primary cluster**, that is the first cluster in your kPow configuration.
+When managing multiple Kafka Clusters you must configure your StreamsRegistry to produce snapshots to the **primary** Cluster that contains the internal kPow snapshot topics. This is the first cluster in your kPow configuration.
 
-### Single-Cluster kPow + Streams Registry
+### Single-Cluster kPow
 
 Reuse your Kafka Streams `Properties` to create your StreamsRegistry.
 
@@ -139,9 +139,9 @@ StreamsRegistry registry = new StreamsRegistry(streamsProps);
 ...
 ```
 
-### Multi-Cluster kPow + Streams Registry
+### Multi-Cluster kPow
 
-Create a `Properties` with your **primary cluster** configuration to create your StreamsRegistry.
+Use a `Properties` with your **primary** cluster configuration to create your StreamsRegistry.
 
 ```java
 Properties streamsProps = createMyStreamProperties();
