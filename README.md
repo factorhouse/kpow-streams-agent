@@ -19,6 +19,12 @@ This Apache-2.0 licensed agent is written in Java and Clojure and is available i
 
 ![topology-ui](docs/topology-ui.png)
 
+# Prerequisites
+
+The kPow Streams Agent requires a running instance of kPow.
+
+Evaluate kPow with the [kpow-local](https://github.com/operatr-io/kpow-local) repository or visit our [Quick Start](https://docs.kpow.io/installation/quick-start) guide.
+
 # Installation
 
 The kPow Stream Agent can be found on [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent):
@@ -34,17 +40,11 @@ Include the agent as a dependency in your Kafka Streams application.
 </dependency>
 ```
 
-# Operation
+# Integration
 
-Register your 
+Create a new [io.operatr.kpow.StreamsRegistry](https://github.com/operatr-io/kpow-streams-agent/blob/main/src/java/io/operatr/kpow/StreamsRegistry.java) instance and register your KafkaStreams and Topology instances with it.
 
-# Prerequisites
-
-kPow's Streams Agent requires a running instance of kPow. 
-
-To get up and running with kPow, visit the [kpow-local](https://github.com/operatr-io/kpow-local) repo or visit our [Quick Start](https://docs.kpow.io/installation/quick-start) guide.
-
-# Usage
+The StreamsRegistry captures metadata about your Kafka Streams application and produces snapshots to the `__oprtr_snapshot_state` topic once every minute.
 
 To instrument a Kafka Streams application, create a new instance of a `StreamsRegistry` and register your `KafkaStreams` + `Topology` instances against it.
 
