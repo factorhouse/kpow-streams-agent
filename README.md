@@ -106,7 +106,7 @@ You can verify `StreamsRegistry` is sending telemetry to your Kafka Cluster by u
 * Choose `Transit / JSON` as the key serde
 * Enter the following kJQ filter for the key: `.[0] == :streams`
 
-![Data Inspect](https://i.imgur.com/LvtXmq3.png)
+![Data Inspect](docs/data-inspect.png)
 
 # Copyright and License
 
