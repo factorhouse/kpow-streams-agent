@@ -158,7 +158,7 @@ See the [kPow Multi-Cluster Feature Guide](https://docs.kpow.io/config/multi-clu
 
 Is the requirement to produce to the primary kPow cluster difficult for you?
 
-Please [let us know](mailto:support@operatr.io) - we are considering options to allow you to produce to the same cluster as your streams connects to in all cases, and then have kPow gather telemetry from all clusters in the case of streams.
+Please [let us know](mailto:support@operatr.io) - we are considering the option of always writing to the same cluster as your Kafka Streams connects to and having kPow gather snapshots from each cluster.
 
 ### Register Multiple Kafka Streams Instances
 
