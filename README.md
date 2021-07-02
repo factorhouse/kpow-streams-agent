@@ -167,7 +167,7 @@ registry.register(dedupeStreams, dedupeTopology);
 
 ## Troubleshooting 
 
-### The Workflows UI is showing "Configure Streams Topology" for my consumer
+### The Workflows UI is showing "Configure Streams Topology"
 
 This could happen for a few reasons:
 
@@ -182,6 +182,10 @@ You can verify `StreamsRegistry` is sending telemetry to your Kafka Cluster by u
 * Enter the following kJQ filter for the key: `.[0] == :streams`
 
 ![Data Inspect](docs/data-inspect.png)
+
+# Get Help
+
+If you have any issues contact [support@operatr.io](mailto:support@operatr.io).
 
 # Copyright and License
 
