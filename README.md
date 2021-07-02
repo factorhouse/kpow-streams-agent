@@ -65,7 +65,7 @@ For more information read the [documentation](https://docs.kpow.io/features/kafk
 
 ### Simple
 
-If kPow is configured to monitor only a single Kafka cluster, you can reuse your Kafka Streams `Properties` file:
+If kPow is configured to monitor only a single Kafka cluster, you can reuse your Kafka Streams `Properties` configuration:
 
 ```java
 Properties streamsProps = new Properties();
