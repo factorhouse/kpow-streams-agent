@@ -63,6 +63,16 @@ For more information read the [documentation](https://docs.kpow.io/features/kafk
 
 ## Deployment scenarios
 
+The `Properties` object passed to the `StreamsRegistry` instance only requires your Kafka Connection details. This configuration is used to initialize a Kafka Producer that periodically sends streams telemetry to an internal kPow topic.
+
+Appropriate key/value serializers will be appropriately set once the instance has been constructed.
+
+Kafka connection fields include any of the following: `"ssl.truststore.type, ssl.truststore.password, ssl.truststore.location, ssl.truststore.certificates, ssl.trustmanager.algorithm, ssl.secure.random.implementation, ssl.provider, ssl.protocol, ssl.keystore.type, ssl.keystore.password, ssl.keystore.location, ssl.keystore.key, ssl.keystore.certificate.chain, ssl.keymanager.algorithm, ssl.key.password, ssl.endpoint.identification.algorithm, ssl.enabled.protocols, ssl.cipher.suites, security.protocol, sasl.mechanism, sasl.login.callback.handler.class, sasl.jaas.config"`
+
+For more details visit the [Producer configs](https://kafka.apache.org/documentation/#producerconfigs) section of the Apache Kafka documentation.
+
+This section outlines different deployment scenarios and how you might want to configure your `Properties` object.
+
 ### Simple
 
 If kPow is configured to monitor only a single Kafka cluster, you can reuse your Kafka Streams `Properties` configuration:
