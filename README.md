@@ -79,7 +79,7 @@ The `Properties` instance you pass to `StreamsRegistry` must contain configurati
 
 Visit [kPow's documentation](https://docs.kpow.io/config/multi-cluster) to read more about multi-cluster.
 
-### Registring multiple streams instances for a single app
+### Registring multiple KafkaStreams instances for a single app
 
 You can call the `register` method many times to register multiple streams apps:
 
