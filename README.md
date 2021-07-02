@@ -3,7 +3,7 @@
 
 # [kPow](https://kpow.io) Streams Agent
 
-This repository contains the kPow Streams Agent.
+This repository contains the kPow Streams Agent. This agent is available in [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent).
 
 Use this agent to integrate your Kafka Streams applications with kPow and unlock the following features:
 
@@ -12,8 +12,6 @@ Use this agent to integrate your Kafka Streams applications with kPow and unlock
 * See summaries of Kafka Streams activity for your Kafka cluster(s).
 * Expose Kafka Streams metrics in the kPow [Prometheus Endpoints](https://docs.kpow.io/features/prometheus) (for alerting, etc).
 * (Soon) View kPow Insights of your Kafka Streams applications (outlier metrics, etc).
-
-This Apache-2.0 licensed agent is written in Java and Clojure and is available in [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent).
 
 See the [kPow Kafka Streams Feature Guide](https://docs.kpow.io/features/kafka-streams) for full documentation.
 
