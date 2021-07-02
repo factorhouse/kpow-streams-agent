@@ -42,14 +42,10 @@ Include the agent as a dependency in your Kafka Streams application.
 
 # Integration
 
-In your application, at the point where you start your KafkaStreams instance:
+In your application, just before you start your KafkaStreams instance:
 
 * Create a new [io.operatr.kpow.StreamsRegistry](https://github.com/operatr-io/kpow-streams-agent/blob/main/src/java/io/operatr/kpow/StreamsRegistry.java) instance.
-* Register both your KafkaStreams and Topology instances with it.
-
-The StreamsRegistry captures metadata about your Kafka Streams application and produces snapshots to the `__oprtr_snapshot_state` topic once every minute.
-
-To instrument a Kafka Streams application, create a new instance of a `StreamsRegistry` and register your `KafkaStreams` + `Topology` instances against it.
+* Register your KafkaStreams and Topology instances with the StreamsRegistry.
 
 ```java 
 import io.operatr.kpow.StreamsRegistry;
@@ -63,15 +59,26 @@ Properties props = new createMyStreamProperties();
 // Your Kafka Streams instance
 KafkaStreams streams = new KafkaStreams(topology, props); 
 
-// kPow Streams Registry to periodically capture and send metrics to the kPow Snapshot Topic
+// Create a kPow StreamsRegistry
 StreamsRegistry registry = new StreamsRegistry(props);
 
-// Register your Kafka Streams instance with the kPow StreamsRegistry
+// Register your KafkaStreams and Topology instances with the StreamsRegistry
 registry.register(streams, topology); 
 
 // Start your Kafka Streams application
 streams.start();
 ```
+
+The StreamsRegistry is a single-threaded process that performs these actions once every minute:
+
+* Capture metadata about each registered Kafka Streams application.
+* Produce snapshots to the kpow internal `__oprtr_snapshot_state` topic.
+
+The StreamsRegistry *does not talk directly to kPow*.
+
+The StreamsRegistry captures metadata about your Kafka Streams application and produces snapshots to the `__oprtr_snapshot_state` topic once every minute.
+
+To instrument a Kafka Streams application, create a new instance of a `StreamsRegistry` and register your `KafkaStreams` + `Topology` instances against it.
 
 Once configured, metrics will be periodically sent to kPow's internal snapshot topic. You will be able to monitor your streams application from within kPow and externally via [Prometheus egress](https://docs.kpow.io/features/prometheus)
 
