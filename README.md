@@ -61,6 +61,35 @@ Once configured, metrics will be periodically sent to kPow's internal snapshot t
 
 For more information read the [documentation](https://docs.kpow.io/features/kafka-streams)
 
+## Deployment scenarios
+
+### Simple
+
+If kPow is configured to monitor only a single Kafka cluster, you can reuse your Kafka Streams `Properties` file:
+
+```java
+Properties streamsProps = new Properties();
+KafkaStreams streams = new KafkaStreams(topology, streamsProps); 
+StreamsRegistry registry = new StreamsRegistry(streamsProps);
+```
+
+### Multi-cluster kPow + Streams Registry
+
+The `Properties` instance you pass to `StreamsRegistry` must contain configuration details for your **primary** Kafka cluster. Your primary Kafka cluster is the cluster housing internal kPow topics like `__oprtr_snapshot_state`.
+
+Visit [kPow's documentation](https://docs.kpow.io/config/multi-cluster) to read more about multi-cluster.
+
+### Registring multiple streams instances for a single app
+
+You can call the `register` method many times to register multiple streams apps:
+
+```java
+KafkaStreams dedupeStreams = new KafkaStreams(dedupeTopology, dedupeProps);
+KafkaStreams paymentStreams = new KafkaStreams(paymentTopology, paymentProps);
+registry.register(paymentStreams, paymentTopology);
+registry.register(dedupeStreams, dedupeTopology);
+```
+
 # Copyright and License
 
 Copyright © 2021 Operatr Pty Ltd. 
