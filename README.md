@@ -90,6 +90,24 @@ registry.register(paymentStreams, paymentTopology);
 registry.register(dedupeStreams, dedupeTopology);
 ```
 
+## Troubleshooting 
+
+### The Workflows UI is showing "Configure Streams Topology" for my consumer
+
+This could happen for a few reasons:
+
+1. `register` method has not been called.
+2. Invalid connection details passed to `StreamsRegistry` constructor. If this is the case you will see Kafka producer exceptions in the logs of your streams application.
+3. Telemetry is still being calculated. After a fresh deployment, it might take up to 2 minutes for initial streams telemetry to be calculated. 
+
+You can verify `StreamsRegistry` is sending telemetry to your Kafka Cluster by using Data Inspect in kPow:
+
+* Select `__oprtr_snapshot_state`
+* Choose `Transit / JSON` as the key + value serde
+* Enter the following kJQ filter for the key: `.[0] == :streams`
+
+![Data Inspect](https://i.imgur.com/LvtXmq3.png)
+
 # Copyright and License
 
 Copyright © 2021 Operatr Pty Ltd. 
