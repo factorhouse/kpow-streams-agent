@@ -9,7 +9,7 @@ Use this agent to integrate your Kafka Streams applications with kPow and unlock
 
 * Visualise Kafka Streams topologies.
 * View Kafka Streams metrics (e.g Stream-Thread, State Store, RocksDB, etc).
-* Have Kafka Streams metrics exposed in the kPow Prometheus Endpoints (for alerting, etc).
+* Expose Kafka Streams metrics in the kPow Prometheus Endpoints (for alerting, etc).
 * See summaries of Kafka Streams activity for your Kafka cluster(s).
 * (Soon) View kPow Insights of your Kafka Streams applications (outlier metrics, etc).
 
