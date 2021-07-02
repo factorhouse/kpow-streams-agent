@@ -112,25 +112,36 @@ For more details visit the [Producer configs](https://kafka.apache.org/documenta
 
 ## Single v Multi-Cluster kPow
 
-In the case of kPow managing a single Kafka Cluster you can reuse the properties from your Kafka Streams application to create your StreamsRegisty.
+In the case of kPow managing a single Kafka Cluster you can reuse the properties from your Kafka Streams application to create your StreamsRegisty. This is because the kPow internal topic `___oprtr_snapshot_compute` is guaranteed to reside in the same cluster that your Kafka Streams application connects to.
 
-This is because the kpow internal topic `___oprtr_snapshot_compute` resides in the cluster that your Kafka Streams application connects to.
+In the case of kPow managing multiple Kafka Clusters, the kPow internal topic `___oprtr_snapshot_compute` resides in your **primary cluster**, that is the first cluster in your kPow configuration.
 
-### Single Cluster kPow + Streams Registry
+### Single-Cluster kPow + Streams Registry
 
-If kPow is configured to monitor only a single Kafka cluster, you can reuse your Kafka Streams `Properties` configuration:
+Reuse your Kafka Streams `Properties` to create your StreamsRegistry.
 
 ```java
 Properties streamsProps = new Properties();
-KafkaStreams streams = new KafkaStreams(topology, streamsProps); 
+KafkaStreams streams = new KafkaStreams(topology, streamsProps);
+
 StreamsRegistry registry = new StreamsRegistry(streamsProps);
+...
 ```
 
-### Multi-cluster kPow + Streams Registry
+### Multi-Cluster kPow + Streams Registry
 
-The `Properties` instance you pass to `StreamsRegistry` must contain configuration details for your **primary** Kafka cluster. Your primary Kafka cluster is the cluster housing internal kPow topics like `__oprtr_snapshot_state`.
+Create a `Properties` with your **primary cluster** configuration to create your StreamsRegistry.
 
-Visit [kPow's documentation](https://docs.kpow.io/config/multi-cluster) to read more about multi-cluster.
+```java
+Properties streamsProps = createMyStreamProperties();
+KafkaStreams streams = new KafkaStreams(topology, streamsProps); 
+
+Properties primaryProps = createMyPrimaryClusterProducerProperties();
+StreamsRegistry registry = new StreamsRegistry(primaryProps);
+...
+```
+
+See the [kPow Multi-Cluster Feature Guide](https://docs.kpow.io/config/multi-cluster) form more information.
 
 ### Registring multiple KafkaStreams instances for a single app
 
