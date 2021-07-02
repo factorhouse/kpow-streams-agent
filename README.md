@@ -3,7 +3,9 @@
 
 # [kPow](https://kpow.io) Kafka Streams Agent
 
-kPow's Kafka Streams agent allows you to view Kafka Streams telemtry in the kPow UI. [[Full Documentation]](https://docs.kpow.io/features/kafka-streams)
+kPow's Kafka Streams agent allows you to view Kafka Streams telemtry in the kPow UI. 
+
+For the [Kafka Streams Feature Guide](https://docs.kpow.io/features/kafka-streams) for full documentation.
 
 ![screenshot](docs/screenshot.png)
 
