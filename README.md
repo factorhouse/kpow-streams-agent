@@ -82,9 +82,29 @@ The `Properties` passed to the `StreamsRegistry` contains connection configurati
 
 Connection configuration means any of the following fields: 
 
-```
-bootstrap.servers, ssl.truststore.type, ssl.truststore.password, ssl.truststore.location, ssl.truststore.certificates, ssl.trustmanager.algorithm, ssl.secure.random.implementation, ssl.provider, ssl.protocol, ssl.keystore.type, ssl.keystore.password, ssl.keystore.location, ssl.keystore.key, ssl.keystore.certificate.chain, ssl.keymanager.algorithm, ssl.key.password, ssl.endpoint.identification.algorithm, ssl.enabled.protocols, ssl.cipher.suites, security.protocol, sasl.mechanism, sasl.login.callback.handler.class, sasl.jaas.config
-```
+* bootstrap.servers
+* ssl.truststore.type
+* ssl.truststore.password
+* ssl.truststore.location
+* ssl.truststore.certificates
+* ssl.trustmanager.algorithm
+* ssl.secure.random.implementation
+* ssl.provider
+* ssl.protocol
+* ssl.keystore.type
+* ssl.keystore.password
+* ssl.keystore.location
+* ssl.keystore.key
+* ssl.keystore.certificate.chain
+* ssl.keymanager.algorithm
+* ssl.key.password
+* ssl.endpoint.identification.algorithm
+* ssl.enabled.protocols
+* ssl.cipher.suites
+* security.protocol
+* sasl.mechanism
+* sasl.jaas.config
+* sasl.login.callback.handler.class
 
 For more details visit the [Producer configs](https://kafka.apache.org/documentation/#producerconfigs) section of the Apache Kafka documentation.
 
