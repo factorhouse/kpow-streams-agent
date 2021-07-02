@@ -23,7 +23,7 @@ See the [kPow Kafka Streams Feature Guide](https://docs.kpow.io/features/kafka-s
 
 The kPow Streams Agent requires a running instance of kPow.
 
-Evaluate kPow with the [kpow-local](https://github.com/operatr-io/kpow-local) repository or visit our [Quick Start](https://docs.kpow.io/installation/quick-start) guide.
+Evaluate kPow with the [kPow Local](https://github.com/operatr-io/kpow-local) repository or see our [Quick Start](https://docs.kpow.io/installation/quick-start) guide.
 
 # Installation
 
