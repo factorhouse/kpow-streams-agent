@@ -7,9 +7,13 @@ This repository contains the kPow Streams Agent.
 
 Use this agent to integrate your Kafka Streams with kPow and unlock the following features:
 
-The agent is written in Java and Clojure and is packaged as a library available in [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent).
+* Visualise Kafka Streams topologies.
+* View Kafka Streams metrics (e.g Stream-Thread, State Store, RocksDB, etc).
+* Have Kafka Streams metrics exposed in the kPow Prometheus Endpoints (for alerting, etc).
+* See summaries of Kafka Streams activity for your Kafka cluster(s).
+* (Soon) View kPow Insights of your Kafka Streams applications (outlier metrics, etc).
 
-Visualise Kafka Streams topologies and view streams metrics (including RocksDB) in the kPow UI.
+This agent is written in Java and Clojure and is packaged as a library available in [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent).
 
 ![topology-ui](docs/topology-ui.png)
 
