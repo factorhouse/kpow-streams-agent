@@ -27,7 +27,7 @@ Evaluate kPow with the [kPow Local](https://github.com/operatr-io/kpow-local) re
 
 # Installation
 
-The kPow Stream Agent can be found on [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent):
+The kPow Stream Agent can be found on [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent).
 
 Include the agent as a dependency in your Kafka Streams application.
 
@@ -35,7 +35,7 @@ Include the agent as a dependency in your Kafka Streams application.
 <dependency>
   <groupId>io.operatr</groupId>
   <artifactId>kpow-streams-agent</artifactId>
-  <version>0.2.5</version>
+  <version>0.2.6</version>
   <type>bundle</type>
 </dependency>
 ```
