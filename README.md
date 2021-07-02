@@ -5,7 +5,7 @@
 
 This repository contains the kPow Streams Agent.
 
-Use this agent to integrate your Kafka Streams with kPow and unlock the following features:
+Use this agent to integrate your Kafka Streams applications with kPow and unlock the following features:
 
 * Visualise Kafka Streams topologies.
 * View Kafka Streams metrics (e.g Stream-Thread, State Store, RocksDB, etc).
