@@ -112,7 +112,7 @@ For more details visit the [Producer](https://kafka.apache.org/documentation/#pr
 
 ### Minimum Required ACLs
 
-The user provided in the Producer configuration must have permission to write to the internal kPow topic.
+If you secure your Kafka Cluster with ACLs, the user provided in the Producer configuration must have permission to write to the internal kPow topic.
 
 ```
 ./kafka-acls.sh \
@@ -121,7 +121,7 @@ The user provided in the Producer configuration must have permission to write to
   --add --allow-principal User:<your-producer-user> --operation Write --topic '__oprtr_snapshot_state'
 ```
 
-### Single v Multi-Cluster kPow
+### Single vs Multi-Cluster kPow
 
 When managing a single Kafka Cluster you can reuse the properties from your Kafka Streams application to create your StreamsRegisty. This is because the kPow internal topic `___oprtr_snapshot_compute` lives in the cluster that your Kafka Streams application connects to.
 
