@@ -80,7 +80,11 @@ The StreamsRegistry **does not talk directly to kPow**. kPow reads streams data 
 
 The `Properties` passed to the `StreamsRegistry` contains connection configuration required to create a producer that sends streams snapshot information to the internal kPow topic. The StreamsRegistry configures its own Serdes.
 
-Connection configuration means any of the following fields: `bootstrap.servers, ssl.truststore.type, ssl.truststore.password, ssl.truststore.location, ssl.truststore.certificates, ssl.trustmanager.algorithm, ssl.secure.random.implementation, ssl.provider, ssl.protocol, ssl.keystore.type, ssl.keystore.password, ssl.keystore.location, ssl.keystore.key, ssl.keystore.certificate.chain, ssl.keymanager.algorithm, ssl.key.password, ssl.endpoint.identification.algorithm, ssl.enabled.protocols, ssl.cipher.suites, security.protocol, sasl.mechanism, sasl.login.callback.handler.class, sasl.jaas.config`
+Connection configuration means any of the following fields: 
+
+```
+bootstrap.servers, ssl.truststore.type, ssl.truststore.password, ssl.truststore.location, ssl.truststore.certificates, ssl.trustmanager.algorithm, ssl.secure.random.implementation, ssl.provider, ssl.protocol, ssl.keystore.type, ssl.keystore.password, ssl.keystore.location, ssl.keystore.key, ssl.keystore.certificate.chain, ssl.keymanager.algorithm, ssl.key.password, ssl.endpoint.identification.algorithm, ssl.enabled.protocols, ssl.cipher.suites, security.protocol, sasl.mechanism, sasl.login.callback.handler.class, sasl.jaas.config
+```
 
 For more details visit the [Producer configs](https://kafka.apache.org/documentation/#producerconfigs) section of the Apache Kafka documentation.
 
