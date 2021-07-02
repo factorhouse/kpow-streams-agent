@@ -42,7 +42,10 @@ Include the agent as a dependency in your Kafka Streams application.
 
 # Integration
 
-Create a new [io.operatr.kpow.StreamsRegistry](https://github.com/operatr-io/kpow-streams-agent/blob/main/src/java/io/operatr/kpow/StreamsRegistry.java) instance and register your KafkaStreams and Topology instances with it.
+In your application, at the point where you start your KafkaStreams instance:
+
+* Create a new [io.operatr.kpow.StreamsRegistry](https://github.com/operatr-io/kpow-streams-agent/blob/main/src/java/io/operatr/kpow/StreamsRegistry.java) instance.
+* Register both your KafkaStreams and Topology instances with it.
 
 The StreamsRegistry captures metadata about your Kafka Streams application and produces snapshots to the `__oprtr_snapshot_state` topic once every minute.
 
