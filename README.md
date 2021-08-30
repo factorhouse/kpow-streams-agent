@@ -39,7 +39,7 @@ Include the agent as a dependency in your Kafka Streams application.
 <dependency>
   <groupId>io.operatr</groupId>
   <artifactId>kpow-streams-agent</artifactId>
-  <version>0.2.6</version>
+  <version>0.2.7</version>
   <type>bundle</type>
 </dependency>
 ```
