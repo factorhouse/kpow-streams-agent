@@ -22,7 +22,6 @@
                     [:role "developer"]
                     [:role "maintainer"]]]])
   :dependencies [[org.clojure/clojure "1.10.3"]
-                 [cheshire "5.10.0"]
                  [com.cognitect/transit-clj "1.0.324"]
                  [org.clojure/tools.logging "1.1.0"]
                  [org.apache.kafka/kafka-streams "2.8.0" :scope "provided" :exclusions [com.fasterxml.jackson.core/jackson-core]]]
@@ -39,7 +38,8 @@
                       :plugins        [[lein-cljfmt "0.7.0"]]
                       :dependencies   [[org.slf4j/slf4j-api "1.7.31"]
                                        [ch.qos.logback/logback-classic "1.2.3"]
-                                       [clj-kondo "2021.06.18"]]}
+                                       [cheshire "5.10.0"]
+                                       [clj-kondo "2021.08.06"]]}
              :smoke  {:pedantic? :abort}}
   :aliases {"kaocha" ["with-profile" "+kaocha" "run" "-m" "kaocha.runner"]
             "kondo"  ["with-profile" "+smoke" "run" "-m" "clj-kondo.main" "--lint" "src"]
