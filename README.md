@@ -15,6 +15,8 @@ Use this agent to integrate your Kafka Streams applications with kPow and unlock
 
 See the [kPow Kafka Streams Feature Guide](https://docs.kpow.io/features/kafka-streams) for full documentation.
 
+See the [kPow Kafka Streams Spring Word Count Example](https://github.com/operatr-io/kpow-streams-agent-example-spring) for an integration of Spring, Kafka, and kPow.
+
 ---
 
 ![streams-ui](docs/streams.png)
@@ -40,7 +42,6 @@ Include the agent as a dependency in your Kafka Streams application.
   <groupId>io.operatr</groupId>
   <artifactId>kpow-streams-agent</artifactId>
   <version>0.2.7</version>
-  <type>bundle</type>
 </dependency>
 ```
 
