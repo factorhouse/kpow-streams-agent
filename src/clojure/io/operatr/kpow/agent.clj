@@ -64,10 +64,14 @@
   [metrics]
   (some #(when (= "application-id" (:name %)) (:value %)) metrics))
 
+(defn client-id-tag
+  [metrics]
+  (some #(get-in % [:tags "client-id"]) metrics))
+
 (defn client-id
   [metrics]
   (let [app-id    (application-id metrics)
-        client-id (some #(get-in % [:tags "client-id"]) metrics)]
+        client-id (client-id-tag metrics)]
     (some-> client-id
             (str/replace (str app-id "-") "")
             (str/split #"-StreamThread-")
@@ -84,9 +88,8 @@
        (map #(select-keys % [:name :tags :value]))))
 
 (defn snapshot-send
-  [{:keys [snapshot-topic ^Producer producer snapshot-id application-id job-id client-id]} data]
-  (let [captured (System/currentTimeMillis)
-        snapshot {:type           :kafka/streams-agent
+  [{:keys [snapshot-topic ^Producer producer snapshot-id application-id job-id client-id captured]} data]
+  (let [snapshot {:type           :kafka/streams-agent
                   :application-id application-id
                   :client-id      client-id
                   :captured       captured
@@ -98,11 +101,10 @@
     (.get (.send producer record))))
 
 (defn metrics-send
-  [{:keys [snapshot-topic producer snapshot-id application-id job-id client-id]} metrics]
+  [{:keys [snapshot-topic producer snapshot-id application-id job-id client-id captured]} metrics]
   (let [taxon [(:domain snapshot-id) (:id snapshot-id) :kafka/streams-agent]]
     (doseq [data (partition-all 50 metrics)]
-      (let [captured (System/currentTimeMillis)
-            value    {:type           :kafka/streams-agent-metrics
+      (let [value    {:type           :kafka/streams-agent-metrics
                       :application-id application-id
                       :client-id      client-id
                       :captured       captured
@@ -114,9 +116,8 @@
     (log/infof "kPow: sent [%s] streams metrics for application.id %s" (count metrics) application-id)))
 
 (defn plan-send
-  [{:keys [snapshot-topic producer snapshot-id job-id]}]
-  (let [captured (System/currentTimeMillis)
-        taxon    [(:domain snapshot-id) (:id snapshot-id) :kafka/streams-agent]
+  [{:keys [snapshot-topic producer snapshot-id job-id captured]}]
+  (let [taxon    [(:domain snapshot-id) (:id snapshot-id) :kafka/streams-agent]
         plan     {:type        :observation/plan
                   :captured    captured
                   :snapshot/id snapshot-id
@@ -127,21 +128,29 @@
 
 (defn snapshot-telemetry
   [{:keys [streams ^Topology topology] :as ctx}]
-  (let [topology       (p/datafy (.describe topology))
-        state          (str (.state streams))
-        metrics        (metrics streams)
-        snapshot       {:topology topology :state state}
-        client-id      (client-id metrics)
-        application-id (application-id metrics)
-        ctx            (assoc ctx
-                              :client-id client-id
-                              :application-id application-id
-                              :snapshot-id {:domain :streams :id client-id})]
-    (when (or (nil? application-id) (nil? client-id))
-      (throw (Exception. "Cannot infer client id from metrics returned from KafkaStreams instance")))
-    (snapshot-send ctx snapshot)
-    (metrics-send ctx (numeric-metrics metrics))
-    ctx))
+  (let [metrics (metrics streams)]
+    (if (empty? metrics)
+      (log/warn "KafkStreams .metrics() method returned an empty collection, no telemetry was sent. Has something mutated the global metrics registry?")
+      (let [topology       (p/datafy (.describe topology))
+            state          (str (.state streams))
+            snapshot       {:topology topology :state state}
+            client-id      (client-id metrics)
+            application-id (application-id metrics)
+            ctx            (assoc ctx
+                                  :captured (System/currentTimeMillis)
+                                  :client-id client-id
+                                  :application-id application-id
+                                  :snapshot-id {:domain :streams :id client-id})]
+        (when (nil? application-id)
+          (throw (Exception. "Cannot infer application id from metrics returned from KafkaStreams instance. Expected metric \"application-id\" in the metrics registry.")))
+        (when (nil? client-id)
+          (throw (Exception.
+                  (format "Cannot infer client id from metrics returned from KafkaStreams instance. Got: client-id %s and application-id %s"
+                          (client-id-tag metrics)
+                          application-id))))
+        (snapshot-send ctx snapshot)
+        (metrics-send ctx (numeric-metrics metrics))
+        ctx))))
 
 (defn ^Runnable snapshot-task
   [snapshot-topic producer registered-topologies latch]
@@ -152,7 +161,7 @@
                   :producer       producer}]
 
       (doseq [[id [streams topology]] @registered-topologies]
-        (try (let [next-ctx (snapshot-telemetry (assoc ctx :streams streams :topology topology))]
+        (try (when-let [next-ctx (snapshot-telemetry (assoc ctx :streams streams :topology topology))]
                (Thread/sleep 2000)
                (plan-send next-ctx))
              (catch Throwable e

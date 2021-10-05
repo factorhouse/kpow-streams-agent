@@ -24,7 +24,7 @@
   :dependencies [[org.clojure/clojure "1.10.3"]
                  [com.cognitect/transit-clj "1.0.324"]
                  [org.clojure/tools.logging "1.1.0"]
-                 [org.apache.kafka/kafka-streams "2.8.0" :scope "provided" :exclusions [com.fasterxml.jackson.core/jackson-core]]]
+                 [org.apache.kafka/kafka-streams "3.0.0" :scope "provided" :exclusions [com.fasterxml.jackson.core/jackson-core]]]
   :uberjar {:prep-tasks ["clean" "javac" "compile"]
             :aot        :all}
   :classifiers [["sources" {:source-paths      ^:replace []
@@ -36,10 +36,10 @@
   :profiles {:kaocha {:dependencies [[lambdaisland/kaocha "1.0.861"]]}
              :dev    {:resource-paths ["dev-resources"]
                       :plugins        [[lein-cljfmt "0.7.0"]]
-                      :dependencies   [[org.slf4j/slf4j-api "1.7.31"]
-                                       [ch.qos.logback/logback-classic "1.2.3"]
-                                       [cheshire "5.10.0"]
-                                       [clj-kondo "2021.08.06"]]}
+                      :dependencies   [[org.slf4j/slf4j-api "1.7.32"]
+                                       [ch.qos.logback/logback-classic "1.2.6"]
+                                       [cheshire "5.10.1" :exclusions [com.fasterxml.jackson.core/jackson-databind]]
+                                       [clj-kondo "2021.09.25" :exclusions [org.clojure/tools.reader]]]}
              :smoke  {:pedantic? :abort}}
   :aliases {"kaocha" ["with-profile" "+kaocha" "run" "-m" "kaocha.runner"]
             "kondo"  ["with-profile" "+smoke" "run" "-m" "clj-kondo.main" "--lint" "src"]

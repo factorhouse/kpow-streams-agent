@@ -49,7 +49,6 @@
   (let [metric-name  (MetricName. name group description tags)
         metric-value (reify Metric
                        (metricName [_] metric-name)
-                       (value [_] value)
                        (metricValue [_] value))]
     [metric-name metric-value]))
 
@@ -107,6 +106,9 @@
            (into #{} (map (fn [record]
                             [(.key record) (dissoc (.value record) :job/id :captured)]))
                  @records)))
+
+    (testing "consistent :captured value"
+      (is (= 1 (count (into #{} (map (fn [record] (-> record (.value) :captured))) @records)))))
 
     (is (agent/unregister registry agent))
 
