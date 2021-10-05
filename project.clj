@@ -39,7 +39,7 @@
                       :dependencies   [[org.slf4j/slf4j-api "1.7.32"]
                                        [ch.qos.logback/logback-classic "1.2.6"]
                                        [cheshire "5.10.1" :exclusions [com.fasterxml.jackson.core/jackson-databind]]
-                                       [clj-kondo "2021.09.25" :exclusions [org.clojure/tools.reader]]]}
+                                       [clj-kondo "2021.09.25"]]}
              :smoke  {:pedantic? :abort}}
   :aliases {"kaocha" ["with-profile" "+kaocha" "run" "-m" "kaocha.runner"]
             "kondo"  ["with-profile" "+smoke" "run" "-m" "clj-kondo.main" "--lint" "src"]
