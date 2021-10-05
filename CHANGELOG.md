@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [0.2.7] - 2021-05-10
+## [0.2.8] - 2021-05-10
 ### Changed
 - Consistent `:captured` value in snapshots sent
 - Improve snapshot logging+debugging
