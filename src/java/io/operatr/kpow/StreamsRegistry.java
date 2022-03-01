@@ -85,12 +85,12 @@ public class StreamsRegistry implements AutoCloseable {
         }
     }
 
-    public void unregister(StreamsAgent agent) {
-        if (agent != null) {
+    public void unregister(StreamsAgent streamsAgent) {
+        if (streamsAgent != null) {
             IFn require = Clojure.var("clojure.core", "require");
             require.invoke(Clojure.read("io.operatr.kpow.agent"));
             IFn unregisterFn = Clojure.var("io.operatr.kpow.agent", "unregister");
-            unregisterFn.invoke(agent.getId());
+            unregisterFn.invoke(agent, streamsAgent.getId());
         }
     }
 
