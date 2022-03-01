@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [0.2.10] - 2022-02-03
+### Changed
+- Additional connection fields allowed for Producer properties 
+
 ## [0.2.9] - 2022-01-03
 ### Fixed
 - Fix `unregister` method of `io.operatr.kpow.StreamsRegistry`
