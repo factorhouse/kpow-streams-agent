@@ -28,29 +28,35 @@ public class StreamsRegistry implements AutoCloseable {
 
     public static Properties filterProperties(Properties props) {
         ArrayList<String> allowedKeys = new ArrayList<>();
-        allowedKeys.add("security.protocol");
-        allowedKeys.add("sasl.mechanism");
-        allowedKeys.add("sasl.jaas.config");
-        allowedKeys.add("sasl.login.callback.handler.class");
-        allowedKeys.add("ssl.keystore.location");
-        allowedKeys.add("ssl.keystore.password");
-        allowedKeys.add("ssl.key.password");
-        allowedKeys.add("ssl.keystore.type");
-        allowedKeys.add("ssl.keymanager.algorithm");
-        allowedKeys.add("ssl.truststore.location");
-        allowedKeys.add("ssl.truststore.password");
-        allowedKeys.add("ssl.truststore.type");
-        allowedKeys.add("ssl.trustmanager.algorithm");
+        allowedKeys.add("ssl.enabled.protocols");
+        allowedKeys.add("sasl.client.callback.handler.class");
         allowedKeys.add("ssl.endpoint.identification.algorithm");
         allowedKeys.add("ssl.provider");
-        allowedKeys.add("ssl.cipher.suites");
-        allowedKeys.add("ssl.protocol");
-        allowedKeys.add("ssl.enabled.protocols");
-        allowedKeys.add("ssl.secure.random.implementation");
+        allowedKeys.add("ssl.truststore.location");
         allowedKeys.add("ssl.keystore.key");
-        allowedKeys.add("ssl.keystore.certificate.chain");
+        allowedKeys.add("ssl.key.password");
+        allowedKeys.add("ssl.protocol");
+        allowedKeys.add("ssl.keystore.password");
+        allowedKeys.add("sasl.login.class");
+        allowedKeys.add("ssl.trustmanager.algorithm");
+        allowedKeys.add("ssl.keystore.location");
+        allowedKeys.add("sasl.login.callback.handler.class");
         allowedKeys.add("ssl.truststore.certificates");
+        allowedKeys.add("ssl.cipher.suites");
+        allowedKeys.add("ssl.truststore.password");
+        allowedKeys.add("ssl.keymanager.algorithm");
+        allowedKeys.add("ssl.keystore.type");
+        allowedKeys.add("ssl.secure.random.implementation");
+        allowedKeys.add("ssl.truststore.type");
+        allowedKeys.add("sasl.jaas.config");
+        allowedKeys.add("ssl.keystore.certificate.chain");
+        allowedKeys.add("sasl.mechanism");
+        allowedKeys.add("sasl.oauthbearer.jwks.endpoint.url");
+        allowedKeys.add("sasl.oauthbearer.token.endpoint.url");
+        allowedKeys.add("sasl.kerberos.service.name");
+        allowedKeys.add("security.protocol");
         allowedKeys.add("bootstrap.servers");
+
         Properties nextProps = new Properties();
         for (String key : allowedKeys) {
             if (props.containsKey(key)) {
