@@ -89,29 +89,34 @@ The StreamsRegistry configures its own Serdes on the snapshot producer, you do n
 
 Producer configuration means any of the following fields: 
 
-* bootstrap.servers
-* ssl.truststore.type
-* ssl.truststore.password
-* ssl.truststore.location
-* ssl.truststore.certificates
-* ssl.trustmanager.algorithm
-* ssl.secure.random.implementation
-* ssl.provider
-* ssl.protocol
-* ssl.keystore.type
-* ssl.keystore.password
-* ssl.keystore.location
-* ssl.keystore.key
-* ssl.keystore.certificate.chain
-* ssl.keymanager.algorithm
-* ssl.key.password
-* ssl.endpoint.identification.algorithm
 * ssl.enabled.protocols
-* ssl.cipher.suites
-* security.protocol
-* sasl.mechanism
-* sasl.jaas.config
+* sasl.client.callback.handler.class
+* ssl.endpoint.identification.algorithm
+* ssl.provider
+* ssl.truststore.location
+* ssl.keystore.key
+* ssl.key.password
+* ssl.protocol
+* ssl.keystore.password
+* sasl.login.class
+* ssl.trustmanager.algorithm
+* ssl.keystore.location
 * sasl.login.callback.handler.class
+* ssl.truststore.certificates
+* ssl.cipher.suites
+* ssl.truststore.password
+* ssl.keymanager.algorithm
+* ssl.keystore.type
+* ssl.secure.random.implementation
+* ssl.truststore.type
+* sasl.jaas.config
+* ssl.keystore.certificate.chain
+* sasl.mechanism
+* sasl.oauthbearer.jwks.endpoint.url
+* sasl.oauthbearer.token.endpoint.url
+* sasl.kerberos.service.name
+* security.protocol
+* bootstrap.servers
 
 For more details visit the [Producer](https://kafka.apache.org/documentation/#producerconfigs) section of the Apache Kafka documentation.
 
