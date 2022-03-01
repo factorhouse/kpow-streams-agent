@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [0.2.9] - 2022-01-03
+### Fixed
+- Fix `unregister` method of `io.operatr.kpow.StreamsRegistry`
+### Changed
+- Bump dependencies
+
 ## [0.2.8] - 2021-05-10
 ### Changed
 - Consistent `:captured` value in snapshots sent
