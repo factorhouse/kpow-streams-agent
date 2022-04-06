@@ -205,6 +205,6 @@ If you have any issues contact [support@operatr.io](mailto:support@operatr.io).
 
 # Copyright and License
 
-Copyright © 2021 Operatr Pty Ltd. 
+Copyright © 2021-2022 Operatr Pty Ltd. 
 
 Distributed under the Apache-2.0 License, the same as Apache Kafka.
