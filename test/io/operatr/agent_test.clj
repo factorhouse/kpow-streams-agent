@@ -15,8 +15,13 @@
     props))
 
 (deftest filter-props
-  (is (empty? (StreamsRegistry/filterProperties (->props {"fo" "bar"}))))
-  (is (= {"bootstrap.servers" "xyz"}
+  (is (= {"compression.type" "gzip"}
+         (StreamsRegistry/filterProperties (->props {"fo" "bar"}))))
+  (is (= {"bootstrap.servers" "xyz"
+          "compression.type"  "lz4"}
+         (into {} (StreamsRegistry/filterProperties (->props {"compression.type" "lz4" "bootstrap.servers" "xyz"})))))
+  (is (= {"bootstrap.servers" "xyz"
+          "compression.type"  "gzip"}
          (into {} (StreamsRegistry/filterProperties (->props {"fo" "bar" "bootstrap.servers" "xyz"}))))))
 
 (defn ^Topology test-topology
