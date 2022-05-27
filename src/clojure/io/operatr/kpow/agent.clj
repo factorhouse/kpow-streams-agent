@@ -152,8 +152,8 @@
         (metrics-send ctx (numeric-metrics metrics))
         ctx))))
 
-(defn ^Runnable snapshot-task
-  [snapshot-topic producer registered-topologies latch]
+(defn snapshot-task
+  ^Runnable [snapshot-topic producer registered-topologies latch]
   (fn []
     (let [job-id (str (UUID/randomUUID))
           ctx    {:job-id         job-id

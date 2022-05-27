@@ -63,6 +63,10 @@ public class StreamsRegistry implements AutoCloseable {
                 nextProps.setProperty(key, String.valueOf(props.get(key)));
             }
         }
+
+        String compressionType = props.getProperty("compression.type", "gzip");
+        nextProps.setProperty("compression.type", compressionType);
+
         return nextProps;
     }
 

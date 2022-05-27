@@ -1,4 +1,4 @@
-(defproject io.operatr/kpow-streams-agent "0.2.10"
+(defproject io.operatr/kpow-streams-agent "0.2.11"
   :description "kPow's Kafka Streams monitoring agent"
   :url "https://github.com/operatr-io/kpow-streams-agent"
   :license {:name         "Apache-2.0 License"
@@ -21,10 +21,10 @@
                    [:roles
                     [:role "developer"]
                     [:role "maintainer"]]]])
-  :dependencies [[org.clojure/clojure "1.10.3"]
+  :dependencies [[org.clojure/clojure "1.11.1"]
                  [com.cognitect/transit-clj "1.0.329"]
                  [org.clojure/tools.logging "1.2.4"]
-                 [org.apache.kafka/kafka-streams "3.1.0" :scope "provided" :exclusions [com.fasterxml.jackson.core/jackson-core]]]
+                 [org.apache.kafka/kafka-streams "3.2.0" :scope "provided" :exclusions [com.fasterxml.jackson.core/jackson-core]]]
   :uberjar {:prep-tasks ["clean" "javac" "compile"]
             :aot        :all}
   :classifiers [["sources" {:source-paths      ^:replace []
@@ -33,13 +33,13 @@
                 ["javadoc" {:source-paths      ^:replace []
                             :java-source-paths ^:replace []
                             :resource-paths    ^:replace ["javadoc"]}]]
-  :profiles {:kaocha {:dependencies [[lambdaisland/kaocha "1.63.998"]]}
+  :profiles {:kaocha {:dependencies [[lambdaisland/kaocha "1.66.1034"]]}
              :dev    {:resource-paths ["dev-resources"]
                       :plugins        [[lein-cljfmt "0.7.0"]]
                       :dependencies   [[org.slf4j/slf4j-api "1.7.36"]
-                                       [ch.qos.logback/logback-classic "1.2.10"]
-                                       [cheshire "5.10.2" :exclusions [com.fasterxml.jackson.core/jackson-databind]]
-                                       [clj-kondo "2022.02.09"]]}
+                                       [ch.qos.logback/logback-classic "1.2.11"]
+                                       [cheshire "5.11.0" :exclusions [com.fasterxml.jackson.core/jackson-databind]]
+                                       [clj-kondo "2022.04.25"]]}
              :smoke  {:pedantic? :abort}}
   :aliases {"kaocha" ["with-profile" "+kaocha" "run" "-m" "kaocha.runner"]
             "kondo"  ["with-profile" "+smoke" "run" "-m" "clj-kondo.main" "--lint" "src"]

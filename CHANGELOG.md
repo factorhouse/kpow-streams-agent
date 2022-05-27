@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [0.2.11] - 2022-05-27
+### Changed
+- Add `compression.type` to allowed Producer properties
+- Default Producer `compression.type` to `gzip`
+- Bump dependencies
+
 ## [0.2.10] - 2022-02-03
 ### Changed
 - Additional connection fields allowed for Producer properties 
