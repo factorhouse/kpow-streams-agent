@@ -1,21 +1,21 @@
 [![test](https://github.com/operatr-io/streams-agent/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/operatr-io/streams-agent/actions/workflows/test.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/io.operatr/kpow-streams-agent.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.operatr%22%20AND%20a:%22kpow-streams-agent%22)
 
-# [kPow](https://kpow.io) Streams Agent
+# [Kpow](https://kpow.io) Streams Agent
 
-This repository contains the kPow Streams Agent.
+This repository contains the Kpow Streams Agent.
 
-Use this agent to integrate your Kafka Streams applications with kPow and unlock the following features:
+Use this agent to integrate your Kafka Streams applications with Kpow and unlock the following features:
 
 * See summaries of Kafka Streams activity for your Kafka cluster(s).
-* Visualise Kafka Streams topologies in the kPow Workflows UI.
+* Visualise Kafka Streams topologies in the Kpow Workflows UI.
 * Monitor Kafka Streams metrics (e.g Stream-Thread, State Store, RocksDB, etc).
-* Aggregate and Expose Kafka Streams metrics via kPow [Prometheus Endpoints](https://docs.kpow.io/features/prometheus) (for alerting, etc).
-* (Soon) View kPow Insights of your Kafka Streams applications (outlier metrics, etc).
+* Aggregate and Expose Kafka Streams metrics via Kpow [Prometheus Endpoints](https://docs.kpow.io/features/prometheus) (for alerting, etc).
+* (Soon) View Kpow Insights of your Kafka Streams applications (outlier metrics, etc).
 
-See the [kPow Kafka Streams Feature Guide](https://docs.kpow.io/features/kafka-streams) for full documentation.
+See the [Kpow Kafka Streams Feature Guide](https://docs.kpow.io/features/kafka-streams) for full documentation.
 
-See the [kPow Kafka Streams Spring Word Count Example](https://github.com/operatr-io/kpow-streams-agent-example-spring) for an integration of Spring, Kafka, and kPow.
+See the [Kpow Kafka Streams Spring Word Count Example](https://github.com/operatr-io/kpow-streams-agent-example-spring) for an integration of Spring, Kafka, and Kpow.
 
 ---
 
@@ -27,13 +27,13 @@ See the [kPow Kafka Streams Spring Word Count Example](https://github.com/operat
 
 # Prerequisites
 
-The kPow Streams Agent requires a running instance of kPow.
+The Kpow Streams Agent requires a running instance of Kpow.
 
-Evaluate kPow with the [kPow Local](https://github.com/operatr-io/kpow-local) repository or see our [Quick Start](https://docs.kpow.io/installation/quick-start) guide.
+Evaluate Kpow with the [Kpow Local](https://github.com/operatr-io/kpow-local) repository or see our [Quick Start](https://docs.kpow.io/installation/quick-start) guide.
 
 # Installation
 
-The kPow Stream Agent can be found on [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent).
+The Kpow Stream Agent can be found on [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent).
 
 Include the agent as a dependency in your Kafka Streams application.
 
@@ -64,7 +64,7 @@ Properties props = new createMyStreamProperties();
 // Your Kafka Streams instance
 KafkaStreams streams = new KafkaStreams(topology, props); 
 
-// Create a kPow StreamsRegistry
+// Create a Kpow StreamsRegistry
 StreamsRegistry registry = new StreamsRegistry(props);
 
 // Register your KafkaStreams and Topology instances with the StreamsRegistry
@@ -77,9 +77,9 @@ streams.start();
 The StreamsRegistry is a *single-threaded process* that performs these actions **once every minute**:
 
 * Capture metadata about each registered Kafka Streams application.
-* Produce snapshots to the kPow internal `__oprtr_snapshot_state` topic.
+* Produce snapshots to the Kpow internal `__oprtr_snapshot_state` topic.
 
-The StreamsRegistry **does not talk directly to kPow**. kPow reads streams data from the snapshot topic.
+The StreamsRegistry **does not talk directly to Kpow**. Kpow reads streams data from the snapshot topic.
 
 # Configuration
 
@@ -122,7 +122,7 @@ For more details visit the [Producer](https://kafka.apache.org/documentation/#pr
 
 ### Minimum Required ACLs
 
-If you secure your Kafka Cluster with ACLs, the user provided in the Producer configuration must have permission to write to the internal kPow topic.
+If you secure your Kafka Cluster with ACLs, the user provided in the Producer configuration must have permission to write to the internal Kpow topic.
 
 ```
 ./kafka-acls.sh \
@@ -133,11 +133,11 @@ If you secure your Kafka Cluster with ACLs, the user provided in the Producer co
 
 ### Produce to the Primary Cluster
 
-When managing a single Kafka Cluster you can reuse the properties from your Kafka Streams application to create your StreamsRegisty. This is because the kPow internal topic `___oprtr_snapshot_state` lives in the cluster that your Kafka Streams application connects to.
+When managing a single Kafka Cluster you can reuse the properties from your Kafka Streams application to create your StreamsRegisty. This is because the Kpow internal topic `___oprtr_snapshot_state` lives in the cluster that your Kafka Streams application connects to.
 
-When managing multiple Kafka Clusters configure your StreamsRegistry to produce snapshots to the **primary** Cluster that contains the internal kPow snapshot topics. This is the first cluster in your kPow configuration.
+When managing multiple Kafka Clusters configure your StreamsRegistry to produce snapshots to the **primary** Cluster that contains the internal Kpow snapshot topics. This is the first cluster in your Kpow configuration.
 
-### Single-Cluster kPow
+### Single-Cluster Kpow
 
 Reuse your Kafka Streams `Properties` to create your StreamsRegistry.
 
@@ -149,7 +149,7 @@ StreamsRegistry registry = new StreamsRegistry(streamsProps);
 ...
 ```
 
-### Multi-Cluster kPow
+### Multi-Cluster Kpow
 
 Use a `Properties` with your **primary** cluster configuration to create your StreamsRegistry.
 
@@ -162,13 +162,13 @@ StreamsRegistry registry = new StreamsRegistry(primaryProps);
 ...
 ```
 
-See the [kPow Multi-Cluster Feature Guide](https://docs.kpow.io/config/multi-cluster) for more information.
+See the [Kpow Multi-Cluster Feature Guide](https://docs.kpow.io/config/multi-cluster) for more information.
 
-### Multi-Cluster kPow Feedback Requested
+### Multi-Cluster Kpow Feedback Requested
 
-Is the requirement to produce to the primary kPow cluster difficult for you?
+Is the requirement to produce to the primary Kpow cluster difficult for you?
 
-Please [let us know](mailto:support@operatr.io) - we are considering the option of always writing to the same cluster as your Kafka Streams connects to and having kPow gather snapshots from each cluster.
+Please [let us know](mailto:support@operatr.io) - we are considering the option of always writing to the same cluster as your Kafka Streams connects to and having Kpow gather snapshots from each cluster.
 
 ### Register Multiple Kafka Streams Instances
 
@@ -191,7 +191,7 @@ This could happen for a few reasons:
 2. Invalid connection details passed to `StreamsRegistry` constructor. If this is the case you will see Kafka producer exceptions in the logs of your streams application.
 3. Telemetry is still being calculated. After a fresh deployment, it might take up to 2 minutes for initial streams telemetry to be calculated. 
 
-You can verify `StreamsRegistry` is sending telemetry to your Kafka Cluster by using Data Inspect in kPow:
+You can verify `StreamsRegistry` is sending telemetry to your Kafka Cluster by using Data Inspect in Kpow:
 
 * Select topic `__oprtr_snapshot_state`
 * Choose `Transit / JSON` as the key deserializer
