@@ -201,7 +201,7 @@ You can verify `StreamsRegistry` is sending telemetry to your Kafka Cluster by u
 
 # Get Help
 
-If you have any issues contact [support@factorhouse.io](mailto:support@operatr.io).
+If you have any issues contact [support@factorhouse.io](mailto:support@factorhouse.io).
 
 # Copyright and License
 
