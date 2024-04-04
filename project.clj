@@ -21,7 +21,7 @@
                    [:roles
                     [:role "developer"]
                     [:role "maintainer"]]]])
-  :dependencies [[org.clojure/clojure "1.11.1"]
+  :dependencies [[org.clojure/clojure "1.11.2"]
                  [com.cognitect/transit-clj "1.0.329"]
                  [org.clojure/tools.logging "1.2.4"]
                  [org.apache.kafka/kafka-streams "3.2.0" :scope "provided" :exclusions [com.fasterxml.jackson.core/jackson-core]]]
