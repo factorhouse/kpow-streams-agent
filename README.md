@@ -1,7 +1,7 @@
-[![test](https://github.com/operatr-io/streams-agent/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/operatr-io/streams-agent/actions/workflows/test.yml)
+[![test](https://github.com/factorhouse/kpow-streams-agent/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/factorhouse/kpow-streams-agent/actions/workflows/test.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/io.operatr/kpow-streams-agent.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.operatr%22%20AND%20a:%22kpow-streams-agent%22)
 
-# [Kpow](https://kpow.io) Streams Agent
+# Kpow Streams Agent
 
 This repository contains the Kpow Streams Agent.
 
@@ -15,7 +15,7 @@ Use this agent to integrate your Kafka Streams applications with Kpow and unlock
 
 See the [Kpow Kafka Streams Feature Guide](https://docs.kpow.io/features/kafka-streams) for full documentation.
 
-See the [Kpow Kafka Streams Spring Word Count Example](https://github.com/operatr-io/kpow-streams-agent-example-spring) for an integration of Spring, Kafka, and Kpow.
+See the [Kpow Kafka Streams Spring Word Count Example](https://github.com/factorhouse/kpow-streams-spring-cloud-example) for an integration of Spring, Kafka, and Kpow.
 
 ---
 
@@ -29,7 +29,7 @@ See the [Kpow Kafka Streams Spring Word Count Example](https://github.com/operat
 
 The Kpow Streams Agent requires a running instance of Kpow.
 
-Evaluate Kpow with the [Kpow Local](https://github.com/operatr-io/kpow-local) repository or see our [Quick Start](https://docs.kpow.io/installation/quick-start) guide.
+Evaluate Kpow with the [Kpow Local](https://github.com/factorhouse/kpow-local) repository or see our [Quick Start](https://docs.kpow.io/installation/quick-start) guide.
 
 # Installation
 
@@ -41,7 +41,7 @@ Include the agent as a dependency in your Kafka Streams application.
 <dependency>
   <groupId>io.operatr</groupId>
   <artifactId>kpow-streams-agent</artifactId>
-  <version>0.2.11</version>
+  <version>0.2.12</version>
 </dependency>
 ```
 
@@ -49,7 +49,7 @@ Include the agent as a dependency in your Kafka Streams application.
 
 In your application, just before you start your KafkaStreams instance:
 
-* Create a new [io.operatr.kpow.StreamsRegistry](https://github.com/operatr-io/kpow-streams-agent/blob/main/src/java/io/operatr/kpow/StreamsRegistry.java) instance.
+* Create a new [io.operatr.kpow.StreamsRegistry](https://github.com/factorhouse/kpow-streams-agent/blob/main/src/java/io/operatr/kpow/StreamsRegistry.java) instance.
 * Register your KafkaStreams and Topology instances with the StreamsRegistry.
 
 ```java 
@@ -168,7 +168,7 @@ See the [Kpow Multi-Cluster Feature Guide](https://docs.kpow.io/config/multi-clu
 
 Is the requirement to produce to the primary Kpow cluster difficult for you?
 
-Please [let us know](mailto:support@operatr.io) - we are considering the option of always writing to the same cluster as your Kafka Streams connects to and having Kpow gather snapshots from each cluster.
+Please [let us know](mailto:support@factorhouse.io) - we are considering the option of always writing to the same cluster as your Kafka Streams connects to and having Kpow gather snapshots from each cluster.
 
 ### Register Multiple Kafka Streams Instances
 
@@ -201,10 +201,10 @@ You can verify `StreamsRegistry` is sending telemetry to your Kafka Cluster by u
 
 # Get Help
 
-If you have any issues contact [support@operatr.io](mailto:support@operatr.io).
+If you have any issues contact [support@factorhouse.io](mailto:support@factorhouse.io).
 
 # Copyright and License
 
-Copyright © 2021-2022 Operatr Pty Ltd. 
+Copyright © 2021-2024 Factor House Pty Ltd. 
 
 Distributed under the Apache-2.0 License, the same as Apache Kafka.

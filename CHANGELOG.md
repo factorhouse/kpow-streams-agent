@@ -1,6 +1,10 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [0.2.12] - 2024-04-10
+### Changed
+- Bump dependencies, fix CVE-2024-22871
+ 
 ## [0.2.11] - 2022-05-27
 ### Changed
 - Add `compression.type` to allowed Producer properties
