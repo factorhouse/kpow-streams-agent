@@ -1,23 +1,23 @@
-(defproject io.operatr/kpow-streams-agent "0.2.12"
+(defproject io.factorhouse/kpow-streams-agent "1.0.0"
   :description "kPow's Kafka Streams monitoring agent"
-  :url "https://github.com/operatr-io/kpow-streams-agent"
+  :url "https://github.com/factorhouse/kpow-streams-agent"
   :license {:name         "Apache-2.0 License"
             :url          "https://www.apache.org/licenses/LICENSE-2.0"
             :distribution :repo
             :comments     "same as Kafka"}
-  :scm {:name "git" :url "https://github.com/operatr-io/kpow-streams-agent"}
+  :scm {:name "git" :url "https://github.com/factorhouse/kpow-streams-agent"}
   :pom-addition ([:developers
                   [:developer
                    [:id "wavejumper"]
                    [:name "Thomas Crowley"]
-                   [:url "https://operatr.io"]
+                   [:url "https://factorhouse.io"]
                    [:roles
                     [:role "developer"]
                     [:role "maintainer"]]]
                   [:developer
                    [:id "d-t-w"]
                    [:name "Derek Troy-West"]
-                   [:url "https://operatr.io"]
+                   [:url "https://factorhouse.io"]
                    [:roles
                     [:role "developer"]
                     [:role "maintainer"]]]])
