@@ -1,4 +1,4 @@
-(ns io.operatr.kpow.agent
+(ns io.factorhouse.kpow.agent
   (:require [clojure.string :as str]
             [clojure.tools.logging :as log]
             [clojure.core.protocols :as p])

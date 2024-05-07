@@ -24,7 +24,7 @@
   :dependencies [[org.clojure/clojure "1.11.3"]
                  [com.cognitect/transit-clj "1.0.333"]
                  [org.clojure/tools.logging "1.3.0"]
-                 [org.apache.kafka/kafka-streams "3.2.0" :scope "provided" :exclusions [com.fasterxml.jackson.core/jackson-core]]]
+                 [org.apache.kafka/kafka-streams "3.6.1" :scope "provided"]]
   :uberjar {:prep-tasks ["clean" "javac" "compile"]
             :aot        :all}
   :classifiers [["sources" {:source-paths      ^:replace []

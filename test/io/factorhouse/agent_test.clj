@@ -1,11 +1,11 @@
-(ns io.operatr.agent-test
+(ns io.factorhouse.agent-test
   (:require [clojure.test :refer :all]
             [clojure.core.protocols :as p]
-            [io.operatr.kpow.agent :as agent])
+            [io.factorhouse.kpow.agent :as agent])
   (:import (org.apache.kafka.streams Topology StreamsBuilder KafkaStreams$State)
            (org.apache.kafka.common MetricName Metric)
            (org.apache.kafka.clients.producer Producer)
-           (io.operatr.kpow StreamsRegistry)
+           (io.factorhouse.kpow StreamsRegistry)
            (java.util Properties)))
 
 (defn ^Properties ->props [m]
