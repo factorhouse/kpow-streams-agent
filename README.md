@@ -10,7 +10,7 @@ Use this agent to integrate your Kafka Streams applications with Kpow and unlock
 * See summaries of Kafka Streams activity for your Kafka cluster(s).
 * Monitor Kafka Streams metrics (e.g Streams State, Stream-Thread, State Store, RocksDB, etc).
 * Visualise Kafka Streams topologies in the Kpow Workflows UI.
-* Aggregate and Expose Kafka Streams metrics via Kpow [Prometheus Endpoints](https://docs.kpow.io/features/prometheus) (for alerting, etc).
+* Aggregate and Expose Kafka Streams metrics via Kpow [Prometheus Endpoints](https://docs.factorhouse.io/kpow-ee/features/prometheus/) (for alerting, etc).
 
 See the [Kpow Kafka Streams Feature Guide](https://docs.factorhouse.io/kpow-ee/features/kafka-streams/) for full documentation.
 
@@ -28,7 +28,7 @@ See the [Kpow Kafka Streams Spring Word Count Example](https://github.com/factor
 
 The Kpow Streams Agent requires a running instance of Kpow.
 
-Evaluate Kpow with the [Kpow Local](https://github.com/factorhouse/kpow-local) repository or see our [Quick Start](https://docs.kpow.io/installation/quick-start) guide.
+Evaluate Kpow with the [Kpow Local](https://github.com/factorhouse/kpow-local) repository or see our [Quick Start](https://docs.factorhouse.io/kpow-ee/installation/quick-start/) guide.
 
 # Installation
 
@@ -161,7 +161,7 @@ StreamsRegistry registry = new StreamsRegistry(primaryProps);
 ...
 ```
 
-See the [Kpow Multi-Cluster Feature Guide](https://docs.kpow.io/config/multi-cluster) for more information.
+See the [Kpow Multi-Cluster Feature Guide](https://docs.factorhouse.io/kpow-ee/config/multi-cluster/) for more information.
 
 ### Multi-Cluster Kpow Feedback Requested
 
