@@ -1,12 +1,12 @@
 (ns io.factorhouse.agent-test
-  (:require [clojure.test :refer :all]
-            [clojure.core.protocols :as p]
+  (:require [clojure.core.protocols :as p]
+            [clojure.test :refer :all]
             [io.factorhouse.kpow.agent :as agent])
-  (:import (org.apache.kafka.streams Topology StreamsBuilder KafkaStreams$State)
-           (org.apache.kafka.common MetricName Metric)
+  (:import (io.factorhouse.kpow StreamsRegistry)
+           (java.util Properties)
            (org.apache.kafka.clients.producer Producer)
-           (io.factorhouse.kpow StreamsRegistry)
-           (java.util Properties)))
+           (org.apache.kafka.common Metric MetricName)
+           (org.apache.kafka.streams KafkaStreams$State StreamsBuilder Topology)))
 
 (defn ^Properties ->props [m]
   (let [props (Properties.)]
@@ -15,13 +15,16 @@
     props))
 
 (deftest filter-props
-  (is (= {"compression.type" "gzip"}
+  (is (= {"compression.type"   "gzip"
+          "enable.idempotence" "false"}
          (StreamsRegistry/filterProperties (->props {"fo" "bar"}))))
-  (is (= {"bootstrap.servers" "xyz"
-          "compression.type"  "lz4"}
+  (is (= {"bootstrap.servers"  "xyz"
+          "compression.type"   "lz4"
+          "enable.idempotence" "false"}
          (into {} (StreamsRegistry/filterProperties (->props {"compression.type" "lz4" "bootstrap.servers" "xyz"})))))
-  (is (= {"bootstrap.servers" "xyz"
-          "compression.type"  "gzip"}
+  (is (= {"bootstrap.servers"  "xyz"
+          "compression.type"   "gzip"
+          "enable.idempotence" "false"}
          (into {} (StreamsRegistry/filterProperties (->props {"fo" "bar" "bootstrap.servers" "xyz"}))))))
 
 (defn ^Topology test-topology
