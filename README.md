@@ -194,7 +194,7 @@ You can verify `StreamsRegistry` is sending telemetry to your Kafka Cluster by u
 
 * Select topic `__oprtr_snapshot_state`
 * Choose `Transit / JSON` as the key deserializer
-* Choose 'Last 15 minutes' as the window
+* Choose `Last 15 minutes` as the window
 * Enter the following kJQ filter: `.key[0] == :streams`
 
 ![Data Inspect](docs/kpow-data-inspect.png)
