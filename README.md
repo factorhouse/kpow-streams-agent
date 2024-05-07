@@ -48,11 +48,11 @@ Include the agent as a dependency in your Kafka Streams application.
 
 In your application, just before you start your KafkaStreams instance:
 
-* Create a new [io.operatr.kpow.StreamsRegistry](https://github.com/factorhouse/kpow-streams-agent/blob/main/src/java/io/operatr/kpow/StreamsRegistry.java) instance.
+* Create a new [io.factorhouse.kpow.StreamsRegistry](https://github.com/factorhouse/kpow-streams-agent/blob/main/src/java/io/factorhouse/kpow/StreamsRegistry.java) instance.
 * Register your KafkaStreams and Topology instances with the StreamsRegistry.
 
 ```java 
-import io.operatr.kpow.StreamsRegistry;
+import io.factorhouse.kpow.StreamsRegistry;
 
 // Your Kafka Streams topology
 Topology topology = createMyTopology(); 
@@ -194,6 +194,7 @@ You can verify `StreamsRegistry` is sending telemetry to your Kafka Cluster by u
 
 * Select topic `__oprtr_snapshot_state`
 * Choose `Transit / JSON` as the key deserializer
+* Choose 'Last 15 minutes' as the window
 * Enter the following kJQ filter: `.key[0] == :streams`
 
 ![Data Inspect](docs/kpow-data-inspect.png)
