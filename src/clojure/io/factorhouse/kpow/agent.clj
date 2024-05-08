@@ -1,4 +1,4 @@
-(ns io.operatr.kpow.agent
+(ns io.factorhouse.kpow.agent
   (:require [clojure.string :as str]
             [clojure.tools.logging :as log]
             [clojure.core.protocols :as p])
@@ -113,7 +113,7 @@
                       :snapshot/id    snapshot-id}
             record   (ProducerRecord. (:topic snapshot-topic) taxon value)]
         (.get (.send producer record))))
-    (log/infof "kPow: sent [%s] streams metrics for application.id %s" (count metrics) application-id)))
+    (log/infof "Kpow: sent [%s] streams metrics for application.id %s" (count metrics) application-id)))
 
 (defn plan-send
   [{:keys [snapshot-topic producer snapshot-id job-id captured]}]
@@ -165,7 +165,7 @@
                (Thread/sleep 2000)
                (plan-send next-ctx))
              (catch Throwable e
-               (log/errorf e "kPow: error sending streams snapshot for agent %s" id))))
+               (log/errorf e "Kpow: error sending streams snapshot for agent %s" id))))
 
       (deliver latch true))))
 
@@ -178,7 +178,7 @@
 
 (defn start-registry
   [{:keys [snapshot-topic producer]}]
-  (log/info "kPow: starting registry")
+  (log/info "Kpow: starting registry")
   (let [registered-topologies (atom {})
         pool                  (Executors/newSingleThreadScheduledExecutor thread-factory)
         register-fn           (fn [streams topology]
@@ -197,7 +197,7 @@
 
 (defn close-registry
   [agent]
-  (log/info "kPow: closing registry")
+  (log/info "Kpow: closing registry")
   (when-let [close (:close agent)]
     (close))
   (when-let [registered-topologies (:topologies agent)]
@@ -212,12 +212,12 @@
   [agent streams topology]
   (when-let [register-fn (:register agent)]
     (let [id (register-fn streams topology)]
-      (log/infof "kPow: registring new streams agent %s" id)
+      (log/infof "Kpow: registring new streams agent %s" id)
       id)))
 
 (defn unregister
   [agent ^String id]
   (when-let [registered-topologies (:topologies agent)]
     (swap! registered-topologies dissoc id)
-    (log/infof "kPow: unregistered streams agent %s" id)
+    (log/infof "Kpow: unregistered streams agent %s" id)
     true))

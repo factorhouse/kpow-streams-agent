@@ -8,28 +8,27 @@ This repository contains the Kpow Streams Agent.
 Use this agent to integrate your Kafka Streams applications with Kpow and unlock the following features:
 
 * See summaries of Kafka Streams activity for your Kafka cluster(s).
+* Monitor Kafka Streams metrics (e.g Streams State, Stream-Thread, State Store, RocksDB, etc).
 * Visualise Kafka Streams topologies in the Kpow Workflows UI.
-* Monitor Kafka Streams metrics (e.g Stream-Thread, State Store, RocksDB, etc).
-* Aggregate and Expose Kafka Streams metrics via Kpow [Prometheus Endpoints](https://docs.kpow.io/features/prometheus) (for alerting, etc).
-* (Soon) View Kpow Insights of your Kafka Streams applications (outlier metrics, etc).
+* Aggregate and Expose Kafka Streams metrics via Kpow [Prometheus Endpoints](https://docs.factorhouse.io/kpow-ee/features/prometheus/) (for alerting, etc).
 
-See the [Kpow Kafka Streams Feature Guide](https://docs.kpow.io/features/kafka-streams) for full documentation.
+See the [Kpow Kafka Streams Feature Guide](https://docs.factorhouse.io/kpow-ee/features/kafka-streams/) for full documentation.
 
 See the [Kpow Kafka Streams Spring Word Count Example](https://github.com/factorhouse/kpow-streams-spring-cloud-example) for an integration of Spring, Kafka, and Kpow.
 
 ---
 
-![streams-ui](docs/streams.png)
+![streams-ui](docs/kpow-streams.png)
 
 ---
 
-![topology-ui](docs/topologies.png)
+![topology-ui](docs/kpow-streams-topology.png)
 
 # Prerequisites
 
 The Kpow Streams Agent requires a running instance of Kpow.
 
-Evaluate Kpow with the [Kpow Local](https://github.com/factorhouse/kpow-local) repository or see our [Quick Start](https://docs.kpow.io/installation/quick-start) guide.
+Evaluate Kpow with the [Kpow Local](https://github.com/factorhouse/kpow-local) repository or see our [Quick Start](https://docs.factorhouse.io/kpow-ee/installation/quick-start/) guide.
 
 # Installation
 
@@ -49,11 +48,11 @@ Include the agent as a dependency in your Kafka Streams application.
 
 In your application, just before you start your KafkaStreams instance:
 
-* Create a new [io.operatr.kpow.StreamsRegistry](https://github.com/factorhouse/kpow-streams-agent/blob/main/src/java/io/operatr/kpow/StreamsRegistry.java) instance.
+* Create a new [io.factorhouse.kpow.StreamsRegistry](https://github.com/factorhouse/kpow-streams-agent/blob/main/src/java/io/factorhouse/kpow/StreamsRegistry.java) instance.
 * Register your KafkaStreams and Topology instances with the StreamsRegistry.
 
 ```java 
-import io.operatr.kpow.StreamsRegistry;
+import io.factorhouse.kpow.StreamsRegistry;
 
 // Your Kafka Streams topology
 Topology topology = createMyTopology(); 
@@ -162,7 +161,7 @@ StreamsRegistry registry = new StreamsRegistry(primaryProps);
 ...
 ```
 
-See the [Kpow Multi-Cluster Feature Guide](https://docs.kpow.io/config/multi-cluster) for more information.
+See the [Kpow Multi-Cluster Feature Guide](https://docs.factorhouse.io/kpow-ee/config/multi-cluster/) for more information.
 
 ### Multi-Cluster Kpow Feedback Requested
 
@@ -195,9 +194,10 @@ You can verify `StreamsRegistry` is sending telemetry to your Kafka Cluster by u
 
 * Select topic `__oprtr_snapshot_state`
 * Choose `Transit / JSON` as the key deserializer
-* Enter the following kJQ filter for the key: `.[0] == :streams`
+* Choose `Last 15 minutes` as the window
+* Enter the following kJQ filter: `.key[0] == :streams`
 
-![Data Inspect](docs/data-inspect.png)
+![Data Inspect](docs/kpow-data-inspect.png)
 
 # Get Help
 

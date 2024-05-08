@@ -1,4 +1,4 @@
-package io.operatr.kpow;
+package io.factorhouse.kpow;
 
 import clojure.java.api.Clojure;
 import clojure.lang.IFn;

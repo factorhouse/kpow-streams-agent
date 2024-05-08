@@ -1,30 +1,30 @@
-(defproject io.operatr/kpow-streams-agent "0.2.12"
-  :description "kPow's Kafka Streams monitoring agent"
-  :url "https://github.com/operatr-io/kpow-streams-agent"
+(defproject io.factorhouse/kpow-streams-agent "0.2.13"
+  :description "Kpow's Kafka Streams monitoring agent"
+  :url "https://github.com/factorhouse/kpow-streams-agent"
   :license {:name         "Apache-2.0 License"
             :url          "https://www.apache.org/licenses/LICENSE-2.0"
             :distribution :repo
             :comments     "same as Kafka"}
-  :scm {:name "git" :url "https://github.com/operatr-io/kpow-streams-agent"}
+  :scm {:name "git" :url "https://github.com/factorhouse/kpow-streams-agent"}
   :pom-addition ([:developers
                   [:developer
                    [:id "wavejumper"]
                    [:name "Thomas Crowley"]
-                   [:url "https://operatr.io"]
+                   [:url "https://factorhouse.io"]
                    [:roles
                     [:role "developer"]
                     [:role "maintainer"]]]
                   [:developer
                    [:id "d-t-w"]
                    [:name "Derek Troy-West"]
-                   [:url "https://operatr.io"]
+                   [:url "https://factorhouse.io"]
                    [:roles
                     [:role "developer"]
                     [:role "maintainer"]]]])
-  :dependencies [[org.clojure/clojure "1.11.2"]
+  :dependencies [[org.clojure/clojure "1.11.3"]
                  [com.cognitect/transit-clj "1.0.333"]
                  [org.clojure/tools.logging "1.3.0"]
-                 [org.apache.kafka/kafka-streams "3.2.0" :scope "provided" :exclusions [com.fasterxml.jackson.core/jackson-core]]]
+                 [org.apache.kafka/kafka-streams "3.6.1" :scope "provided"]]
   :uberjar {:prep-tasks ["clean" "javac" "compile"]
             :aot        :all}
   :classifiers [["sources" {:source-paths      ^:replace []
@@ -33,13 +33,13 @@
                 ["javadoc" {:source-paths      ^:replace []
                             :java-source-paths ^:replace []
                             :resource-paths    ^:replace ["javadoc"]}]]
-  :profiles {:kaocha {:dependencies [[lambdaisland/kaocha "1.87.1366"]]}
+  :profiles {:kaocha {:dependencies [[lambdaisland/kaocha "1.88.1376"]]}
              :dev    {:resource-paths ["dev-resources"]
-                      :plugins        [[lein-cljfmt "0.8.0"]]
-                      :dependencies   [[org.slf4j/slf4j-api "2.0.12"]
+                      :plugins        [[lein-cljfmt "0.9.2"]]
+                      :dependencies   [[org.slf4j/slf4j-api "2.0.13"]
                                        [ch.qos.logback/logback-classic "1.3.14"]
-                                       [cheshire "5.12.0" :exclusions [com.fasterxml.jackson.core/jackson-databind]]
-                                       [clj-kondo "2024.02.12"]]}
+                                       [cheshire "5.13.0" :exclusions [com.fasterxml.jackson.core/jackson-databind]]
+                                       [clj-kondo "2024.03.13"]]}
              :smoke  {:pedantic? :abort}}
   :aliases {"kaocha" ["with-profile" "+kaocha" "run" "-m" "kaocha.runner"]
             "kondo"  ["with-profile" "+smoke" "run" "-m" "clj-kondo.main" "--lint" "src"]
