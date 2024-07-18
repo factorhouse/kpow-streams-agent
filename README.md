@@ -18,11 +18,13 @@ See the [Kpow Kafka Streams Spring Word Count Example](https://github.com/factor
 
 ---
 
-![streams-ui](docs/kpow-streams.png)
+![kpow-streams](https://github.com/user-attachments/assets/020e23df-ca59-44fa-85e0-d510b4fee897)
 
 ---
 
-![topology-ui](docs/kpow-streams-topology.png)
+![streams-topology-usage](https://github.com/user-attachments/assets/85f8ddaf-fcb5-47d4-adc6-dfad10cf9f83)
+
+---
 
 # Prerequisites
 
