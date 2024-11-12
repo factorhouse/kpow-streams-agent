@@ -2,7 +2,8 @@
   (:require [clojure.string :as str]
             [clojure.tools.logging :as log]
             [clojure.core.protocols :as p])
-  (:import (java.util UUID)
+  (:import (io.factorhouse.kpow.key_strategies KeyStrategy Taxon)
+           (java.util UUID)
            (java.util.concurrent Executors TimeUnit ThreadFactory)
            (org.apache.kafka.clients.producer Producer ProducerRecord)
            (org.apache.kafka.common MetricName)
@@ -16,6 +17,15 @@
   {:topic "__oprtr_snapshot_state"})
 
 (extend-protocol p/Datafiable
+  Taxon
+  (datafy [v]
+    (into []
+          (filter identity)
+          [(keyword (.getDomain v))
+           (.getId v)
+           (keyword "kafka" (.getObject v))
+           (.getObjectId v)]))
+
   KeyValue
   (datafy [kv]
     {:key   (.key kv)
@@ -109,21 +119,21 @@
           metrics)))
 
 (defn snapshot-send
-  [{:keys [snapshot-topic ^Producer producer snapshot-id application-id job-id client-id captured]} data]
-  (let [snapshot {:type           :kafka/streams-agent
+  [{:keys [snapshot-topic ^Producer producer taxon application-id job-id client-id captured]} data]
+  (let [taxon    (p/datafy taxon)
+        snapshot {:type           :kafka/streams-agent
                   :application-id application-id
                   :client-id      client-id
                   :captured       captured
                   :data           data
                   :job/id         job-id
-                  :snapshot/id    snapshot-id}
-        taxon    [(:domain snapshot-id) (:id snapshot-id) :kafka/streams-agent]
+                  :snapshot/id    {:domain (first taxon) :id (second taxon)}}
         record   (ProducerRecord. (:topic snapshot-topic) taxon snapshot)]
     (.get (.send producer record))))
 
 (defn metrics-send
-  [{:keys [snapshot-topic producer snapshot-id application-id job-id client-id captured]} metrics]
-  (let [taxon [(:domain snapshot-id) (:id snapshot-id) :kafka/streams-agent]]
+  [{:keys [snapshot-topic producer taxon application-id job-id client-id captured]} metrics]
+  (let [taxon (p/datafy taxon)]
     (doseq [data (partition-all 50 metrics)]
       (let [value  {:type           :kafka/streams-agent-metrics
                     :application-id application-id
@@ -131,24 +141,24 @@
                     :captured       captured
                     :data           (vec data)
                     :job/id         job-id
-                    :snapshot/id    snapshot-id}
+                    :snapshot/id    {:domain (first taxon) :id (second taxon)}}
             record (ProducerRecord. (:topic snapshot-topic) taxon value)]
         (.get (.send producer record))))
     (log/infof "Kpow: sent [%s] streams metrics for application.id %s" (count metrics) application-id)))
 
 (defn plan-send
-  [{:keys [snapshot-topic producer snapshot-id job-id captured]}]
-  (let [taxon  [(:domain snapshot-id) (:id snapshot-id) :kafka/streams-agent]
+  [{:keys [snapshot-topic producer job-id captured taxon]}]
+  (let [taxon  (p/datafy taxon)
         plan   {:type        :observation/plan
                 :captured    captured
-                :snapshot/id snapshot-id
+                :snapshot/id {:domain (first taxon) :id (second taxon)}
                 :job/id      job-id
                 :data        {:type :observe/streams-agent}}
         record (ProducerRecord. (:topic snapshot-topic) taxon plan)]
     (.get (.send producer record))))
 
 (defn snapshot-telemetry
-  [{:keys [streams ^Topology topology metrics-filter] :as ctx}]
+  [{:keys [streams ^Topology topology metrics-filter ^KeyStrategy key-strategy] :as ctx}]
   (let [metrics (metrics streams)]
     (if (empty? metrics)
       (log/warn "KafkStreams .metrics() method returned an empty collection, no telemetry was sent. Has something mutated the global metrics registry?")
@@ -157,11 +167,12 @@
             snapshot       {:topology topology :state state}
             client-id      (client-id metrics)
             application-id (application-id metrics)
+            taxon          (.getTaxon key-strategy client-id application-id)
             ctx            (assoc ctx
                                   :captured (System/currentTimeMillis)
                                   :client-id client-id
                                   :application-id application-id
-                                  :snapshot-id {:domain :streams :id client-id})]
+                                  :taxon taxon)]
         (when (nil? application-id)
           (throw (Exception. "Cannot infer application id from metrics returned from KafkaStreams instance. Expected metric \"application-id\" in the metrics registry.")))
         (when (nil? client-id)
@@ -181,8 +192,8 @@
                   :snapshot-topic snapshot-topic
                   :producer       producer
                   :metrics-filter metrics-filter}]
-      (doseq [[id [streams topology]] @registered-topologies]
-        (try (when-let [next-ctx (snapshot-telemetry (assoc ctx :streams streams :topology topology))]
+      (doseq [[id [streams topology key-strategy]] @registered-topologies]
+        (try (when-let [next-ctx (snapshot-telemetry (assoc ctx :streams streams :topology topology :key-strategy key-strategy))]
                (Thread/sleep 2000)
                (plan-send next-ctx))
              (catch Throwable e
@@ -202,9 +213,9 @@
   (log/info "Kpow: starting registry")
   (let [registered-topologies (atom {})
         pool                  (Executors/newSingleThreadScheduledExecutor thread-factory)
-        register-fn           (fn [streams topology]
+        register-fn           (fn [streams topology key-strategy]
                                 (let [id (str (UUID/randomUUID))]
-                                  (swap! registered-topologies assoc id [streams topology])
+                                  (swap! registered-topologies assoc id [streams topology key-strategy])
                                   id))
         latch                 (promise)
         task                  (snapshot-task snapshot-topic producer registered-topologies metrics-filter latch)
@@ -227,12 +238,14 @@
 
 (defn init-registry
   [producer metrics-filter]
-  (start-registry {:snapshot-topic kpow-snapshot-topic :producer producer :metrics-filter metrics-filter}))
+  (start-registry {:snapshot-topic kpow-snapshot-topic
+                   :producer       producer
+                   :metrics-filter metrics-filter}))
 
 (defn register
-  [agent streams topology]
+  [agent streams topology key-strategy]
   (when-let [register-fn (:register agent)]
-    (let [id (register-fn streams topology)]
+    (let [id (register-fn streams topology key-strategy)]
       (log/infof "Kpow: registring new streams agent %s" id)
       id)))
 

@@ -6,7 +6,8 @@
            (java.util Properties)
            (org.apache.kafka.clients.producer Producer)
            (org.apache.kafka.common Metric MetricName)
-           (org.apache.kafka.streams KafkaStreams$State StreamsBuilder Topology)))
+           (org.apache.kafka.streams KafkaStreams$State StreamsBuilder Topology)
+           (io.factorhouse.kpow.key_strategies ClientIDKeyStrategy)))
 
 (defn ^Properties ->props [m]
   (let [props (Properties.)]
@@ -86,7 +87,8 @@
                                        (mock-streams [(mock-metric "first.metric" "first" "mock metric" {} 1.0)
                                                       (mock-metric "application-id" "first" "mock metric" {"client-id" "abc123"} "xxx")
                                                       (mock-metric "second.metric" "first" "mock metric" {"client-id" "abc123"} 2.0)])
-                                       (test-topology))]
+                                       (test-topology)
+                                       (ClientIDKeyStrategy.))]
 
     (is agent)
 

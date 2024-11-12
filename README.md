@@ -55,21 +55,25 @@ In your application, just before you start your KafkaStreams instance:
 
 ```java 
 import io.factorhouse.kpow.StreamsRegistry;
+import io.factorhouse.kpow.key_strategies.ClusterIDKeyStrategy;
 
 // Your Kafka Streams topology
-Topology topology = createMyTopology(); 
+Topology topology = createMyTopology();
 
 // Your Kafka Streams config
 Properties props = new createMyStreamProperties();
- 
+
 // Your Kafka Streams instance
-KafkaStreams streams = new KafkaStreams(topology, props); 
+KafkaStreams streams = new KafkaStreams(topology, props);
 
 // Create a Kpow StreamsRegistry
 StreamsRegistry registry = new StreamsRegistry(props);
 
+// Specify the key strategy when writing metrics to the internal Kafka topic
+KeyStrategy keyStrategy = new ClusterIDKeyStrategy(props);
+
 // Register your KafkaStreams and Topology instances with the StreamsRegistry
-registry.register(streams, topology); 
+registry.register(streams, topology, keyStrategy);
 
 // Start your Kafka Streams application
 streams.start();
