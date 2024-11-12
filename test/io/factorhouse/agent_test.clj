@@ -2,7 +2,7 @@
   (:require [clojure.core.protocols :as p]
             [clojure.test :refer :all]
             [io.factorhouse.kpow.agent :as agent])
-  (:import (io.factorhouse.kpow StreamsRegistry)
+  (:import (io.factorhouse.kpow MetricsFilter StreamsRegistry)
            (java.util Properties)
            (org.apache.kafka.clients.producer Producer)
            (org.apache.kafka.common Metric MetricName)
@@ -63,8 +63,10 @@
 (deftest agent-metrics
   (is (= [{:value 1.0, :description "mock metric", :group "first", :name "first.metric", :tags {}}
           {:value 2.0, :description "mock metric", :group "first", :name "second.metric", :tags {}}]
-         (agent/metrics (mock-streams [(mock-metric "first.metric" "first" "mock metric" {} 1.0)
-                                       (mock-metric "second.metric" "first" "mock metric" {} 2.0)])))))
+         (into []
+               (map #(dissoc % :metric-name))
+               (agent/metrics (mock-streams [(mock-metric "first.metric" "first" "mock metric" {} 1.0)
+                                             (mock-metric "second.metric" "first" "mock metric" {} 2.0)]))))))
 
 (deftest datafy-topo
   (is (= {:sub-topologies #{{:id    0,
@@ -77,13 +79,14 @@
          (p/datafy (.describe (test-topology))))))
 
 (deftest agent-test
-  (let [records  (atom [])
-        registry (agent/init-registry (mock-producer records))
-        agent    (agent/register registry
-                                 (mock-streams [(mock-metric "first.metric" "first" "mock metric" {} 1.0)
-                                                (mock-metric "application-id" "first" "mock metric" {"client-id" "abc123"} "xxx")
-                                                (mock-metric "second.metric" "first" "mock metric" {"client-id" "abc123"} 2.0)])
-                                 (test-topology))]
+  (let [records        (atom [])
+        metrics-filter (.build (MetricsFilter/emptyMetricsFilter))
+        registry       (agent/init-registry (mock-producer records) metrics-filter)
+        agent          (agent/register registry
+                                       (mock-streams [(mock-metric "first.metric" "first" "mock metric" {} 1.0)
+                                                      (mock-metric "application-id" "first" "mock metric" {"client-id" "abc123"} "xxx")
+                                                      (mock-metric "second.metric" "first" "mock metric" {"client-id" "abc123"} 2.0)])
+                                       (test-topology))]
 
     (is agent)
 

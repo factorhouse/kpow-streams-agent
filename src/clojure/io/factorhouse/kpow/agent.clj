@@ -4,10 +4,13 @@
             [clojure.core.protocols :as p])
   (:import (java.util UUID)
            (java.util.concurrent Executors TimeUnit ThreadFactory)
+           (java.util.function Predicate)
            (org.apache.kafka.clients.producer Producer ProducerRecord)
+           (org.apache.kafka.common MetricName)
            (org.apache.kafka.streams Topology KeyValue TopologyDescription TopologyDescription$Subtopology
                                      TopologyDescription$GlobalStore TopologyDescription$Node TopologyDescription$Source
                                      TopologyDescription$Processor TopologyDescription$Sink)
+           (io.factorhouse.kpow MetricsFilter)
            (java.util.concurrent.atomic AtomicInteger)))
 
 (def kpow-snapshot-topic
@@ -52,12 +55,13 @@
 (defn metrics
   [streams]
   (into [] (map (fn [[_ metric]]
-                  (let [metric-name (.metricName metric)]
+                  (let [metric-name ^MetricName (.metricName metric)]
                     {:value       (.metricValue metric)
                      :description (.description metric-name)
                      :group       (.group metric-name)
                      :name        (.name metric-name)
-                     :tags        (into {} (.tags metric-name))})))
+                     :tags        (into {} (.tags metric-name))
+                     :metric-name metric-name})))
         (.metrics streams)))
 
 (defn application-id
@@ -78,14 +82,22 @@
             (first))))
 
 (defn numeric-metrics
-  [metrics]
-  (->> metrics
-       (filter (comp number? :value))
-       (remove (fn [{:keys [value]}]
-                 (if (double? value)
-                   (Double/isNaN value)
-                   false)))
-       (map #(select-keys % [:name :tags :value]))))
+  [metrics ^MetricsFilter metrics-filter]
+  (let [filters   (.getFilters metrics-filter)
+        filter-fn (if (seq filters)
+                    (fn [{:keys [metric-name]}]
+                      (some (fn [^Predicate predicate]
+                              (.test predicate ^MetricName metric-name))
+                            filters))
+                    (constantly identity))]
+    (into [] (comp (filter (comp number? :value))
+                   (remove (fn [{:keys [value]}]
+                             (if (double? value)
+                               (Double/isNaN value)
+                               false)))
+                   (map #(select-keys % [:name :tags :value]))
+                   (filter filter-fn))
+          metrics)))
 
 (defn snapshot-send
   [{:keys [snapshot-topic ^Producer producer snapshot-id application-id job-id client-id captured]} data]
@@ -104,30 +116,30 @@
   [{:keys [snapshot-topic producer snapshot-id application-id job-id client-id captured]} metrics]
   (let [taxon [(:domain snapshot-id) (:id snapshot-id) :kafka/streams-agent]]
     (doseq [data (partition-all 50 metrics)]
-      (let [value    {:type           :kafka/streams-agent-metrics
-                      :application-id application-id
-                      :client-id      client-id
-                      :captured       captured
-                      :data           (vec data)
-                      :job/id         job-id
-                      :snapshot/id    snapshot-id}
-            record   (ProducerRecord. (:topic snapshot-topic) taxon value)]
+      (let [value  {:type           :kafka/streams-agent-metrics
+                    :application-id application-id
+                    :client-id      client-id
+                    :captured       captured
+                    :data           (vec data)
+                    :job/id         job-id
+                    :snapshot/id    snapshot-id}
+            record (ProducerRecord. (:topic snapshot-topic) taxon value)]
         (.get (.send producer record))))
     (log/infof "Kpow: sent [%s] streams metrics for application.id %s" (count metrics) application-id)))
 
 (defn plan-send
   [{:keys [snapshot-topic producer snapshot-id job-id captured]}]
-  (let [taxon    [(:domain snapshot-id) (:id snapshot-id) :kafka/streams-agent]
-        plan     {:type        :observation/plan
-                  :captured    captured
-                  :snapshot/id snapshot-id
-                  :job/id      job-id
-                  :data        {:type :observe/streams-agent}}
-        record   (ProducerRecord. (:topic snapshot-topic) taxon plan)]
+  (let [taxon  [(:domain snapshot-id) (:id snapshot-id) :kafka/streams-agent]
+        plan   {:type        :observation/plan
+                :captured    captured
+                :snapshot/id snapshot-id
+                :job/id      job-id
+                :data        {:type :observe/streams-agent}}
+        record (ProducerRecord. (:topic snapshot-topic) taxon plan)]
     (.get (.send producer record))))
 
 (defn snapshot-telemetry
-  [{:keys [streams ^Topology topology] :as ctx}]
+  [{:keys [streams ^Topology topology metrics-filter] :as ctx}]
   (let [metrics (metrics streams)]
     (if (empty? metrics)
       (log/warn "KafkStreams .metrics() method returned an empty collection, no telemetry was sent. Has something mutated the global metrics registry?")
@@ -149,17 +161,17 @@
                           (client-id-tag metrics)
                           application-id))))
         (snapshot-send ctx snapshot)
-        (metrics-send ctx (numeric-metrics metrics))
+        (metrics-send ctx (numeric-metrics metrics metrics-filter))
         ctx))))
 
 (defn snapshot-task
-  ^Runnable [snapshot-topic producer registered-topologies latch]
+  ^Runnable [snapshot-topic producer registered-topologies metrics-filter latch]
   (fn []
     (let [job-id (str (UUID/randomUUID))
           ctx    {:job-id         job-id
                   :snapshot-topic snapshot-topic
-                  :producer       producer}]
-
+                  :producer       producer
+                  :metrics-filter metrics-filter}]
       (doseq [[id [streams topology]] @registered-topologies]
         (try (when-let [next-ctx (snapshot-telemetry (assoc ctx :streams streams :topology topology))]
                (Thread/sleep 2000)
@@ -177,7 +189,7 @@
           (.setName (format "kpow-streams-agent-%d" (.getAndIncrement n))))))))
 
 (defn start-registry
-  [{:keys [snapshot-topic producer]}]
+  [{:keys [snapshot-topic producer metrics-filter]}]
   (log/info "Kpow: starting registry")
   (let [registered-topologies (atom {})
         pool                  (Executors/newSingleThreadScheduledExecutor thread-factory)
@@ -186,7 +198,7 @@
                                   (swap! registered-topologies assoc id [streams topology])
                                   id))
         latch                 (promise)
-        task                  (snapshot-task snapshot-topic producer registered-topologies latch)
+        task                  (snapshot-task snapshot-topic producer registered-topologies metrics-filter latch)
         scheduled-future      (.scheduleWithFixedDelay pool task 500 60000 TimeUnit/MILLISECONDS)]
     {:register         register-fn
      :pool             pool
@@ -205,8 +217,8 @@
   {})
 
 (defn init-registry
-  [producer]
-  (start-registry {:snapshot-topic kpow-snapshot-topic :producer producer}))
+  [producer metrics-filter]
+  (start-registry {:snapshot-topic kpow-snapshot-topic :producer producer :metrics-filter metrics-filter}))
 
 (defn register
   [agent streams topology]
