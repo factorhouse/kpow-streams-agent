@@ -82,7 +82,39 @@ The StreamsRegistry is a *single-threaded process* that performs these actions *
 
 The StreamsRegistry **does not talk directly to Kpow**. Kpow reads streams data from the snapshot topic.
 
-# Configuration
+# Metric filters
+
+You can configure each streams registry with metric filters, which give you greater control over which metrics Kpow's streams agent will export.
+
+Metric filters can be chained and added programmatically:
+
+```java
+import io.factorhouse.kpow.StreamsRegistry;
+import io.factorhouse.kpow.MetricFilter;
+
+MetricFilter metricFilter = MetricFilter().deny(); // don't send any streams metrics, just send through the Streams Topology
+
+// ..
+
+StreamsRegistry registry = new StreamsRegistry(props, metricFilter);
+```
+
+If you pass no metric filters to the `StreamsRegistry` constructor then the default metric filter will be used. The default metric filter will **accept** all metrics to be exported.
+
+### Metric filter usage
+
+Kpow's streams agent metric filters work very similar to Micrometer's [meter filters](https://github.com/micrometer-metrics/micrometer-docs/blob/main/src/docs/concepts/meter-filters.adoc).
+
+Metric filters can either `ACCEPT` or `DENY` a metric. The filter itself is a Java predicate which takes in the [org.apache.common.MetricName](https://kafka.apache.org/0110/javadoc/org/apache/kafka/common/MetricName.html#group()) class. This allows you to filter metrics by name, tags or group.
+
+Metric filters are applied sequentially in the order they are configured in the registry. This allows for stacking of deny and accept filters to create more complex rules:
+
+```java
+MetricFilter metricFilter = MetricFilter().acceptNameStartsWith("rocksdb").deny();
+```
+The above example allows all rocksdb related metrics through and denies all other types of streams metrics.
+
+# Kafka connection
 
 The `StreamsRegistry` `Properties` contains configuration to create the snapshot producer.
 
