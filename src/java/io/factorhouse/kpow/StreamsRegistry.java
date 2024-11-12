@@ -3,7 +3,6 @@ package io.factorhouse.kpow;
 import clojure.java.api.Clojure;
 import clojure.lang.IFn;
 import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.common.Metric;
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.Topology;
@@ -74,7 +73,7 @@ public class StreamsRegistry implements AutoCloseable {
         return nextProps;
     }
 
-    public StreamsRegistry(Properties props, MetricsFilter metricsFilter) {
+    public StreamsRegistry(Properties props, MetricFilter metricsFilter) {
         IFn require = Clojure.var("clojure.core", "require");
         require.invoke(Clojure.read("io.factorhouse.kpow.agent"));
         IFn agentFn = Clojure.var("io.factorhouse.kpow.agent", "init-registry");
@@ -87,8 +86,14 @@ public class StreamsRegistry implements AutoCloseable {
         agent = agentFn.invoke(producer, metricsFilter);
     }
 
+    public static MetricFilter defaultMetricFilter() {
+        return new MetricFilter()
+                .acceptNameStartsWith("foo")
+                .deny();
+    }
+
     public StreamsRegistry(Properties props) {
-        this(props, MetricsFilter.defaultMetricsFilter().build());
+        this(props, StreamsRegistry.defaultMetricFilter());
     }
 
     public StreamsAgent register(KafkaStreams streams, Topology topology) {

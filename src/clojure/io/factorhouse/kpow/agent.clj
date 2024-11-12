@@ -4,13 +4,12 @@
             [clojure.core.protocols :as p])
   (:import (java.util UUID)
            (java.util.concurrent Executors TimeUnit ThreadFactory)
-           (java.util.function Predicate)
            (org.apache.kafka.clients.producer Producer ProducerRecord)
            (org.apache.kafka.common MetricName)
            (org.apache.kafka.streams Topology KeyValue TopologyDescription TopologyDescription$Subtopology
                                      TopologyDescription$GlobalStore TopologyDescription$Node TopologyDescription$Source
                                      TopologyDescription$Processor TopologyDescription$Sink)
-           (io.factorhouse.kpow MetricsFilter)
+           (io.factorhouse.kpow MetricFilter MetricFilter$FilterCriteria)
            (java.util.concurrent.atomic AtomicInteger)))
 
 (def kpow-snapshot-topic
@@ -81,22 +80,32 @@
             (str/split #"-StreamThread-")
             (first))))
 
+(defn apply-metric-filters
+  [^MetricName metric-name filters]
+  (reduce
+   (fn [acc ^MetricFilter$FilterCriteria filter-criteria]
+     (let [metric-filter-type (.getFilterType filter-criteria)
+           predicate          (.getPredicate filter-criteria)]
+       (if (.test predicate metric-name)
+         (reduced
+          (case (.name metric-filter-type)
+            "ACCEPT" true
+            "DENY" false))
+         acc)))
+   nil
+   filters))
+
 (defn numeric-metrics
-  [metrics ^MetricsFilter metrics-filter]
-  (let [filters   (.getFilters metrics-filter)
-        filter-fn (if (seq filters)
-                    (fn [{:keys [metric-name]}]
-                      (some (fn [^Predicate predicate]
-                              (.test predicate ^MetricName metric-name))
-                            filters))
-                    (constantly identity))]
+  [metrics ^MetricFilter metrics-filter]
+  (let [filters (.getFilters metrics-filter)]
     (into [] (comp (filter (comp number? :value))
                    (remove (fn [{:keys [value]}]
                              (if (double? value)
                                (Double/isNaN value)
                                false)))
-                   (map #(select-keys % [:name :tags :value]))
-                   (filter filter-fn))
+                   (filter (fn [{:keys [metric-name]}]
+                             (apply-metric-filters metric-name filters)))
+                   (map #(select-keys % [:name :tags :value])))
           metrics)))
 
 (defn snapshot-send

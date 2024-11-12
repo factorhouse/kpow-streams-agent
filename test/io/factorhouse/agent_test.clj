@@ -2,7 +2,7 @@
   (:require [clojure.core.protocols :as p]
             [clojure.test :refer :all]
             [io.factorhouse.kpow.agent :as agent])
-  (:import (io.factorhouse.kpow MetricsFilter StreamsRegistry)
+  (:import (io.factorhouse.kpow MetricFilter StreamsRegistry)
            (java.util Properties)
            (org.apache.kafka.clients.producer Producer)
            (org.apache.kafka.common Metric MetricName)
@@ -80,7 +80,7 @@
 
 (deftest agent-test
   (let [records        (atom [])
-        metrics-filter (.build (MetricsFilter/emptyMetricsFilter))
+        metrics-filter (-> (MetricFilter.) (.accept))
         registry       (agent/init-registry (mock-producer records) metrics-filter)
         agent          (agent/register registry
                                        (mock-streams [(mock-metric "first.metric" "first" "mock metric" {} 1.0)
