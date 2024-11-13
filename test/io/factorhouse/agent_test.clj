@@ -3,11 +3,11 @@
             [clojure.test :refer :all]
             [io.factorhouse.kpow.agent :as agent])
   (:import (io.factorhouse.kpow MetricFilter StreamsRegistry)
+           (io.factorhouse.kpow.key ClientIdKeyStrategy)
            (java.util Properties)
            (org.apache.kafka.clients.producer Producer)
            (org.apache.kafka.common Metric MetricName)
-           (org.apache.kafka.streams KafkaStreams$State StreamsBuilder Topology)
-           (io.factorhouse.kpow.key_strategies ClientIDKeyStrategy)))
+           (org.apache.kafka.streams KafkaStreams$State StreamsBuilder Topology)))
 
 (defn ^Properties ->props [m]
   (let [props (Properties.)]
@@ -88,7 +88,7 @@
                                                       (mock-metric "application-id" "first" "mock metric" {"client-id" "abc123"} "xxx")
                                                       (mock-metric "second.metric" "first" "mock metric" {"client-id" "abc123"} 2.0)])
                                        (test-topology)
-                                       (ClientIDKeyStrategy.))]
+                                       (ClientIdKeyStrategy.))]
 
     (is agent)
 

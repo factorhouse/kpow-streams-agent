@@ -1,22 +1,22 @@
-package io.factorhouse.kpow.key_strategies;
+package io.factorhouse.kpow.key;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.DescribeClusterResult;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
-public class ClusterIDKeyStrategy implements KeyStrategy {
-    private final String clusterID;
+public class ClusterIdKeyStrategy implements KeyStrategy {
+    private final String clusterId;
 
-    public ClusterIDKeyStrategy(Properties props) throws InterruptedException, ExecutionException {
+    public ClusterIdKeyStrategy(Properties props) throws InterruptedException, ExecutionException {
         try (AdminClient adminClient = AdminClient.create(props)) {
             DescribeClusterResult describeClusterResult = adminClient.describeCluster();
-            this.clusterID = describeClusterResult.clusterId().get();
+            this.clusterId = describeClusterResult.clusterId().get();
         }
     }
 
     @Override
     public Taxon getTaxon(String clientId, String applicationId) {
-        return new Taxon("streams", clusterID, "streams-agent-cid", clientId);
+        return new Taxon("streams", clusterId, "streams-agent-cid", clientId);
     }
 }

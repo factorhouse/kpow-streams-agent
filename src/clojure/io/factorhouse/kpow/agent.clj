@@ -1,17 +1,17 @@
 (ns io.factorhouse.kpow.agent
-  (:require [clojure.string :as str]
-            [clojure.tools.logging :as log]
-            [clojure.core.protocols :as p])
-  (:import (io.factorhouse.kpow.key_strategies KeyStrategy Taxon)
+  (:require [clojure.core.protocols :as p]
+            [clojure.string :as str]
+            [clojure.tools.logging :as log])
+  (:import (io.factorhouse.kpow MetricFilter MetricFilter$FilterCriteria)
+           (io.factorhouse.kpow.key KeyStrategy Taxon)
            (java.util UUID)
-           (java.util.concurrent Executors TimeUnit ThreadFactory)
+           (java.util.concurrent Executors ThreadFactory TimeUnit)
+           (java.util.concurrent.atomic AtomicInteger)
            (org.apache.kafka.clients.producer Producer ProducerRecord)
            (org.apache.kafka.common MetricName)
-           (org.apache.kafka.streams Topology KeyValue TopologyDescription TopologyDescription$Subtopology
-                                     TopologyDescription$GlobalStore TopologyDescription$Node TopologyDescription$Source
-                                     TopologyDescription$Processor TopologyDescription$Sink)
-           (io.factorhouse.kpow MetricFilter MetricFilter$FilterCriteria)
-           (java.util.concurrent.atomic AtomicInteger)))
+           (org.apache.kafka.streams KeyValue Topology TopologyDescription TopologyDescription$GlobalStore
+                                     TopologyDescription$Node TopologyDescription$Processor TopologyDescription$Sink
+                                     TopologyDescription$Source TopologyDescription$Subtopology)))
 
 (def kpow-snapshot-topic
   {:topic "__oprtr_snapshot_state"})
@@ -19,12 +19,9 @@
 (extend-protocol p/Datafiable
   Taxon
   (datafy [v]
-    (into []
-          (filter identity)
-          [(keyword (.getDomain v))
-           (.getId v)
-           (keyword "kafka" (.getObject v))
-           (.getObjectId v)]))
+    (if-let [object-id (.getObjectId v)]
+      [(keyword (.getDomain v)) (.getDomainId v) (keyword "kafka" (.getObject v)) object-id]
+      [(keyword (.getDomain v)) (.getDomainId v) (keyword "kafka" (.getObject v))]))
 
   KeyValue
   (datafy [kv]
@@ -93,17 +90,17 @@
 (defn apply-metric-filters
   [^MetricName metric-name filters]
   (reduce
-   (fn [acc ^MetricFilter$FilterCriteria filter-criteria]
-     (let [metric-filter-type (.getFilterType filter-criteria)
-           predicate          (.getPredicate filter-criteria)]
-       (if (.test predicate metric-name)
-         (reduced
-          (case (.name metric-filter-type)
-            "ACCEPT" true
-            "DENY" false))
-         acc)))
-   nil
-   filters))
+    (fn [acc ^MetricFilter$FilterCriteria filter-criteria]
+      (let [metric-filter-type (.getFilterType filter-criteria)
+            predicate          (.getPredicate filter-criteria)]
+        (if (.test predicate metric-name)
+          (reduced
+            (case (.name metric-filter-type)
+              "ACCEPT" true
+              "DENY" false))
+          acc)))
+    nil
+    filters))
 
 (defn numeric-metrics
   [metrics ^MetricFilter metrics-filter]
@@ -169,17 +166,17 @@
             application-id (application-id metrics)
             taxon          (.getTaxon key-strategy client-id application-id)
             ctx            (assoc ctx
-                                  :captured (System/currentTimeMillis)
-                                  :client-id client-id
-                                  :application-id application-id
-                                  :taxon taxon)]
+                             :captured (System/currentTimeMillis)
+                             :client-id client-id
+                             :application-id application-id
+                             :taxon taxon)]
         (when (nil? application-id)
           (throw (Exception. "Cannot infer application id from metrics returned from KafkaStreams instance. Expected metric \"application-id\" in the metrics registry.")))
         (when (nil? client-id)
           (throw (Exception.
-                  (format "Cannot infer client id from metrics returned from KafkaStreams instance. Got: client-id %s and application-id %s"
-                          (client-id-tag metrics)
-                          application-id))))
+                   (format "Cannot infer client id from metrics returned from KafkaStreams instance. Got: client-id %s and application-id %s"
+                           (client-id-tag metrics)
+                           application-id))))
         (snapshot-send ctx snapshot)
         (metrics-send ctx (numeric-metrics metrics metrics-filter))
         ctx))))

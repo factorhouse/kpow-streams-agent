@@ -1,14 +1,13 @@
-package io.factorhouse.kpow.key_strategies;
+package io.factorhouse.kpow.key;
 
 public class Taxon {
     private final String domain;
-    private final String id;
-
+    private final String domainId;
     private final String object;
     private final String objectId;
 
-    public Taxon(String domain, String id, String object, String objectId) {
-        this.id = id;
+    public Taxon(String domain, String domainId, String object, String objectId) {
+        this.domainId = domainId;
         this.domain = domain;
         this.object = object;
         this.objectId = objectId;
@@ -26,7 +25,7 @@ public class Taxon {
         return objectId;
     }
 
-    public String getId() {
-        return id;
+    public String getDomainId() {
+        return domainId;
     }
 }

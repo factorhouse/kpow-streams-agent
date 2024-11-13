@@ -1,4 +1,4 @@
-package io.factorhouse.kpow.key_strategies;
+package io.factorhouse.kpow.key;
 
 public class ManualKeyStrategy implements KeyStrategy {
     private final String envName;

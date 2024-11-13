@@ -55,7 +55,7 @@ In your application, just before you start your KafkaStreams instance:
 
 ```java 
 import io.factorhouse.kpow.StreamsRegistry;
-import io.factorhouse.kpow.key_strategies.ClusterIDKeyStrategy;
+import io.factorhouse.kpow.key.ClusterIdKeyStrategy;
 
 // Your Kafka Streams topology
 Topology topology = createMyTopology();
@@ -70,7 +70,7 @@ KafkaStreams streams = new KafkaStreams(topology, props);
 StreamsRegistry registry = new StreamsRegistry(props);
 
 // Specify the key strategy when writing metrics to the internal Kafka topic
-KeyStrategy keyStrategy = new ClusterIDKeyStrategy(props);
+KeyStrategy keyStrategy = new ClusterIdKeyStrategy(props);
 
 // Register your KafkaStreams and Topology instances with the StreamsRegistry
 registry.register(streams, topology, keyStrategy);
@@ -161,7 +161,7 @@ For more details visit the [Producer](https://kafka.apache.org/documentation/#pr
 
 The keying strategy for data sent from Kpow's streams agent to its internal Kafka topic is configurable. The key strategy plays an important role in enabling Kpow to align stream metrics with the UI accurately. There are many key strategies available depending on your organisation's deployment.
 
-#### Cluster ID (default in 1.0.0+, recommended)
+#### Cluster ID (recommended key strategy, requires Kpow 94.1+)
 
 The default key strategy uses the cluster ID, obtained via an AdminClient [describeClusters](https://kafka.apache.org/23/javadoc/org/apache/kafka/clients/admin/DescribeClusterResult.html) call. This AdminClient is created once during registry initialization and then closed. If you prefer not to have the streams registry create an AdminClient—either because your Kafka variant does not provide a cluster ID or due to security considerations—you may select an alternative key strategy from the options below.
 
@@ -178,20 +178,20 @@ registry.register(streams, topology, keyStrategy);
 This key strategy relies on the client ID and application ID from the active KafkaStreams instance, eliminating the need for an AdminClient. However, in a multi-cluster Kpow deployment where the same application ID is used across multiple environments (e.g., staging, dev, prod), Kpow cannot determine which cluster the Kafka Streams instance is associated with.
 
 ```java
-import io.factorhouse.kpow.StreamsRegistry;
-import io.factorhouse.kpow.key_strategies.ClientIDKeyStrategy;
 
-KeyStrategy keyStrategy = new ClientIDKeyStrategy();
+import io.factorhouse.kpow.key.ClientIdKeyStrategy;
+
+KeyStrategy keyStrategy = new ClientIdKeyStrategy();
 registry.register(streams, topology, keyStrategy);
 ```
 
-#### Environment name (manual)
+#### Environment name (manual, requires Kpow 94.1+)
 
 If you have set a UI-friendly cluster name using the `ENVIRONMENT_NAME` environment variable in Kpow, you can use this environment name as the keying strategy for the streams agent.
 
 ```java
-import io.factorhouse.kpow.StreamsRegistry;
-import io.factorhouse.kpow.key_strategies.ManualKeyStrategy;
+
+import io.factorhouse.kpow.key.ManualKeyStrategy;
 
 // This sets a manual key of `Trade Book (Staging)`, the name of the clusters environment name in Kpow's UI.
 KeyStrategy keyStrategy = new ManualKeyStrategy("Trade Book (Staging)");
@@ -224,7 +224,7 @@ Properties streamsProps = new Properties();
 KafkaStreams streams = new KafkaStreams(topology, streamsProps);
 
 StreamsRegistry registry = new StreamsRegistry(streamsProps);
-...
+//...
 ```
 
 ### Multi-Cluster Kpow
@@ -237,7 +237,7 @@ KafkaStreams streams = new KafkaStreams(topology, streamsProps);
 
 Properties primaryProps = createMyPrimaryClusterProducerProperties();
 StreamsRegistry registry = new StreamsRegistry(primaryProps);
-...
+//...
 ```
 
 See the [Kpow Multi-Cluster Feature Guide](https://docs.factorhouse.io/kpow-ee/config/multi-cluster/) for more information.

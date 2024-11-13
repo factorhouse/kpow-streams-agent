@@ -1,7 +1,7 @@
-package io.factorhouse.kpow.key_strategies;
+package io.factorhouse.kpow.key;
 
-public class ClientIDKeyStrategy implements KeyStrategy {
-    public ClientIDKeyStrategy() {}
+public class ClientIdKeyStrategy implements KeyStrategy {
+    public ClientIdKeyStrategy() {}
 
     @Override
     public Taxon getTaxon(String clientId, String applicationId) {

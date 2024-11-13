@@ -2,7 +2,7 @@ package io.factorhouse.kpow;
 
 import clojure.java.api.Clojure;
 import clojure.lang.IFn;
-import io.factorhouse.kpow.key_strategies.KeyStrategy;
+import io.factorhouse.kpow.key.KeyStrategy;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.streams.KafkaStreams;
