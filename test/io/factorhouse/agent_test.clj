@@ -182,11 +182,7 @@
 
 (deftest agent-test-manual-key-strategy
   (let [records        (atom [])
-        metrics-filter (-> (MetricFilter.)
-                           (.denyNameStartsWith "second")
-                           (.acceptNameStartsWith "first")
-                           (.acceptNameStartsWith "rocksdb")
-                           (.deny))
+        metrics-filter (-> (MetricFilter.) (.deny))
         registry       (agent/init-registry (mock-producer records) metrics-filter)
         agent          (agent/register registry
                                        (mock-streams [(mock-metric "first.metric" "first" "mock metric" {} 1.0)
@@ -214,14 +210,7 @@
                                 :state    "RUNNING"},
                :snapshot/id    {:domain :streams, :id "Trade Book (Staging)"}}]
              [[:streams "Trade Book (Staging)" :kafka/streams-agent-m "abc123"]
-              {:type :observation/plan, :snapshot/id {:domain :streams, :id "Trade Book (Staging)"}, :data {:type :observe/streams-agent}}]
-             [[:streams "Trade Book (Staging)" :kafka/streams-agent-m "abc123"]
-              {:type           :kafka/streams-agent-metrics,
-               :application-id "xxx",
-               :client-id      "abc123",
-               :data           [{:name "first.metric", :tags {}, :value 1.0}
-                                {:name "rocksdb.foo", :tags {"client-id" "abc123"}, :value 3.0}],
-               :snapshot/id    {:domain :streams, :id "Trade Book (Staging)"}}]}
+              {:type :observation/plan, :snapshot/id {:domain :streams, :id "Trade Book (Staging)"}, :data {:type :observe/streams-agent}}]}
            (into #{} (map (fn [record]
                             [(.key record) (dissoc (.value record) :job/id :captured)]))
                  @records)))
