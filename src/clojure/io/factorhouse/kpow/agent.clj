@@ -90,17 +90,17 @@
 (defn apply-metric-filters
   [^MetricName metric-name filters]
   (reduce
-    (fn [acc ^MetricFilter$FilterCriteria filter-criteria]
-      (let [metric-filter-type (.getFilterType filter-criteria)
-            predicate          (.getPredicate filter-criteria)]
-        (if (.test predicate metric-name)
-          (reduced
-            (case (.name metric-filter-type)
-              "ACCEPT" true
-              "DENY" false))
-          acc)))
-    nil
-    filters))
+   (fn [acc ^MetricFilter$FilterCriteria filter-criteria]
+     (let [metric-filter-type (.getFilterType filter-criteria)
+           predicate          (.getPredicate filter-criteria)]
+       (if (.test predicate metric-name)
+         (reduced
+          (case (.name metric-filter-type)
+            "ACCEPT" true
+            "DENY" false))
+         acc)))
+   nil
+   filters))
 
 (defn numeric-metrics
   [metrics ^MetricFilter metrics-filter]
@@ -168,18 +168,18 @@
             application-id   (application-id metrics)
             taxon            (.getTaxon key-strategy client-id application-id)
             ctx              (assoc ctx
-                               :captured (System/currentTimeMillis)
-                               :client-id client-id
-                               :application-id application-id
-                               :taxon taxon)
+                                    :captured (System/currentTimeMillis)
+                                    :client-id client-id
+                                    :application-id application-id
+                                    :taxon taxon)
             filtered-metrics (numeric-metrics metrics metrics-filter)]
         (when (nil? application-id)
           (throw (Exception. "Cannot infer application id from metrics returned from KafkaStreams instance. Expected metric \"application-id\" in the metrics registry.")))
         (when (nil? client-id)
           (throw (Exception.
-                   (format "Cannot infer client id from metrics returned from KafkaStreams instance. Got: client-id %s and application-id %s"
-                           (client-id-tag metrics)
-                           application-id))))
+                  (format "Cannot infer client id from metrics returned from KafkaStreams instance. Got: client-id %s and application-id %s"
+                          (client-id-tag metrics)
+                          application-id))))
         (snapshot-send ctx snapshot)
         (metrics-send ctx filtered-metrics)
         (assoc ctx :metrics-summary {:total (count metrics)
