@@ -8,6 +8,13 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class MetricFilter {
+
+    private String filterId = null;
+
+    public String getFilterId() {
+        return filterId;
+    }
+
     public enum FilterType {
         ACCEPT, DENY
     }
@@ -35,6 +42,18 @@ public class MetricFilter {
 
     public MetricFilter() {
         this.filters = new ArrayList<>();
+        this.filterId = "custom";
+    }
+
+    private MetricFilter(String id) {
+        this.filters = new ArrayList<>();
+        this.filterId = id;
+    }
+
+    public static MetricFilter defaultMetricFilter() {
+        return new MetricFilter("default")
+                .acceptNameStartsWith("streams.state")
+                .deny();
     }
 
     public List<FilterCriteria> getFilters() {

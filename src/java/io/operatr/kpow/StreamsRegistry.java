@@ -87,14 +87,8 @@ public class StreamsRegistry implements AutoCloseable {
         agent = agentFn.invoke(producer, metricsFilter);
     }
 
-    public static MetricFilter defaultMetricFilter() {
-        return new MetricFilter()
-                .acceptNameStartsWith("foo")
-                .deny();
-    }
-
     public StreamsRegistry(Properties props) {
-        this(props, StreamsRegistry.defaultMetricFilter());
+        this(props, MetricFilter.defaultMetricFilter());
     }
 
     public StreamsAgent register(KafkaStreams streams, Topology topology) {

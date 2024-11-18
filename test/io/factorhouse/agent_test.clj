@@ -106,16 +106,22 @@
                                                                         :topic-pattern nil}}}},
                                            :global-stores  #{}},
                                 :state    "RUNNING"},
-               :snapshot/id    {:domain :streams, :id "abc123"}}]
+               :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}}]
              [[:streams "abc123" :kafka/streams-agent]
-              {:type :observation/plan, :snapshot/id {:domain :streams, :id "abc123"}, :data {:type :observe/streams-agent}}]
+              {:type        :observation/plan
+               :snapshot/id {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}
+               :data        {:type  :observe/streams-agent
+                             :agent {:metrics-summary {:id    "custom"
+                                                       :sent  2
+                                                       :total 3}
+                                     :version         "1.0.0"}}}]
              [[:streams "abc123" :kafka/streams-agent]
               {:type           :kafka/streams-agent-metrics,
                :application-id "xxx",
                :client-id      "abc123",
                :data           [{:name "first.metric", :tags {}, :value 1.0}
                                 {:name "second.metric", :tags {"client-id" "abc123"}, :value 2.0}],
-               :snapshot/id    {:domain :streams, :id "abc123"}}]}
+               :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}}]}
            (into #{} (map (fn [record]
                             [(.key record) (dissoc (.value record) :job/id :captured)]))
                  @records)))
@@ -159,16 +165,22 @@
                                                                         :topic-pattern nil}}}},
                                            :global-stores  #{}},
                                 :state    "RUNNING"},
-               :snapshot/id    {:domain :streams, :id "abc123"}}]
+               :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}}]
              [[:streams "abc123" :kafka/streams-agent]
-              {:type :observation/plan, :snapshot/id {:domain :streams, :id "abc123"}, :data {:type :observe/streams-agent}}]
+              {:type        :observation/plan
+               :snapshot/id {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}
+               :data        {:type  :observe/streams-agent
+                             :agent {:metrics-summary {:id    "custom"
+                                                       :sent  2
+                                                       :total 4}
+                                     :version         "1.0.0"}}}]
              [[:streams "abc123" :kafka/streams-agent]
               {:type           :kafka/streams-agent-metrics,
                :application-id "xxx",
                :client-id      "abc123",
                :data           [{:name "first.metric", :tags {}, :value 1.0}
                                 {:name "rocksdb.foo", :tags {"client-id" "abc123"}, :value 3.0}],
-               :snapshot/id    {:domain :streams, :id "abc123"}}]}
+               :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}}]}
            (into #{} (map (fn [record]
                             [(.key record) (dissoc (.value record) :job/id :captured)]))
                  @records)))
@@ -196,7 +208,7 @@
 
     (is (deref (:latch registry) 5000 false))
 
-    (is (= #{[[:streams "Trade Book (Staging)" :kafka/streams-agent-m "abc123"]
+    (is (= #{[[:env "Trade Book (Staging)" :kafka/streams-agent-m "abc123"]
               {:type           :kafka/streams-agent,
                :application-id "xxx",
                :client-id      "abc123",
@@ -208,9 +220,15 @@
                                                                         :topic-pattern nil}}}},
                                            :global-stores  #{}},
                                 :state    "RUNNING"},
-               :snapshot/id    {:domain :streams, :id "Trade Book (Staging)"}}]
-             [[:streams "Trade Book (Staging)" :kafka/streams-agent-m "abc123"]
-              {:type :observation/plan, :snapshot/id {:domain :streams, :id "Trade Book (Staging)"}, :data {:type :observe/streams-agent}}]}
+               :snapshot/id    {:domain :streams, :id [:env "Trade Book (Staging)" :kafka/streams-agent-m "abc123"]}}]
+             [[:env "Trade Book (Staging)" :kafka/streams-agent-m "abc123"]
+              {:type        :observation/plan
+               :snapshot/id {:domain :streams, :id [:env "Trade Book (Staging)" :kafka/streams-agent-m "abc123"]}
+               :data        {:type  :observe/streams-agent
+                             :agent {:metrics-summary {:id    "custom"
+                                                       :sent  0
+                                                       :total 4}
+                                     :version         "1.0.0"}}}]}
            (into #{} (map (fn [record]
                             [(.key record) (dissoc (.value record) :job/id :captured)]))
                  @records)))

@@ -9,6 +9,6 @@ public class ManualKeyStrategy implements KeyStrategy {
 
     @Override
     public Taxon getTaxon(String clientId, String applicationId) {
-        return new Taxon("streams", envName, "streams-agent-m", clientId);
+        return new Taxon("env", envName, "streams-agent-m", clientId);
     }
 }

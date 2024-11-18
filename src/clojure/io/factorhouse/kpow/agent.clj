@@ -90,17 +90,17 @@
 (defn apply-metric-filters
   [^MetricName metric-name filters]
   (reduce
-   (fn [acc ^MetricFilter$FilterCriteria filter-criteria]
-     (let [metric-filter-type (.getFilterType filter-criteria)
-           predicate          (.getPredicate filter-criteria)]
-       (if (.test predicate metric-name)
-         (reduced
-          (case (.name metric-filter-type)
-            "ACCEPT" true
-            "DENY" false))
-         acc)))
-   nil
-   filters))
+    (fn [acc ^MetricFilter$FilterCriteria filter-criteria]
+      (let [metric-filter-type (.getFilterType filter-criteria)
+            predicate          (.getPredicate filter-criteria)]
+        (if (.test predicate metric-name)
+          (reduced
+            (case (.name metric-filter-type)
+              "ACCEPT" true
+              "DENY" false))
+          acc)))
+    nil
+    filters))
 
 (defn numeric-metrics
   [metrics ^MetricFilter metrics-filter]
@@ -124,7 +124,7 @@
                   :captured       captured
                   :data           data
                   :job/id         job-id
-                  :snapshot/id    {:domain (first taxon) :id (second taxon)}}
+                  :snapshot/id    {:domain :streams :id taxon}}
         record   (ProducerRecord. (:topic snapshot-topic) taxon snapshot)]
     (.get (.send producer record))))
 
@@ -138,48 +138,53 @@
                     :captured       captured
                     :data           (vec data)
                     :job/id         job-id
-                    :snapshot/id    {:domain (first taxon) :id (second taxon)}}
+                    :snapshot/id    {:domain :streams :id taxon}}
             record (ProducerRecord. (:topic snapshot-topic) taxon value)]
         (.get (.send producer record))))
     (log/infof "Kpow: sent [%s] streams metrics for application.id %s" (count metrics) application-id)))
 
 (defn plan-send
-  [{:keys [snapshot-topic producer job-id captured taxon]}]
+  [{:keys [snapshot-topic producer job-id captured taxon metrics-summary]}]
   (let [taxon  (p/datafy taxon)
         plan   {:type        :observation/plan
                 :captured    captured
-                :snapshot/id {:domain (first taxon) :id (second taxon)}
+                :snapshot/id {:domain :streams :id taxon}
                 :job/id      job-id
-                :data        {:type :observe/streams-agent}}
+                :data        {:type  :observe/streams-agent
+                              :agent {:metrics-summary metrics-summary
+                                      :version         "1.0.0"}}}
         record (ProducerRecord. (:topic snapshot-topic) taxon plan)]
     (.get (.send producer record))))
 
 (defn snapshot-telemetry
-  [{:keys [streams ^Topology topology metrics-filter ^KeyStrategy key-strategy] :as ctx}]
+  [{:keys [streams ^Topology topology ^MetricFilter metrics-filter ^KeyStrategy key-strategy] :as ctx}]
   (let [metrics (metrics streams)]
     (if (empty? metrics)
       (log/warn "KafkStreams .metrics() method returned an empty collection, no telemetry was sent. Has something mutated the global metrics registry?")
-      (let [topology       (p/datafy (.describe topology))
-            state          (str (.state streams))
-            snapshot       {:topology topology :state state}
-            client-id      (client-id metrics)
-            application-id (application-id metrics)
-            taxon          (.getTaxon key-strategy client-id application-id)
-            ctx            (assoc ctx
-                                  :captured (System/currentTimeMillis)
-                                  :client-id client-id
-                                  :application-id application-id
-                                  :taxon taxon)]
+      (let [topology         (p/datafy (.describe topology))
+            state            (str (.state streams))
+            snapshot         {:topology topology :state state}
+            client-id        (client-id metrics)
+            application-id   (application-id metrics)
+            taxon            (.getTaxon key-strategy client-id application-id)
+            ctx              (assoc ctx
+                               :captured (System/currentTimeMillis)
+                               :client-id client-id
+                               :application-id application-id
+                               :taxon taxon)
+            filtered-metrics (numeric-metrics metrics metrics-filter)]
         (when (nil? application-id)
           (throw (Exception. "Cannot infer application id from metrics returned from KafkaStreams instance. Expected metric \"application-id\" in the metrics registry.")))
         (when (nil? client-id)
           (throw (Exception.
-                  (format "Cannot infer client id from metrics returned from KafkaStreams instance. Got: client-id %s and application-id %s"
-                          (client-id-tag metrics)
-                          application-id))))
+                   (format "Cannot infer client id from metrics returned from KafkaStreams instance. Got: client-id %s and application-id %s"
+                           (client-id-tag metrics)
+                           application-id))))
         (snapshot-send ctx snapshot)
-        (metrics-send ctx (numeric-metrics metrics metrics-filter))
-        ctx))))
+        (metrics-send ctx filtered-metrics)
+        (assoc ctx :metrics-summary {:total (count metrics)
+                                     :sent  (count filtered-metrics)
+                                     :id    (some-> metrics-filter .getFilterId)})))))
 
 (defn snapshot-task
   ^Runnable [snapshot-topic producer registered-topologies metrics-filter latch]
@@ -194,7 +199,7 @@
                (Thread/sleep 2000)
                (plan-send next-ctx))
              (catch Throwable e
-               (log/errorf e "Kpow: error sending streams snapshot for agent %s" id))))
+               (log/warnf e "Kpow: error sending streams snapshot for agent %s" id))))
 
       (deliver latch true))))
 
