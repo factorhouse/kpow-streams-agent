@@ -144,7 +144,7 @@
     (log/infof "Kpow: sent [%s] streams metrics for application.id %s" (count metrics) application-id)))
 
 (defn plan-send
-  [{:keys [snapshot-topic producer job-id captured taxon metrics-summary]}]
+  [{:keys [snapshot-topic producer job-id captured taxon metrics-summary agent-id]}]
   (let [taxon  (p/datafy taxon)
         plan   {:type        :observation/plan
                 :captured    captured
@@ -152,12 +152,13 @@
                 :job/id      job-id
                 :data        {:type  :observe/streams-agent
                               :agent {:metrics-summary metrics-summary
+                                      :id              agent-id
                                       :version         "1.0.0"}}}
         record (ProducerRecord. (:topic snapshot-topic) taxon plan)]
     (.get (.send producer record))))
 
 (defn snapshot-telemetry
-  [{:keys [streams ^Topology topology ^MetricFilter metrics-filter ^KeyStrategy key-strategy] :as ctx}]
+  [{:keys [streams ^Topology topology ^MetricFilter metrics-filter ^KeyStrategy key-strategy agent-id] :as ctx}]
   (let [metrics (metrics streams)]
     (if (empty? metrics)
       (log/warn "KafkStreams .metrics() method returned an empty collection, no telemetry was sent. Has something mutated the global metrics registry?")
@@ -195,7 +196,10 @@
                   :producer       producer
                   :metrics-filter metrics-filter}]
       (doseq [[id [streams topology key-strategy]] @registered-topologies]
-        (try (when-let [next-ctx (snapshot-telemetry (assoc ctx :streams streams :topology topology :key-strategy key-strategy))]
+        (try (when-let [next-ctx (snapshot-telemetry (assoc ctx :streams streams
+                                                            :topology topology
+                                                            :key-strategy key-strategy
+                                                            :agent-id id))]
                (Thread/sleep 2000)
                (plan-send next-ctx))
              (catch Throwable e
@@ -217,6 +221,7 @@
         pool                  (Executors/newSingleThreadScheduledExecutor thread-factory)
         register-fn           (fn [streams topology key-strategy]
                                 (let [id (str (UUID/randomUUID))]
+                                  (log/infof "Kpow: registering new streams application with id %s" id)
                                   (swap! registered-topologies assoc id [streams topology key-strategy])
                                   id))
         latch                 (promise)

@@ -83,14 +83,14 @@
   (let [records        (atom [])
         metrics-filter (-> (MetricFilter.) (.accept))
         registry       (agent/init-registry (mock-producer records) metrics-filter)
-        agent          (agent/register registry
+        agent-id       (agent/register registry
                                        (mock-streams [(mock-metric "first.metric" "first" "mock metric" {} 1.0)
                                                       (mock-metric "application-id" "first" "mock metric" {"client-id" "abc123"} "xxx")
                                                       (mock-metric "second.metric" "first" "mock metric" {"client-id" "abc123"} 2.0)])
                                        (test-topology)
                                        (ClientIdKeyStrategy.))]
 
-    (is agent)
+    (is agent-id)
 
     (is (deref (:latch registry) 5000 false))
 
@@ -114,6 +114,7 @@
                              :agent {:metrics-summary {:id    "custom"
                                                        :sent  2
                                                        :total 3}
+                                     :id              agent-id
                                      :version         "1.0.0"}}}]
              [[:streams "abc123" :kafka/streams-agent]
               {:type           :kafka/streams-agent-metrics,
@@ -141,7 +142,7 @@
                            (.acceptNameStartsWith "rocksdb")
                            (.deny))
         registry       (agent/init-registry (mock-producer records) metrics-filter)
-        agent          (agent/register registry
+        agent-id       (agent/register registry
                                        (mock-streams [(mock-metric "first.metric" "first" "mock metric" {} 1.0)
                                                       (mock-metric "rocksdb.foo" "first" "mock metric" {"client-id" "abc123"} 3.0)
                                                       (mock-metric "application-id" "first" "mock metric" {"client-id" "abc123"} "xxx")
@@ -173,6 +174,7 @@
                              :agent {:metrics-summary {:id    "custom"
                                                        :sent  2
                                                        :total 4}
+                                     :id              agent-id
                                      :version         "1.0.0"}}}]
              [[:streams "abc123" :kafka/streams-agent]
               {:type           :kafka/streams-agent-metrics,
@@ -196,7 +198,7 @@
   (let [records        (atom [])
         metrics-filter (-> (MetricFilter.) (.deny))
         registry       (agent/init-registry (mock-producer records) metrics-filter)
-        agent          (agent/register registry
+        agent-id       (agent/register registry
                                        (mock-streams [(mock-metric "first.metric" "first" "mock metric" {} 1.0)
                                                       (mock-metric "rocksdb.foo" "first" "mock metric" {"client-id" "abc123"} 3.0)
                                                       (mock-metric "application-id" "first" "mock metric" {"client-id" "abc123"} "xxx")
@@ -204,7 +206,7 @@
                                        (test-topology)
                                        (ManualKeyStrategy. "Trade Book (Staging)"))]
 
-    (is agent)
+    (is agent-id)
 
     (is (deref (:latch registry) 5000 false))
 
@@ -228,6 +230,7 @@
                              :agent {:metrics-summary {:id    "custom"
                                                        :sent  0
                                                        :total 4}
+                                     :id              agent-id
                                      :version         "1.0.0"}}}]}
            (into #{} (map (fn [record]
                             [(.key record) (dissoc (.value record) :job/id :captured)]))
