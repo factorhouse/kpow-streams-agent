@@ -21,11 +21,10 @@
                    [:roles
                     [:role "developer"]
                     [:role "maintainer"]]]])
-  :dependencies [[org.clojure/clojure "1.11.3"]
+  :dependencies [[org.clojure/clojure "1.12.0"]
                  [com.cognitect/transit-clj "1.0.333"]
                  [org.clojure/tools.logging "1.3.0"]
-                 [org.apache.kafka/kafka-clients "3.6.1" :scope "provided"]
-                 [org.apache.kafka/kafka-streams "3.6.1" :scope "provided"]]
+                 [org.apache.kafka/kafka-streams "3.7.1" :scope "provided"]]
   :uberjar {:prep-tasks ["clean" "javac" "compile"]
             :aot        :all}
   :classifiers [["sources" {:source-paths      ^:replace []
@@ -34,13 +33,13 @@
                 ["javadoc" {:source-paths      ^:replace []
                             :java-source-paths ^:replace []
                             :resource-paths    ^:replace ["javadoc"]}]]
-  :profiles {:kaocha {:dependencies [[lambdaisland/kaocha "1.88.1376"]]}
+  :profiles {:kaocha {:dependencies [[lambdaisland/kaocha "1.91.1392"]]}
              :dev    {:resource-paths ["dev-resources"]
                       :plugins        [[lein-cljfmt "0.9.2"]]
-                      :dependencies   [[org.slf4j/slf4j-api "2.0.13"]
+                      :dependencies   [[org.slf4j/slf4j-api "2.0.16"]
                                        [ch.qos.logback/logback-classic "1.3.14"]
                                        [cheshire "5.13.0" :exclusions [com.fasterxml.jackson.core/jackson-databind]]
-                                       [clj-kondo "2024.03.13"]]}
+                                       [clj-kondo "2024.09.27"]]}
              :smoke  {:pedantic? :abort}}
   :aliases {"kaocha" ["with-profile" "+kaocha" "run" "-m" "kaocha.runner"]
             "kondo"  ["with-profile" "+smoke" "run" "-m" "clj-kondo.main" "--lint" "src"]
