@@ -158,7 +158,7 @@
     (.get (.send producer record))))
 
 (defn snapshot-telemetry
-  [{:keys [streams ^Topology topology ^MetricFilter metrics-filter ^KeyStrategy key-strategy agent-id] :as ctx}]
+  [{:keys [streams ^Topology topology ^MetricFilter metrics-filter ^KeyStrategy key-strategy] :as ctx}]
   (let [metrics (metrics streams)]
     (if (empty? metrics)
       (log/warn "KafkStreams .metrics() method returned an empty collection, no telemetry was sent. Has something mutated the global metrics registry?")
