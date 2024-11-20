@@ -17,6 +17,6 @@ public class ClusterIdKeyStrategy implements KeyStrategy {
 
     @Override
     public Taxon getTaxon(String clientId, String applicationId) {
-        return new Taxon("cluster", clusterId, "streams-agent-cid", clientId);
+        return new Taxon("cluster", clusterId, "streams-agent", clientId);
     }
 }
