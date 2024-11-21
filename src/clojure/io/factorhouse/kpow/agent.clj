@@ -137,6 +137,7 @@
                     :client-id      client-id
                     :captured       captured
                     :data           (vec data)
+
                     :job/id         job-id
                     :snapshot/id    {:domain :streams :id taxon}}
             record (ProducerRecord. (:topic snapshot-topic) taxon value)]
@@ -144,16 +145,18 @@
     (log/infof "Kpow: sent [%s] streams metrics for application.id %s" (count metrics) application-id)))
 
 (defn plan-send
-  [{:keys [snapshot-topic producer job-id captured taxon metrics-summary agent-id]}]
+  [{:keys [snapshot-topic producer job-id captured taxon metrics-summary agent-id application-id client-id]}]
   (let [taxon  (p/datafy taxon)
-        plan   {:type        :observation/plan
-                :captured    captured
-                :snapshot/id {:domain :streams :id taxon}
-                :job/id      job-id
-                :data        {:type  :observe/streams-agent
-                              :agent {:metrics-summary metrics-summary
-                                      :id              agent-id
-                                      :version         "1.0.0"}}}
+        plan   {:type           :observation/plan
+                :captured       captured
+                :snapshot/id    {:domain :streams :id taxon}
+                :job/id         job-id
+                :application-id application-id
+                :client-id      client-id
+                :data           {:type  :observe/streams-agent
+                                 :agent {:metrics-summary metrics-summary
+                                         :id              agent-id
+                                         :version         "1.0.0"}}}
         record (ProducerRecord. (:topic snapshot-topic) taxon plan)]
     (.get (.send producer record))))
 
