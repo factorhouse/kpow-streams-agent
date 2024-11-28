@@ -156,6 +156,7 @@
                 :data           {:type  :observe/streams-agent
                                  :agent {:metrics-summary metrics-summary
                                          :id              agent-id
+                                         :captured        captured
                                          :version         "1.0.0"}}}
         record (ProducerRecord. (:topic snapshot-topic) taxon plan)]
     (.get (.send producer record))))
@@ -199,7 +200,8 @@
                   :producer       producer
                   :metrics-filter metrics-filter}]
       (doseq [[id [streams topology key-strategy]] @registered-topologies]
-        (try (when-let [next-ctx (snapshot-telemetry (assoc ctx :streams streams
+        (try (when-let [next-ctx (snapshot-telemetry (assoc ctx
+                                                            :streams streams
                                                             :topology topology
                                                             :key-strategy key-strategy
                                                             :agent-id id))]

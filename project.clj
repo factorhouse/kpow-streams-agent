@@ -1,4 +1,4 @@
-(defproject io.factorhouse/kpow-streams-agent "1.0.0-rc3"
+(defproject io.factorhouse/kpow-streams-agent "1.0.0-rc4"
   :description "Kpow's Kafka Streams monitoring agent"
   :url "https://github.com/factorhouse/kpow-streams-agent"
   :license {:name         "Apache-2.0 License"
@@ -19,7 +19,7 @@
                    [:name "Derek Troy-West"]
                    [:url "https://factorhouse.io"]
                    [:roles
-                    [:role "developer"]
+                    [:role "developer"]7
                     [:role "maintainer"]]]])
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [com.cognitect/transit-clj "1.0.333"]
