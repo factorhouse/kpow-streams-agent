@@ -137,6 +137,11 @@ public class MetricFilter {
         return Collections.unmodifiableList(filters);
     }
 
+    /**
+     * Accepts all metrics.
+     *
+     * @return an updated MetricFilter
+     */
     public MetricFilter accept() {
         Predicate<MetricName> acceptPredicate = (_filter) -> {
             return true;
@@ -146,12 +151,22 @@ public class MetricFilter {
         return this;
     }
 
+    /**
+     * Accepts a metric based on the specified Predicate.
+     *
+     * @return an updated MetricFilter
+     */
     public MetricFilter accept(Predicate<MetricName> acceptFilter) {
         FilterCriteria criteria = new FilterCriteria(acceptFilter, FilterType.ACCEPT);
         this.filters.add(criteria);
         return this;
     }
 
+    /**
+     * Denies all metrics.
+     *
+     * @return an updated MetricFilter
+     */
     public MetricFilter deny() {
         Predicate<MetricName> denyFilter = (_filter) -> {
             return true;
@@ -161,12 +176,22 @@ public class MetricFilter {
         return this;
     }
 
+    /**
+     * Denies a metric based on the specified Predicate.
+     *
+     * @return an updated MetricFilter
+     */
     public MetricFilter deny(Predicate<MetricName> denyFilter) {
         FilterCriteria criteria = new FilterCriteria(denyFilter, FilterType.DENY);
         this.filters.add(criteria);
         return this;
     }
 
+    /**
+     * Accepts all metrics whose name start with the specified prefix.
+     *
+     * @return an updated MetricFilter
+     */
     public MetricFilter acceptNameStartsWith(String prefix) {
         Predicate<MetricName> acceptFilter = (metricName) -> {
             return metricName.name().startsWith(prefix);
@@ -176,6 +201,11 @@ public class MetricFilter {
         return this;
     }
 
+    /**
+     * Denies all metrics whose name start with the specified prefix.
+     *
+     * @return an updated MetricFilter
+     */
     public MetricFilter denyNameStartsWith(String prefix) {
         Predicate<MetricName> denyFilter = (metricName) -> {
             return metricName.name().startsWith(prefix);
