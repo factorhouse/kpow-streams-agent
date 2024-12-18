@@ -51,18 +51,6 @@ public class MetricFilter {
     }
 
     /**
-     * Returns the default metricsFilter used by the streams agent.
-     * By default, Kpow's streams agent will only send across the topology and streams state
-     * on each observation.
-     *
-     * @return the default metrics filter
-     */
-    public static MetricFilter defaultMetricFilter() {
-        return new MetricFilter("default")
-                .deny();
-    }
-
-    /**
      * Returns a metrics filter that accepts all numeric metrics from the running Streams application.
      *
      * @return accept all metric filter
@@ -71,9 +59,18 @@ public class MetricFilter {
         return new MetricFilter("acceptAll").accept();
     }
 
+    /**
+     * Returns a metrics filter that denies all metrics, only sending across the Kafka Streams topology + state
+     * on every observation.
+     *
+     * @return deny all metric filter
+     */
+    public static MetricFilter denyAllMetricFilter() {
+        return new MetricFilter("denyAll").deny();
+    }
 
     /**
-     * Returns a metrics filter that includes only state store (and
+     * Returns a metrics filter that includes only state store metrics.
      *
      * @return state store metrics only filter
      */
@@ -90,9 +87,33 @@ public class MetricFilter {
                 .accept(stateStoreMetricsOnly);
     }
 
-    public static MetricFilter essentialMetricsOnlyFilter() {
-        return new MetricFilter("essentialMetricsOnlyFilter")
-                // Lagency
+    /**
+     * Returns the default metricsFilter used by the streams agent.
+     * By default, Kpow's streams agent will only send across a few key Kafka Streams metrics:
+     *  Latency:
+     *  - commit-latency-avg
+     *  - process-latency-avg
+     *  - poll-latecny-avg
+     *  Throughput:
+     *  - process-rate
+     *  - records-processed-rate
+     * Lag:
+     * - commit-rate
+     * - records-lag-max
+     * - records-lag
+     * Stability:
+     * - failed-stream-threads
+     * - rebalances
+     * State store health:
+     * - put-rate
+     * - get-rate
+     * - flush-rate
+     *
+     * @return the default metrics filter
+     */
+    public static MetricFilter defaultMetricFilter() {
+        return new MetricFilter("default")
+                // Latency
                 .acceptNameStartsWith("commit-latency-avg")
                 .acceptNameStartsWith("process-latency-avg")
                 .acceptNameStartsWith("poll-latency-avg")
