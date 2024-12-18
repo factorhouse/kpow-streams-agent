@@ -3,6 +3,7 @@ package io.operatr.kpow;
 import clojure.java.api.Clojure;
 import clojure.lang.IFn;
 import io.factorhouse.kpow.MetricFilter;
+import io.factorhouse.kpow.key.KeyStrategy;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.common.serialization.Serializer;
 import org.apache.kafka.streams.KafkaStreams;
@@ -11,6 +12,12 @@ import org.apache.kafka.streams.Topology;
 import java.util.ArrayList;
 import java.util.Properties;
 
+
+/**
+ * @deprecated This class is no longer recommended for use.
+ * Please use {@link io.factorhouse.kpow.StreamsRegistry} instead.
+ */
+@Deprecated
 public class StreamsRegistry implements AutoCloseable {
 
     public static class StreamsAgent {
@@ -91,11 +98,11 @@ public class StreamsRegistry implements AutoCloseable {
         this(props, MetricFilter.defaultMetricFilter());
     }
 
-    public StreamsAgent register(KafkaStreams streams, Topology topology) {
+    public StreamsAgent register(KafkaStreams streams, Topology topology, KeyStrategy keyStrategy) {
         IFn require = Clojure.var("clojure.core", "require");
         require.invoke(Clojure.read("io.factorhouse.kpow.agent"));
         IFn registerFn = Clojure.var("io.factorhouse.kpow.agent", "register");
-        String id = (String) registerFn.invoke(agent, streams, topology);
+        String id = (String) registerFn.invoke(agent, streams, topology, keyStrategy);
         if (id != null) {
             return new StreamsAgent(id);
         } else {

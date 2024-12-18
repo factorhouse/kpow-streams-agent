@@ -191,11 +191,12 @@ If you have set a UI-friendly cluster name using the `ENVIRONMENT_NAME` environm
 
 ```java
 
-import io.factorhouse.kpow.key.ManualKeyStrategy;
 
 // This sets a manual key of `Trade Book (Staging)`, the name of the clusters environment name in Kpow's UI.
 KeyStrategy keyStrategy = new ManualKeyStrategy("Trade Book (Staging)");
-registry.register(streams, topology, keyStrategy);
+registry.
+
+        register(streams, topology, keyStrategy);
 ```
 
 ### Minimum Required ACLs
