@@ -91,6 +91,11 @@ public class StreamsRegistry implements AutoCloseable {
         this(props, MetricFilter.defaultMetricFilter());
     }
 
+    /**
+     * Registers a Kafka Streams application with Kpow's StreamsRegistry.
+     *
+     * @return a StreamsAgent instance for the registered application (used to unregister).
+     */
     public StreamsAgent register(KafkaStreams streams, Topology topology, KeyStrategy keyStrategy) {
         IFn require = Clojure.var("clojure.core", "require");
         require.invoke(Clojure.read("io.factorhouse.kpow.agent"));
@@ -103,6 +108,10 @@ public class StreamsRegistry implements AutoCloseable {
         }
     }
 
+    /**
+     * Unregisters a Kafka Streams application with Kpow's StreamsRegistry. Use the StreamsAgent instance returned from
+     * the register method.
+     */
     public void unregister(StreamsAgent streamsAgent) {
         if (streamsAgent != null) {
             IFn require = Clojure.var("clojure.core", "require");
