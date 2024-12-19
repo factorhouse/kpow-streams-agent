@@ -3,7 +3,7 @@
             [clojure.test :refer :all]
             [io.factorhouse.kpow.agent :as agent])
   (:import (io.factorhouse.kpow MetricFilter StreamsRegistry)
-           (io.factorhouse.kpow.key ClientIdKeyStrategy ManualKeyStrategy)
+           (io.factorhouse.kpow.key ClientIdKeyStrategy)
            (java.util Properties)
            (org.apache.kafka.clients.producer Producer)
            (org.apache.kafka.common Metric MetricName)
@@ -94,41 +94,46 @@
 
     (is (deref (:latch registry) 5000 false))
 
-    (is (= #{[[:streams "abc123" :kafka/streams-agent]
-              {:type           :kafka/streams-agent,
-               :application-id "xxx",
-               :client-id      "abc123",
-               :data           {:topology {:sub-topologies #{{:id    0,
-                                                              :nodes #{{:name          "KSTREAM-SOURCE-0000000000",
-                                                                        :predecessors  #{},
-                                                                        :successors    #{},
-                                                                        :topic-set     #{"__oprtr_snapshot_state"},
-                                                                        :topic-pattern nil}}}},
-                                           :global-stores  #{}},
-                                :state    "RUNNING"},
-               :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}}]
-             [[:streams "abc123" :kafka/streams-agent]
-              {:type        :observation/plan
-               :snapshot/id {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}
-               :data        {:type  :observe/streams-agent
-                             :agent {:metrics-summary {:id    "custom"
-                                                       :sent  2
-                                                       :total 3}
-                                     :id              agent-id
-                                     :version         "1.0.0"}}}]
-             [[:streams "abc123" :kafka/streams-agent]
-              {:type           :kafka/streams-agent-metrics,
-               :application-id "xxx",
-               :client-id      "abc123",
-               :data           [{:name "first.metric", :tags {}, :value 1.0}
-                                {:name "second.metric", :tags {"client-id" "abc123"}, :value 2.0}],
-               :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}}]}
-           (into #{} (map (fn [record]
-                            [(.key record) (dissoc (.value record) :job/id :captured)]))
-                 @records)))
+    (let [captured (into #{} (map (fn [record] (-> record (.value) :captured))) @records)]
 
-    (testing "consistent :captured value"
-      (is (= 1 (count (into #{} (map (fn [record] (-> record (.value) :captured))) @records)))))
+      (testing "consistent :captured value"
+        (is (= 1 (count captured))))
+
+      (is (= #{[[:streams "abc123" :kafka/streams-agent]
+                {:type           :kafka/streams-agent,
+                 :application-id "xxx",
+                 :client-id      "abc123",
+                 :data           {:topology {:sub-topologies #{{:id    0,
+                                                                :nodes #{{:name          "KSTREAM-SOURCE-0000000000",
+                                                                          :predecessors  #{},
+                                                                          :successors    #{},
+                                                                          :topic-set     #{"__oprtr_snapshot_state"},
+                                                                          :topic-pattern nil}}}},
+                                             :global-stores  #{}},
+                                  :state    "RUNNING"},
+                 :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}}]
+               [[:streams "abc123" :kafka/streams-agent]
+                {:type           :observation/plan
+                 :application-id "xxx",
+                 :client-id      "abc123",
+                 :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}
+                 :data           {:type  :observe/streams-agent
+                                  :agent {:captured        (first captured)
+                                          :metrics-summary {:id    "custom"
+                                                            :sent  2
+                                                            :total 3}
+                                          :id              agent-id
+                                          :version         "1.0.0"}}}]
+               [[:streams "abc123" :kafka/streams-agent]
+                {:type           :kafka/streams-agent-metrics,
+                 :application-id "xxx",
+                 :client-id      "abc123",
+                 :data           [{:name "first.metric", :tags {}, :value 1.0}
+                                  {:name "second.metric", :tags {"client-id" "abc123"}, :value 2.0}],
+                 :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}}]}
+             (into #{} (map (fn [record]
+                              [(.key record) (dissoc (.value record) :job/id :captured)]))
+                   @records))))
 
     (is (agent/unregister registry agent))
 
@@ -154,90 +159,46 @@
 
     (is (deref (:latch registry) 5000 false))
 
-    (is (= #{[[:streams "abc123" :kafka/streams-agent]
-              {:type           :kafka/streams-agent,
-               :application-id "xxx",
-               :client-id      "abc123",
-               :data           {:topology {:sub-topologies #{{:id    0,
-                                                              :nodes #{{:name          "KSTREAM-SOURCE-0000000000",
-                                                                        :predecessors  #{},
-                                                                        :successors    #{},
-                                                                        :topic-set     #{"__oprtr_snapshot_state"},
-                                                                        :topic-pattern nil}}}},
-                                           :global-stores  #{}},
-                                :state    "RUNNING"},
-               :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}}]
-             [[:streams "abc123" :kafka/streams-agent]
-              {:type        :observation/plan
-               :snapshot/id {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}
-               :data        {:type  :observe/streams-agent
-                             :agent {:metrics-summary {:id    "custom"
-                                                       :sent  2
-                                                       :total 4}
-                                     :id              agent-id
-                                     :version         "1.0.0"}}}]
-             [[:streams "abc123" :kafka/streams-agent]
-              {:type           :kafka/streams-agent-metrics,
-               :application-id "xxx",
-               :client-id      "abc123",
-               :data           [{:name "first.metric", :tags {}, :value 1.0}
-                                {:name "rocksdb.foo", :tags {"client-id" "abc123"}, :value 3.0}],
-               :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}}]}
-           (into #{} (map (fn [record]
-                            [(.key record) (dissoc (.value record) :job/id :captured)]))
-                 @records)))
+    (let [captured (into #{} (map (fn [record] (-> record (.value) :captured))) @records)]
 
-    (testing "consistent :captured value"
-      (is (= 1 (count (into #{} (map (fn [record] (-> record (.value) :captured))) @records)))))
+      (testing "consistent :captured value"
+        (is (= 1 (count captured))))
 
-    (is (agent/unregister registry agent))
-
-    (is (empty? (agent/close-registry registry)))))
-
-(deftest agent-test-manual-key-strategy
-  (let [records        (atom [])
-        metrics-filter (-> (MetricFilter.) (.deny))
-        registry       (agent/init-registry (mock-producer records) metrics-filter)
-        agent-id       (agent/register registry
-                                       (mock-streams [(mock-metric "first.metric" "first" "mock metric" {} 1.0)
-                                                      (mock-metric "rocksdb.foo" "first" "mock metric" {"client-id" "abc123"} 3.0)
-                                                      (mock-metric "application-id" "first" "mock metric" {"client-id" "abc123"} "xxx")
-                                                      (mock-metric "second.metric" "first" "mock metric" {"client-id" "abc123"} 2.0)])
-                                       (test-topology)
-                                       (ManualKeyStrategy. "Trade Book (Staging)"))]
-
-    (is agent-id)
-
-    (is (deref (:latch registry) 5000 false))
-
-    (is (= #{[[:env "Trade Book (Staging)" :kafka/streams-agent-m "abc123"]
-              {:type           :kafka/streams-agent,
-               :application-id "xxx",
-               :client-id      "abc123",
-               :data           {:topology {:sub-topologies #{{:id    0,
-                                                              :nodes #{{:name          "KSTREAM-SOURCE-0000000000",
-                                                                        :predecessors  #{},
-                                                                        :successors    #{},
-                                                                        :topic-set     #{"__oprtr_snapshot_state"},
-                                                                        :topic-pattern nil}}}},
-                                           :global-stores  #{}},
-                                :state    "RUNNING"},
-               :snapshot/id    {:domain :streams, :id [:env "Trade Book (Staging)" :kafka/streams-agent-m "abc123"]}}]
-             [[:env "Trade Book (Staging)" :kafka/streams-agent-m "abc123"]
-              {:type        :observation/plan
-               :snapshot/id {:domain :streams, :id [:env "Trade Book (Staging)" :kafka/streams-agent-m "abc123"]}
-               :data        {:type  :observe/streams-agent
-                             :agent {:metrics-summary {:id    "custom"
-                                                       :sent  0
-                                                       :total 4}
-                                     :id              agent-id
-                                     :version         "1.0.0"}}}]}
-           (into #{} (map (fn [record]
-                            [(.key record) (dissoc (.value record) :job/id :captured)]))
-                 @records)))
-
-    (testing "consistent :captured value"
-      (is (= 1 (count (into #{} (map (fn [record] (-> record (.value) :captured))) @records)))))
+      (is (= #{[[:streams "abc123" :kafka/streams-agent]
+                {:type           :kafka/streams-agent,
+                 :application-id "xxx",
+                 :client-id      "abc123",
+                 :data           {:topology {:sub-topologies #{{:id    0,
+                                                                :nodes #{{:name          "KSTREAM-SOURCE-0000000000",
+                                                                          :predecessors  #{},
+                                                                          :successors    #{},
+                                                                          :topic-set     #{"__oprtr_snapshot_state"},
+                                                                          :topic-pattern nil}}}},
+                                             :global-stores  #{}},
+                                  :state    "RUNNING"},
+                 :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}}]
+               [[:streams "abc123" :kafka/streams-agent]
+                {:type           :observation/plan
+                 :application-id "xxx",
+                 :client-id      "abc123",
+                 :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}
+                 :data           {:type  :observe/streams-agent
+                                  :agent {:captured        (first captured)
+                                          :metrics-summary {:id    "custom"
+                                                            :sent  2
+                                                            :total 4}
+                                          :id              agent-id
+                                          :version         "1.0.0"}}}]
+               [[:streams "abc123" :kafka/streams-agent]
+                {:type           :kafka/streams-agent-metrics,
+                 :application-id "xxx",
+                 :client-id      "abc123",
+                 :data           [{:name "first.metric", :tags {}, :value 1.0}
+                                  {:name "rocksdb.foo", :tags {"client-id" "abc123"}, :value 3.0}],
+                 :snapshot/id    {:domain :streams, :id [:streams "abc123" :kafka/streams-agent]}}]}
+             (into #{} (map (fn [record]
+                              [(.key record) (dissoc (.value record) :job/id :captured)]))
+                   @records))))
 
     (is (agent/unregister registry agent))
 
