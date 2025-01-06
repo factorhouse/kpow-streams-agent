@@ -6,7 +6,12 @@
             :distribution :repo
             :comments     "same as Kafka"}
   :scm {:name "git" :url "https://github.com/factorhouse/kpow-streams-agent"}
-  :pom-addition ([:developers
+  :pom-addition ([:distributionManagement
+                  [:repository
+                   [:id "ossrh"]
+                   [:name "Central Repository OSSRH"]
+                   [:url "https://oss.sonatype.org/service/local/staging/deploy/maven2/"]]]
+                 [:developers
                   [:developer
                    [:id "wavejumper"]
                    [:name "Thomas Crowley"]
@@ -49,8 +54,4 @@
             "fmtfix" ["with-profile" "+smoke" "cljfmt" "fix"]}
   :javac-options ["-target" "1.8" "-source" "1.8" "-Xlint:-options"]
   :java-source-paths ["src/java"]
-  :source-paths ["src/clojure"]
-  :deploy-repositories [["releases" {:url   "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-                                     :creds :gpg}
-                         "snapshots" {:url   "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-                                      :creds :gpg}]])
+  :source-paths ["src/clojure"])
