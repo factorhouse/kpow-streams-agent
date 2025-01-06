@@ -6,16 +6,7 @@
             :distribution :repo
             :comments     "same as Kafka"}
   :scm {:name "git" :url "https://github.com/factorhouse/kpow-streams-agent"}
-  :pom-addition ([:build
-                  [:plugins
-                   [:plugin
-                    [:groupId "org.sonatype.central"]
-                    [:artifactId "central-publishing-maven-plugin"]
-                    [:version "0.6.0"]
-                    [:extensions "true"]
-                    [:configuration
-                     [:publishingServerId "central"]]]]]
-                 [:developers
+  :pom-addition ([:developers
                   [:developer
                    [:id "wavejumper"]
                    [:name "Thomas Crowley"]
@@ -36,6 +27,9 @@
                  [com.cognitect/transit-clj "1.0.333"]
                  [org.clojure/tools.logging "1.3.0"]
                  [org.apache.kafka/kafka-streams "3.7.1" :scope "provided"]]
+  :pom-plugins [[org.sonatype.central/central-publishing-maven-plugin "0.6.0"
+                 {:extensions    "true"
+                  :configuration [:publishingServerId "central"]}]]
   :uberjar {:prep-tasks ["clean" "javac" "compile"]
             :aot        :all}
   :classifiers [["sources" {:source-paths      ^:replace []
