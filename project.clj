@@ -6,11 +6,15 @@
             :distribution :repo
             :comments     "same as Kafka"}
   :scm {:name "git" :url "https://github.com/factorhouse/kpow-streams-agent"}
-  :pom-addition ([:distributionManagement
-                  [:repository
-                   [:id "ossrh"]
-                   [:name "Central Repository OSSRH"]
-                   [:url "https://oss.sonatype.org/service/local/staging/deploy/maven2/"]]]
+  :pom-addition ([:build
+                  [:plugins
+                   [:plugin
+                    [:groupId "org.sonatype.central"]
+                    [:artifactId "central-publishing-maven-plugin"]
+                    [:version "0.6.0"]
+                    [:extensions "true"]
+                    [:configuration
+                     [:publishingServerId "central"]]]]]
                  [:developers
                   [:developer
                    [:id "wavejumper"]
