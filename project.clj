@@ -10,6 +10,7 @@
                   [:developer
                    [:id "wavejumper"]
                    [:name "Thomas Crowley"]
+                   [:email "tom@factorhouse.io"]
                    [:url "https://factorhouse.io"]
                    [:roles
                     [:role "developer"]
@@ -17,6 +18,7 @@
                   [:developer
                    [:id "d-t-w"]
                    [:name "Derek Troy-West"]
+                   [:email "derek@factorhouse.io"]
                    [:url "https://factorhouse.io"]
                    [:roles
                     [:role "developer"]
