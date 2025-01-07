@@ -10,6 +10,7 @@
                   [:developer
                    [:id "wavejumper"]
                    [:name "Thomas Crowley"]
+                   [:email "tom@factorhouse.io"]
                    [:url "https://factorhouse.io"]
                    [:roles
                     [:role "developer"]
@@ -17,6 +18,7 @@
                   [:developer
                    [:id "d-t-w"]
                    [:name "Derek Troy-West"]
+                   [:email "derek@factorhouse.io"]
                    [:url "https://factorhouse.io"]
                    [:roles
                     [:role "developer"]7
@@ -25,6 +27,25 @@
                  [com.cognitect/transit-clj "1.0.333"]
                  [org.clojure/tools.logging "1.3.0"]
                  [org.apache.kafka/kafka-streams "3.7.1" :scope "provided"]]
+  :pom-plugins [[org.sonatype.central/central-publishing-maven-plugin "0.6.0"
+                 {:extensions    "true"
+                  :configuration [:publishingServerId "central"]}]
+                [org.apache.maven.plugins/maven-source-plugin "3.3.1"
+                 {:executions ([:execution
+                                [:id "attach-sources"]
+                                [:goals [:goal "jar-no-fork"]]])}]
+                [org.apache.maven.plugins/maven-javadoc-plugin "3.11.2"
+                 {:executions ([:execution
+                                [:id "attach-javadocs"]
+                                [:goals [:goal "jar"]]])}]
+                [org.apache.maven.plugins/maven-gpg-plugin "3.2.7"
+                 {:configuration [:gpgArguments
+                                  ([:arg "--pinentry-mode"]
+                                   [:arg "loopback"])]
+                  :executions    ([:execution
+                                   [:id "sign-artifacts"]
+                                   [:phase "verify"]
+                                   [:goals [:goal "sign"]]])}]]
   :uberjar {:prep-tasks ["clean" "javac" "compile"]
             :aot        :all}
   :classifiers [["sources" {:source-paths      ^:replace []
@@ -47,8 +68,4 @@
             "fmtfix" ["with-profile" "+smoke" "cljfmt" "fix"]}
   :javac-options ["-target" "1.8" "-source" "1.8" "-Xlint:-options"]
   :java-source-paths ["src/java"]
-  :source-paths ["src/clojure"]
-  :deploy-repositories [["releases" {:url   "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-                                     :creds :gpg}
-                         "snapshots" {:url   "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-                                      :creds :gpg}]])
+  :source-paths ["src/clojure"])

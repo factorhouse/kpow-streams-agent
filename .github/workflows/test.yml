@@ -13,7 +13,7 @@ jobs:
           distribution: 'temurin'
           java-version: '8'
       - name: Install Clojure tools
-        uses: DeLaGuardo/setup-clojure@12.3
+        uses: DeLaGuardo/setup-clojure@13.0
         with:
           lein: 'latest'
       - run: lein kaocha
