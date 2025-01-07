@@ -29,7 +29,15 @@
                  [org.apache.kafka/kafka-streams "3.7.1" :scope "provided"]]
   :pom-plugins [[org.sonatype.central/central-publishing-maven-plugin "0.6.0"
                  {:extensions    "true"
-                  :configuration [:publishingServerId "central"]}]]
+                  :configuration [:publishingServerId "central"]}]
+                [org.apache.maven.plugins/maven-source-plugin "2.2.1"
+                 {:executions ([:execution
+                                [:id "attach-sources"]
+                                [:goals [:goal "jar-no-fork"]]])}]
+                [org.apache.maven.plugins/maven-javadoc-plugin
+                 {:executions ([:execution
+                                [:id "attach-javadocs"]
+                                [:goals [:goal "jar"]]])}]]
   :uberjar {:prep-tasks ["clean" "javac" "compile"]
             :aot        :all}
   :classifiers [["sources" {:source-paths      ^:replace []
