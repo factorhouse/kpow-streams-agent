@@ -37,7 +37,12 @@
                 [org.apache.maven.plugins/maven-javadoc-plugin "2.9.1"
                  {:executions ([:execution
                                 [:id "attach-javadocs"]
-                                [:goals [:goal "jar"]]])}]]
+                                [:goals [:goal "jar"]]])}]
+                [org.apache.maven.plugins/maven-gpg-plugin "1.5"
+                 {:executions ([:execution
+                                [:id "sign-artifacts"]
+                                [:phase "verify"]
+                                [:goals [:goal "sign"]]])}]]
   :uberjar {:prep-tasks ["clean" "javac" "compile"]
             :aot        :all}
   :classifiers [["sources" {:source-paths      ^:replace []
