@@ -21,7 +21,7 @@
                    [:email "derek@factorhouse.io"]
                    [:url "https://factorhouse.io"]
                    [:roles
-                    [:role "developer"]7
+                    [:role "developer"]
                     [:role "maintainer"]]]])
   :dependencies [[org.clojure/clojure "1.12.0"]
                  [com.cognitect/transit-clj "1.0.333"]
