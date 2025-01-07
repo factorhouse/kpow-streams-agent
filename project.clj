@@ -34,7 +34,7 @@
                  {:executions ([:execution
                                 [:id "attach-sources"]
                                 [:goals [:goal "jar-no-fork"]]])}]
-                [org.apache.maven.plugins/maven-javadoc-plugin
+                [org.apache.maven.plugins/maven-javadoc-plugin "2.9.1"
                  {:executions ([:execution
                                 [:id "attach-javadocs"]
                                 [:goals [:goal "jar"]]])}]]
