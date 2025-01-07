@@ -30,15 +30,15 @@
   :pom-plugins [[org.sonatype.central/central-publishing-maven-plugin "0.6.0"
                  {:extensions    "true"
                   :configuration [:publishingServerId "central"]}]
-                [org.apache.maven.plugins/maven-source-plugin "2.2.1"
+                [org.apache.maven.plugins/maven-source-plugin "3.3.1"
                  {:executions ([:execution
                                 [:id "attach-sources"]
                                 [:goals [:goal "jar-no-fork"]]])}]
-                [org.apache.maven.plugins/maven-javadoc-plugin "2.9.1"
+                [org.apache.maven.plugins/maven-javadoc-plugin "3.11.2"
                  {:executions ([:execution
                                 [:id "attach-javadocs"]
                                 [:goals [:goal "jar"]]])}]
-                [org.apache.maven.plugins/maven-gpg-plugin "1.5"
+                [org.apache.maven.plugins/maven-gpg-plugin "3.2.7"
                  {:configuration [:gpgArguments
                                   ([:arg "--pinentry-mode"]
                                    [:arg "loopback"])]
