@@ -19,5 +19,5 @@ jobs:
       - run: lein kaocha
       - run: lein kondo
       - run: lein fmt
-      - name: lint javadoc
+      - name: Lint javadoc
         run: ./scripts/javadoc.sh

@@ -6,8 +6,12 @@ package io.factorhouse.kpow.key;
  * However, in a multi-cluster Kpow deployment where the same application ID is used across multiple environments (e.g., staging, dev, prod),
  * Kpow cannot determine which cluster the Kafka Streams instance is associated with.
  * </p>
-*/
+ */
 public class ClientIdKeyStrategy implements KeyStrategy {
+
+    /**
+     * Constructs a new instance of the {@link ClientIdKeyStrategy}.
+     */
     public ClientIdKeyStrategy() {}
 
     @Override
