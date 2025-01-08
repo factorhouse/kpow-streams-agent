@@ -1,15 +1,22 @@
 package io.factorhouse.kpow.key;
 
 /**
- * Taxon is an internal class built to resolve the IDs of the KeyStrategy.
+ * An internal class which represents a hierarchical identifier used by Kpow's {@link KeyStrategy} to key metrics data.
  */
-class Taxon {
+public class Taxon {
 
     private final String domain;
     private final String domainId;
     private final String object;
     private final String objectId;
 
+    /**
+     * Constructs a new Taxon instance.
+     * @param domain the domain of the taxon
+     * @param domainId the domain ID of the taxon
+     * @param object the object of the taxon
+     * @param objectId the object ID of the taxon
+     */
     public Taxon(
         String domain,
         String domainId,

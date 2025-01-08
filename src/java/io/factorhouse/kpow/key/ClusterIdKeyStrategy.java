@@ -6,8 +6,12 @@ import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.DescribeClusterResult;
 
 /**
- * The default key strategy uses the cluster ID, obtained via an {@link org.apache.kafka.clients.admin.Admin#describeCluster()}  call.
- * This AdminClient is created once during registry initialization and then closed.
+ * A {@link KeyStrategy} implementation that uses the Kafka cluster ID as the primary identifier
+ * for keying metrics data in Kpow's internal Kafka topic.
+ * <p>This key strategy uses the cluster ID, obtained via an {@link org.apache.kafka.clients.admin.Admin#describeCluster()} call.</p>
+ * <p>This AdminClient is created once during registry initialization and then closed.</p>
+ * <p>This is the default and recommended keying strategy for Kpow, as it provides a robust way
+ * to uniquely associate metrics data with a specific Kafka cluster.</p>
  */
 public class ClusterIdKeyStrategy implements KeyStrategy {
 

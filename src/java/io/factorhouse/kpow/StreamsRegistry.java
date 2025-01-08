@@ -174,7 +174,8 @@ public class StreamsRegistry implements AutoCloseable {
      *
      * @param streams     the {@link KafkaStreams} instance representing the application to be registered.
      * @param topology    the {@link Topology} of the Kafka Streams application, which defines its processing logic.
-     * @param keyStrategy the {@link KeyStrategy} used to determine the keying of records sent to Kpow's internal Kafka topic.
+     * @param keyStrategy the {@link KeyStrategy} defining the keying mechanism for metrics data written
+     *                    to Kpow's internal Kafka topic.
      * @return a {@link StreamsAgent} representing the registered application, or {@code null} if registration fails.
      * @throws IllegalArgumentException if any of the provided parameters are {@code null}.
      * @see #unregister(StreamsAgent)
