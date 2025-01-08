@@ -7,7 +7,7 @@ package io.factorhouse.kpow.key;
  * <p>This strategy simplifies the configuration process by relying solely on the client ID
  * and application ID, eliminating the need for a Kafka {@link org.apache.kafka.clients.admin.AdminClient}.
  * It is particularly suitable for constrained environments where creating an {@code AdminClient}
- * may not be feasible or appropriate due to resource limitations or security concerns.</p>
+ * may not be feasible or appropriate due to security concerns.</p>
  *
  * <p><b>Important:</b> In a multi-cluster Kpow deployment, where the same application ID and client ID
  * are used across multiple environments (e.g., staging, development, production), this strategy

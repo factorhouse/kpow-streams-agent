@@ -4,6 +4,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+mkdir -p target/javadoc-out
+
 # Run the javadoc command with the -quiet option
 OUTPUT=`javadoc -quiet -classpath "$(lein classpath)" -Xdoclint:all -d target/javadoc-out $(find src -name "*.java") 2>&1`
 
