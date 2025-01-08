@@ -6,7 +6,7 @@ import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 
 /**
- * The default key strategy uses the cluster ID, obtained via an {@link org.apache.kafka.clients.admin.Admin#describeClusters()}  call.
+ * The default key strategy uses the cluster ID, obtained via an {@link org.apache.kafka.clients.admin.Admin#describeCluster()}  call.
  * This AdminClient is created once during registry initialization and then closed.
  */
 public class ClusterIdKeyStrategy implements KeyStrategy {
