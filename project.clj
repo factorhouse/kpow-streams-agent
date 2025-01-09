@@ -1,4 +1,4 @@
-(defproject io.factorhouse/kpow-streams-agent "1.0.0-rc8"
+(defproject io.factorhouse/kpow-streams-agent "1.0.0-rc9"
   :description "Kpow's Kafka Streams monitoring agent"
   :url "https://github.com/factorhouse/kpow-streams-agent"
   :license {:name         "Apache-2.0 License"
