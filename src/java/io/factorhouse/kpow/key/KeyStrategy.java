@@ -3,6 +3,15 @@ package io.factorhouse.kpow.key;
 /**
  * Defines the key strategy used by Kpow's streams agent.
  * <p>This interface specifies how metrics data should be keyed when writing to Kpow's internal snapshots topic.</p>
+ * <h3>Concrete Implementations</h3>
+ * <ul>
+ *   <li>{@link ClientIdKeyStrategy} - Uses the client ID and application ID for keying, suitable for constrained environments.</li>
+ *   <li>{@link ClusterIdKeyStrategy} - The recommended strategy that uses the Kafka cluster ID for keying,
+ *       ideal for multi-cluster deployments.</li>
+ * </ul>
+ *
+ * @see ClientIdKeyStrategy
+ * @see ClusterIdKeyStrategy
  */
 public interface KeyStrategy {
     /**

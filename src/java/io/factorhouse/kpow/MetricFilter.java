@@ -7,13 +7,22 @@ import java.util.function.Predicate;
 import org.apache.kafka.common.MetricName;
 
 /**
+ * Provides filtering functionality for metrics collected from Kafka Streams applications.
  *
- * The MetricFilter class defines and manages a set of criteria for filtering metrics from a Kafka Streams application.
- * Instances of this class can be used to either explicitly specify which metrics to accept or deny,
- * based on various conditions such as the metric name, tags, or custom predicates.
- * The class provides static methods to create common filters, such as accepting all metrics, denying all metrics, filtering
- * by state store metrics, or applying default settings for a typical Kafka Streams application.
+ * <p>The {@code MetricFilter} allows developers to define which metrics should be included or excluded
+ * when reporting to Kpow's internal Kafka topic. Filters can be customized to suit the needs of specific
+ * deployments or use cases.</p>
  *
+ * <h3>Common Filters</h3>
+ * <ul>
+ *   <li>{@link #acceptAllMetricFilter()} - A filter that accepts all metrics.</li>
+ *   <li>{@link #denyAllMetricFilter()} - A filter that denies all metrics.</li>
+ *   <li>{@link #stateStoreMetricsOnlyFilter()} - A filter that includes only state store metrics.</li>
+ *   <li>{@link #defaultMetricFilter()} - The default filter configuration for typical Kafka Streams applications.</li>
+ * </ul>
+ *
+ * <p>Developers can use these predefined static methods to quickly configure common filtering behaviors,
+ * or implement custom filters if required.</p>
  */
 public class MetricFilter {
 
