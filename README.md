@@ -1,5 +1,5 @@
 [![test](https://github.com/factorhouse/kpow-streams-agent/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/factorhouse/kpow-streams-agent/actions/workflows/test.yml)
-[![Maven Central](https://img.shields.io/maven-central/v/io.operatr/kpow-streams-agent.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.factorhouse/kpow-streams-agent)
+[![Maven Central](https://img.shields.io/maven-central/v/io.factorhouse/kpow-streams-agent.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.factorhouse/kpow-streams-agent)
 [![javadoc](https://javadoc.io/badge2/io.factorhouse/kpow-streams-agent/javadoc.svg)](https://javadoc.io/doc/io.factorhouse/kpow-streams-agent)
 
 
