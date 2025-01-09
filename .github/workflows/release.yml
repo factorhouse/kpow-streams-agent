@@ -34,14 +34,12 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./target/javadoc-out
           destination_dir: docs/latest
-          keep_files: true
       - name: Deploy Javadoc to GH pages (release dir)
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./target/javadoc-out
           destination_dir: docs/${{ env.version }}
-          keep_files: true
       - name: Publish package
         run: mvn --batch-mode -Dsource=1.8 -Dtarget=1.8 -Dmaven.compiler.source=1.8 -Dmaven.compiler.target=1.8 deploy
         env:
