@@ -28,6 +28,8 @@ jobs:
         run: |
           V=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | tr -d '\n\r\t ')
           echo "version=$V" >> $GITHUB_ENV
+      - name: Run javadoc
+        run: ./scripts/javadoc.sh
       - name: Deploy Javadoc to GH pages (latest dir)
         uses: peaceiris/actions-gh-pages@v4
         with:
