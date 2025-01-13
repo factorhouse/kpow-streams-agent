@@ -1,4 +1,4 @@
-(defproject io.factorhouse/kpow-streams-agent "1.0.0-rc11"
+(defproject io.factorhouse/kpow-streams-agent "1.0.0-rc12"
   :description "Kpow's Kafka Streams monitoring agent"
   :url "https://github.com/factorhouse/kpow-streams-agent"
   :license {:name         "Apache-2.0 License"
@@ -67,5 +67,5 @@
             "fmt"    ["with-profile" "+smoke" "cljfmt" "check"]
             "fmtfix" ["with-profile" "+smoke" "cljfmt" "fix"]}
   :javac-options ["-target" "1.8" "-source" "1.8" "-Xlint:-options"]
-  :java-source-paths ["src/java"]
+  :java-source-paths ["src/java" "src/clojure"]
   :source-paths ["src/clojure"])
