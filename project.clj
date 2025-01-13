@@ -1,4 +1,4 @@
-(defproject io.factorhouse/kpow-streams-agent "1.0.0-rc9"
+(defproject io.factorhouse/kpow-streams-agent "1.0.0-rc10"
   :description "Kpow's Kafka Streams monitoring agent"
   :url "https://github.com/factorhouse/kpow-streams-agent"
   :license {:name         "Apache-2.0 License"
@@ -48,7 +48,7 @@
                                    [:goals [:goal "sign"]]])}]]
   :uberjar {:prep-tasks ["clean" "javac" "compile"]
             :aot        :all}
-  :classifiers [["sources" {:source-paths      ^:replace []
+  :classifiers [["sources" {:source-paths      ^:replace ["src/clojure"]
                             :java-source-paths ^:replace ["src/java"]
                             :resource-paths    ^:replace ["javadoc"]}]
                 ["javadoc" {:source-paths      ^:replace []
