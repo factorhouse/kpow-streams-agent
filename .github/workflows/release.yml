@@ -10,7 +10,7 @@ jobs:
         with:
           lein: 'latest'
       - name: "Generate pom.xml"
-        run: lein +mvn-deploy pom
+        run: lein with-profile +mvn-deploy pom
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v4
         with:
