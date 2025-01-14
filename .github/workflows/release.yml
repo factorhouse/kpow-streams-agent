@@ -9,10 +9,8 @@ jobs:
         uses: DeLaGuardo/setup-clojure@13.0
         with:
           lein: 'latest'
-      - name: "Build JAR files"
-        run: lein uberjar
       - name: "Generate pom.xml"
-        run: lein pom
+        run: lein +mvn-deploy pom
       - name: Set up Maven Central Repository
         uses: actions/setup-java@v4
         with:
