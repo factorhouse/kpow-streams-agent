@@ -48,8 +48,7 @@
                                    [:goals [:goal "sign"]]])}]]
   :uberjar {:prep-tasks ["clean" "javac" "compile"]
             :aot        :all}
-  :profiles {:mvn-deploy {:resource-paths ["src/clojure"]}
-             :kaocha     {:dependencies [[lambdaisland/kaocha "1.91.1392"]]}
+  :profiles {:kaocha     {:dependencies [[lambdaisland/kaocha "1.91.1392"]]}
              :dev        {:resource-paths ["dev-resources"]
                           :plugins        [[lein-cljfmt "0.9.2"]]
                           :dependencies   [[org.slf4j/slf4j-api "2.0.16"]
@@ -63,4 +62,5 @@
             "fmtfix" ["with-profile" "+smoke" "cljfmt" "fix"]}
   :javac-options ["-target" "1.8" "-source" "1.8" "-Xlint:-options"]
   :java-source-paths ["src/java"]
+  :resource-paths ["src/clojure"]
   :source-paths ["src/clojure"])
