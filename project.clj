@@ -49,7 +49,7 @@
   :uberjar {:prep-tasks ["clean" "javac" "compile"]
             :aot        :all}
   :classifiers [["sources" {:source-paths      ^:replace []
-                            :java-source-paths ^:replace ["src/java" "src/clojure"]
+                            :java-source-paths ^:replace ["src/java"]
                             :resource-paths    ^:replace ["javadoc"]}]
                 ["javadoc" {:source-paths      ^:replace []
                             :java-source-paths ^:replace []
@@ -67,5 +67,5 @@
             "fmt"    ["with-profile" "+smoke" "cljfmt" "check"]
             "fmtfix" ["with-profile" "+smoke" "cljfmt" "fix"]}
   :javac-options ["-target" "1.8" "-source" "1.8" "-Xlint:-options"]
-  :java-source-paths ["src/java" "src/clojure"]
+  :java-source-paths ["src/java"]
   :source-paths ["src/clojure"])
