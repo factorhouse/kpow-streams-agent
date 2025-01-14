@@ -68,4 +68,5 @@
             "fmtfix" ["with-profile" "+smoke" "cljfmt" "fix"]}
   :javac-options ["-target" "1.8" "-source" "1.8" "-Xlint:-options"]
   :java-source-paths ["src/java"]
+  :resource-paths ["src/clojure"]
   :source-paths ["src/clojure"])
