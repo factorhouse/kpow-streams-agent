@@ -36,15 +36,15 @@ Evaluate Kpow with the [Kpow Local](https://github.com/factorhouse/kpow-local) r
 
 # Installation
 
-The Kpow Stream Agent can be found on [Maven Central](https://search.maven.org/artifact/io.operatr/kpow-streams-agent).
+The Kpow Stream Agent can be found on [Maven Central](https://search.maven.org/artifact/io.factorhouse/kpow-streams-agent).
 
 Include the agent as a dependency in your Kafka Streams application.
 
 ```xml
 <dependency>
-  <groupId>io.operatr</groupId>
+  <groupId>io.factorhouse</groupId>
   <artifactId>kpow-streams-agent</artifactId>
-  <version>0.2.12</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
