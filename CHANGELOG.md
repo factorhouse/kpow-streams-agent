@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
-## [1.0.0] - 2024-05-07
+## [1.0.0] - 2025-02-27
 
 A major release of the StreamsAgent with some breaking changes.
 
