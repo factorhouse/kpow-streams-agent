@@ -13,7 +13,7 @@ A major release of the StreamsAgent with some breaking changes.
 ### Breaking
 - Removed `io.operatr` namespace
 - Moved deployment to [io.factorhouse/kpow-streams-agent](https://central.sonatype.com/artifact/io.factorhouse/kpow-streams-agent) on Maven
-- `register` method of the [StreamsRegistry](https://javadoc.io/doc/io.factorhouse/kpow-streams-agent/latest/io/factorhouse/kpow/StreamsRegistry.html) has an additional argument: `keyStrategy`. 
+- `register` method of the [StreamsRegistry](https://javadoc.io/doc/io.factorhouse/kpow-streams-agent/latest/io/factorhouse/kpow/StreamsRegistry.html) class has an additional argument: `keyStrategy`. 
 
 ### Changed
 - Move to `io.factorhouse` domain from `io.operatr`
