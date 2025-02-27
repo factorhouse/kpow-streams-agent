@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
 ## [1.0.0] - 2024-05-07
+
+A major release of the StreamsAgent with some breaking changes.
+
+### Changed
+- Add new [KeyStrategy](https://javadoc.io/static/io.factorhouse/kpow-streams-agent/latest/io/factorhouse/kpow/key/KeyStrategy.html) interface: specifies how metrics data should be keyed when writing to Kpow's internal snapshots topic.
+- Add two concrete implementations of `KeyStrategy`: [ClientIdKeyStrategy](https://javadoc.io/static/io.factorhouse/kpow-streams-agent/latest/io/factorhouse/kpow/key/ClientIdKeyStrategy.html) and [ClusterIdKeyStrategy](https://javadoc.io/static/io.factorhouse/kpow-streams-agent/latest/io/factorhouse/kpow/key/ClusterIdKeyStrategy.html).
+- Add new [MetricFilters](https://javadoc.io/doc/io.factorhouse/kpow-streams-agent/latest/io/factorhouse/kpow/MetricFilter.html) class: allows developers to define which metrics should be included or excluded when reporting to Kpow's internal Kafka topic. Filters can be customized to suit the needs of specific deployments or use cases.
+
+### Breaking
+- Removed `io.operatr` namespace
+- Moved deployment to [io.factorhouse/kpow-streams-agent](https://central.sonatype.com/artifact/io.factorhouse/kpow-streams-agent) on Maven
+- `register` method of the [StreamsRegistry](https://javadoc.io/doc/io.factorhouse/kpow-streams-agent/latest/io/factorhouse/kpow/StreamsRegistry.html) has an additional argument: `keyStrategy`. 
+
 ### Changed
 - Move to `io.factorhouse` domain from `io.operatr`
 - Keep old `io.operatr.kpow.StreamsRegistry` entry point for backwards compatibility
