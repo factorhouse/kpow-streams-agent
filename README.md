@@ -1,7 +1,6 @@
 [![test](https://github.com/factorhouse/kpow-streams-agent/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/factorhouse/kpow-streams-agent/actions/workflows/test.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/io.factorhouse/kpow-streams-agent.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.factorhouse/kpow-streams-agent)
-[![javadoc](https://javadoc.io/badge2/io.factorhouse/kpow-streams-agent/javadoc.svg)](https://javadoc.io/doc/io.factorhouse/kpow-streams-agent)
-
+[![javadoc](https://img.shields.io/badge/javadoc-latest-blue.svg)](https://www.javadocs.dev/io.factorhouse/kpow-streams-agent)
 
 # Kpow Streams Agent
 
@@ -9,10 +8,10 @@ This repository contains the Kpow Streams Agent.
 
 Use this agent to integrate your Kafka Streams applications with Kpow and unlock the following features:
 
-* See summaries of Kafka Streams activity for your Kafka cluster(s).
-* Monitor Kafka Streams metrics (e.g Streams State, Stream-Thread, State Store, RocksDB, etc).
-* Visualise Kafka Streams topologies in the Kpow Workflows UI.
-* Aggregate and Expose Kafka Streams metrics via Kpow [Prometheus Endpoints](https://docs.factorhouse.io/kpow-ee/features/prometheus/) (for alerting, etc).
+- See summaries of Kafka Streams activity for your Kafka cluster(s).
+- Monitor Kafka Streams metrics (e.g Streams State, Stream-Thread, State Store, RocksDB, etc).
+- Visualise Kafka Streams topologies in the Kpow Workflows UI.
+- Aggregate and Expose Kafka Streams metrics via Kpow [Prometheus Endpoints](https://docs.factorhouse.io/kpow-ee/features/prometheus/) (for alerting, etc).
 
 See the [Kpow Kafka Streams Feature Guide](https://docs.factorhouse.io/kpow-ee/features/kafka-streams/) for full documentation.
 
@@ -52,10 +51,10 @@ Include the agent as a dependency in your Kafka Streams application.
 
 In your application, just before you start your KafkaStreams instance:
 
-* Create a new [io.factorhouse.kpow.StreamsRegistry](https://github.com/factorhouse/kpow-streams-agent/blob/main/src/java/io/factorhouse/kpow/StreamsRegistry.java) instance.
-* Register your KafkaStreams and Topology instances with the StreamsRegistry.
+- Create a new [io.factorhouse.kpow.StreamsRegistry](https://github.com/factorhouse/kpow-streams-agent/blob/main/src/java/io/factorhouse/kpow/StreamsRegistry.java) instance.
+- Register your KafkaStreams and Topology instances with the StreamsRegistry.
 
-```java 
+```java
 import io.factorhouse.kpow.StreamsRegistry;
 import io.factorhouse.kpow.key.ClusterIdKeyStrategy;
 
@@ -81,10 +80,10 @@ registry.register(streams, topology, keyStrategy);
 streams.start();
 ```
 
-The StreamsRegistry is a *single-threaded process* that performs these actions **once every minute**:
+The StreamsRegistry is a _single-threaded process_ that performs these actions **once every minute**:
 
-* Capture metadata about each registered Kafka Streams application.
-* Produce snapshots to the Kpow internal `__oprtr_snapshot_state` topic.
+- Capture metadata about each registered Kafka Streams application.
+- Produce snapshots to the Kpow internal `__oprtr_snapshot_state` topic.
 
 The StreamsRegistry **does not talk directly to Kpow**. Kpow reads streams data from the snapshot topic.
 
@@ -111,13 +110,14 @@ If you pass no metric filters to the `StreamsRegistry` constructor then the defa
 
 Kpow's streams agent metric filters work very similar to Micrometer's [meter filters](https://github.com/micrometer-metrics/micrometer-docs/blob/main/src/docs/concepts/meter-filters.adoc).
 
-Metric filters can either `ACCEPT` or `DENY` a metric. The filter itself is a Java predicate which takes in the [org.apache.common.MetricName](https://kafka.apache.org/0110/javadoc/org/apache/kafka/common/MetricName.html#group()) class. This allows you to filter metrics by name, tags or group.
+Metric filters can either `ACCEPT` or `DENY` a metric. The filter itself is a Java predicate which takes in the [org.apache.common.MetricName](<https://kafka.apache.org/0110/javadoc/org/apache/kafka/common/MetricName.html#group()>) class. This allows you to filter metrics by name, tags or group.
 
 Metric filters are applied sequentially in the order they are configured in the registry. This allows for stacking of deny and accept filters to create more complex rules:
 
 ```java
 MetricFilter metricFilter = MetricFilter().acceptNameStartsWith("rocksdb").deny();
 ```
+
 The above example allows all rocksdb related metrics through and denies all other types of streams metrics.
 
 # Kafka connection
@@ -126,36 +126,36 @@ The `StreamsRegistry` `Properties` contains configuration to create the snapshot
 
 The StreamsRegistry configures its own Serdes on the snapshot producer, you do not need to set them.
 
-Producer configuration means any of the following fields: 
+Producer configuration means any of the following fields:
 
-* ssl.enabled.protocols
-* sasl.client.callback.handler.class
-* ssl.endpoint.identification.algorithm
-* ssl.provider
-* ssl.truststore.location
-* ssl.keystore.key
-* ssl.key.password
-* ssl.protocol
-* ssl.keystore.password
-* sasl.login.class
-* ssl.trustmanager.algorithm
-* ssl.keystore.location
-* sasl.login.callback.handler.class
-* ssl.truststore.certificates
-* ssl.cipher.suites
-* ssl.truststore.password
-* ssl.keymanager.algorithm
-* ssl.keystore.type
-* ssl.secure.random.implementation
-* ssl.truststore.type
-* sasl.jaas.config
-* ssl.keystore.certificate.chain
-* sasl.mechanism
-* sasl.oauthbearer.jwks.endpoint.url
-* sasl.oauthbearer.token.endpoint.url
-* sasl.kerberos.service.name
-* security.protocol
-* bootstrap.servers
+- ssl.enabled.protocols
+- sasl.client.callback.handler.class
+- ssl.endpoint.identification.algorithm
+- ssl.provider
+- ssl.truststore.location
+- ssl.keystore.key
+- ssl.key.password
+- ssl.protocol
+- ssl.keystore.password
+- sasl.login.class
+- ssl.trustmanager.algorithm
+- ssl.keystore.location
+- sasl.login.callback.handler.class
+- ssl.truststore.certificates
+- ssl.cipher.suites
+- ssl.truststore.password
+- ssl.keymanager.algorithm
+- ssl.keystore.type
+- ssl.secure.random.implementation
+- ssl.truststore.type
+- sasl.jaas.config
+- ssl.keystore.certificate.chain
+- sasl.mechanism
+- sasl.oauthbearer.jwks.endpoint.url
+- sasl.oauthbearer.token.endpoint.url
+- sasl.kerberos.service.name
+- security.protocol
+- bootstrap.servers
 
 For more details visit the [Producer](https://kafka.apache.org/documentation/#producerconfigs) section of the Apache Kafka documentation.
 
@@ -236,7 +236,7 @@ Use a `Properties` with your **primary** cluster configuration to create your St
 
 ```java
 Properties streamsProps = createMyStreamProperties();
-KafkaStreams streams = new KafkaStreams(topology, streamsProps); 
+KafkaStreams streams = new KafkaStreams(topology, streamsProps);
 
 Properties primaryProps = createMyPrimaryClusterProducerProperties();
 StreamsRegistry registry = new StreamsRegistry(primaryProps);
@@ -262,7 +262,7 @@ registry.register(paymentStreams, paymentTopology);
 registry.register(dedupeStreams, dedupeTopology);
 ```
 
-## Troubleshooting 
+## Troubleshooting
 
 ### The Workflows UI is showing "Configure Streams Topology"
 
@@ -270,14 +270,14 @@ This could happen for a few reasons:
 
 1. `register` method has not been called.
 2. Invalid connection details passed to `StreamsRegistry` constructor. If this is the case you will see Kafka producer exceptions in the logs of your streams application.
-3. Telemetry is still being calculated. After a fresh deployment, it might take up to 2 minutes for initial streams telemetry to be calculated. 
+3. Telemetry is still being calculated. After a fresh deployment, it might take up to 2 minutes for initial streams telemetry to be calculated.
 
 You can verify `StreamsRegistry` is sending telemetry to your Kafka Cluster by using Data Inspect in Kpow:
 
-* Select topic `__oprtr_snapshot_state`
-* Choose `Transit / JSON` as the key deserializer
-* Choose `Last 15 minutes` as the window
-* Enter the following kJQ filter: `.key[0] == :streams`
+- Select topic `__oprtr_snapshot_state`
+- Choose `Transit / JSON` as the key deserializer
+- Choose `Last 15 minutes` as the window
+- Enter the following kJQ filter: `.key[0] == :streams`
 
 ![Data Inspect](docs/kpow-data-inspect.png)
 
@@ -287,6 +287,6 @@ If you have any issues contact [support@factorhouse.io](mailto:support@factorhou
 
 # Copyright and License
 
-Copyright © 2021-2024 Factor House Pty Ltd. 
+Copyright © 2021-2024 Factor House Pty Ltd.
 
 Distributed under the Apache-2.0 License, the same as Apache Kafka.
