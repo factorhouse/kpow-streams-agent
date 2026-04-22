@@ -138,6 +138,8 @@ public class StreamsRegistry implements AutoCloseable {
      * used to configure the underlying Kafka producer, and the {@link MetricFilter} determines which metrics
      * are collected and sent to Kpow's internal Kafka topic.</p>
      *
+     * <p>This method will construct an instance of the {@link StreamsRegistry} with a default target product of Kpow.</p>
+     *
      * <p><b>Important:</b> The Kafka producer properties provided in {@code props} must match the connection
      * details of Kpow's primary cluster, where Kpow's internal topic resides.</p>
      *
