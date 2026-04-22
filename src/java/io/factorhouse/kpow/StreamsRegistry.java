@@ -30,7 +30,7 @@ import java.util.Properties;
 public class StreamsRegistry implements AutoCloseable {
 
     /**
-     * Specifies the target Factor House product this StreamsRegistry should produce to.
+     * Specifies the target Factor House product this StreamsRegistry instance should produce to.
      */
     public enum TargetProduct {
         KPOW,
