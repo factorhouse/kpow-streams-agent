@@ -30,6 +30,21 @@ import java.util.Properties;
 public class StreamsRegistry implements AutoCloseable {
 
     /**
+     * Specifies the target Factor House product this StreamsRegistry should produce to.
+     */
+    public enum TargetProduct {
+        KPOW,
+        FACTOR_PLATFORM;
+
+        public String getInternalTopic() {
+            return switch (this) {
+                case KPOW -> "__oprtr_snapshot_state";
+                case FACTOR_PLATFORM -> "fh_snapshots";
+            };
+        }
+    }
+
+    /**
      * Represents an agent for a registered Kafka Streams application.
      * Provides the unique identifier of the registered application.
      */
@@ -129,6 +144,28 @@ public class StreamsRegistry implements AutoCloseable {
      * @throws IllegalArgumentException if the provided {@code props} are invalid or incomplete.
      */
     public StreamsRegistry(Properties props, MetricFilter metricsFilter) {
+        this(props, metricsFilter, TargetProduct.KPOW);
+    }
+
+    /**
+     * Constructs a {@code StreamsRegistry} instance using the specified Kafka properties and metrics filter.
+     *
+     * <p>This constructor initializes the registry, allowing Kafka Streams applications to be registered
+     * for monitoring through Kpow's user interface and API. The provided {@link Properties} object is
+     * used to configure the underlying Kafka producer, and the {@link MetricFilter} determines which metrics
+     * are collected and sent to Kpow's internal Kafka topic.</p>
+     *
+     * <p><b>Important:</b> The Kafka producer properties provided in {@code props} must match the connection
+     * details of Kpow's primary cluster, where Kpow's internal topic resides.</p>
+     *
+     * @param props         the {@link Properties} object containing Kafka configuration.
+     *                      Must include essential properties like {@code bootstrap.servers}.
+     * @param metricsFilter the {@link MetricFilter} to customize which metrics are reported.
+     *                      Use {@link MetricFilter#defaultMetricFilter()} for default behavior.
+     * @param metricsFilter the {@link TargetProduct} specifies which Factor House product should receive the agent's metrics.
+     * @throws IllegalArgumentException if the provided {@code props} are invalid or incomplete.
+     */
+    public StreamsRegistry(Properties props, MetricFilter metricsFilter, TargetProduct targetProduct) {
         IFn require = Clojure.var("clojure.core", "require");
         require.invoke(Clojure.read("io.factorhouse.kpow.agent"));
         IFn agentFn = Clojure.var("io.factorhouse.kpow.agent", "init-registry");
@@ -138,7 +175,7 @@ public class StreamsRegistry implements AutoCloseable {
         Serializer valSerializer = (Serializer) serdesFn.invoke();
         Properties producerProps = filterProperties(props);
         KafkaProducer producer = new KafkaProducer<>(producerProps, keySerializer, valSerializer);
-        agent = agentFn.invoke(producer, metricsFilter);
+        agent = agentFn.invoke(producer, metricsFilter, targetProduct.getInternalTopic());
     }
 
     /**
