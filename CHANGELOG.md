@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file. This change log follows the conventions of [keepachangelog.com](http://keepachangelog.com/).
 
+## [1.1.0] - 2026-04-22
+
+## Changed
+
+- Added new enum `io.factorhouse.kpow.StreamsRegistry.TargetProduct`: supported values are `KPOW` and `FACTOR_PLATFORM`
+- `io.factorhouse.kpow.StreamsRegistry` now accepts an optional third argument where you can specify the target product.
+- For backwards compatibility, the existing 2-artity `io.factorhouse.kpow.StreamsRegistry` constructor will initialize the `StreamsRegistry` instance with a default target product of `KPOW`.
+
 ## [1.0.0] - 2025-02-27
 
 A major release of the StreamsAgent with some breaking changes.

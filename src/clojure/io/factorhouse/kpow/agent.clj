@@ -13,9 +13,6 @@
                                      TopologyDescription$Node TopologyDescription$Processor TopologyDescription$Sink
                                      TopologyDescription$Source TopologyDescription$Subtopology)))
 
-(def kpow-snapshot-topic
-  {:topic "__oprtr_snapshot_state"})
-
 (extend-protocol p/Datafiable
   Taxon
   (datafy [v]
@@ -249,8 +246,8 @@
   {})
 
 (defn init-registry
-  [producer metrics-filter]
-  (start-registry {:snapshot-topic kpow-snapshot-topic
+  [producer metrics-filter snapshot-topic]
+  (start-registry {:snapshot-topic {:topic snapshot-topic}
                    :producer       producer
                    :metrics-filter metrics-filter}))
 

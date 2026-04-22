@@ -82,7 +82,7 @@
 (deftest agent-test
   (let [records        (atom [])
         metrics-filter (-> (MetricFilter.) (.accept))
-        registry       (agent/init-registry (mock-producer records) metrics-filter)
+        registry       (agent/init-registry (mock-producer records) metrics-filter "__oprtr_snapshot_state")
         agent-id       (agent/register registry
                                        (mock-streams [(mock-metric "first.metric" "first" "mock metric" {} 1.0)
                                                       (mock-metric "application-id" "first" "mock metric" {"client-id" "abc123"} "xxx")
@@ -146,7 +146,7 @@
                            (.acceptNameStartsWith "first")
                            (.acceptNameStartsWith "rocksdb")
                            (.deny))
-        registry       (agent/init-registry (mock-producer records) metrics-filter)
+        registry       (agent/init-registry (mock-producer records) metrics-filter "__oprtr_snapshot_state")
         agent-id       (agent/register registry
                                        (mock-streams [(mock-metric "first.metric" "first" "mock metric" {} 1.0)
                                                       (mock-metric "rocksdb.foo" "first" "mock metric" {"client-id" "abc123"} 3.0)
