@@ -168,7 +168,7 @@ public class StreamsRegistry implements AutoCloseable {
      *                      Must include essential properties like {@code bootstrap.servers}.
      * @param metricsFilter the {@link MetricFilter} to customize which metrics are reported.
      *                      Use {@link MetricFilter#defaultMetricFilter()} for default behavior.
-     * @param metricsFilter the {@link TargetProduct} specifies which Factor House product should receive the agent's metrics.
+     * @param targetProduct the {@link TargetProduct} specifies which Factor House product should receive the agent's metrics.
      * @throws IllegalArgumentException if the provided {@code props} are invalid or incomplete.
      */
     public StreamsRegistry(Properties props, MetricFilter metricsFilter, TargetProduct targetProduct) {
