@@ -37,10 +37,14 @@ public class StreamsRegistry implements AutoCloseable {
         FACTOR_PLATFORM;
 
         public String getInternalTopic() {
-            return switch (this) {
-                case KPOW -> "__oprtr_snapshot_state";
-                case FACTOR_PLATFORM -> "fh_snapshots";
-            };
+            switch (this) {
+                case KPOW:
+                    return "__oprtr_snapshot_state";
+                case FACTOR_PLATFORM:
+                    return "fh_snapshots";
+                default:
+                    throw new IllegalStateException("Unexpected value: " + this);
+            }
         }
     }
 
