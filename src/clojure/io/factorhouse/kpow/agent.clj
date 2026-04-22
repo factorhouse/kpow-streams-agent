@@ -247,7 +247,7 @@
 
 (defn init-registry
   [producer metrics-filter snapshot-topic]
-  (start-registry {:snapshot-topic snapshot-topic
+  (start-registry {:snapshot-topic {:topic snapshot-topic}
                    :producer       producer
                    :metrics-filter metrics-filter}))
 
