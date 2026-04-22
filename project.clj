@@ -50,7 +50,7 @@
             :aot        :all}
   :profiles {:kaocha     {:dependencies [[lambdaisland/kaocha "1.91.1392"]]}
              :dev        {:resource-paths ["dev-resources"]
-                          :plugins        [[dev.weavejester/lein-cljfmt "0.16.4"]
+                          :plugins        [[dev.weavejester/lein-cljfmt "0.16.4"]]
                           :dependencies   [[org.slf4j/slf4j-api "2.0.17"]
                                            [ch.qos.logback/logback-classic "1.5.32"]
                                            [cheshire "6.2.0"]
