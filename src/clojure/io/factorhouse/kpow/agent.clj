@@ -154,7 +154,7 @@
                                  :agent {:metrics-summary metrics-summary
                                          :id              agent-id
                                          :captured        captured
-                                         :version         "1.0.0"}}}
+                                         :version         "1.1.1"}}}
         record (ProducerRecord. (:topic snapshot-topic) taxon plan)]
     (.get (.send producer record))))
 
