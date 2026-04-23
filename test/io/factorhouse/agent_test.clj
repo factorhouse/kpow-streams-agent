@@ -123,7 +123,7 @@
                                                             :sent  2
                                                             :total 3}
                                           :id              agent-id
-                                          :version         "1.0.0"}}}]
+                                          :version         "1.1.1"}}}]
                [[:streams "abc123" :kafka/streams-agent]
                 {:type           :kafka/streams-agent-metrics,
                  :application-id "xxx",
@@ -188,7 +188,7 @@
                                                             :sent  2
                                                             :total 4}
                                           :id              agent-id
-                                          :version         "1.0.0"}}}]
+                                          :version         "1.1.1"}}}]
                [[:streams "abc123" :kafka/streams-agent]
                 {:type           :kafka/streams-agent-metrics,
                  :application-id "xxx",
